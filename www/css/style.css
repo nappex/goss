@@ -54,6 +54,7 @@ pre code {
  * 24th of November 2015
  * MIT License
  *
+ * This project made only small updates to origin code
  *
  * If you are thinking of using this in
  * production code, beware of the browser
@@ -146,7 +147,8 @@ pre code {
  */
 #menu {
   position: absolute;
-  width: 300px;
+  width: 20%;
+  max-width: 200px;
   margin: -40px 0 0 -50px;
   padding: 50px;
   background: #ededed;
