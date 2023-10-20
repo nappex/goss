@@ -53,7 +53,7 @@ To je fáze, takového pre-commitu je to soubor, který si připravuju ke commit
 
 Konečné nevratné zapsání změn do master nebo do vedlejší větve. Tímto potvrzením se zapíší na dobro do historie změn daného souboru. Změny provedené v commit lze zase zpět postup je následující:
 
-```
+```sh
 $ git commit -m "Something terribly misguided"
 $ git reset HEAD~
 << edit files as necessary >>
@@ -127,7 +127,7 @@ Zeptáme se gitu co si myslí o aktutálním stavu v současném repozitáři. D
 
 Pokud nám git status vypíše:
 
-```
+```sh
 *On branch master*
 
 *nothing to commit, working tree clean*
@@ -195,7 +195,7 @@ Změnu, kterou jsme v souboru provedli se smaže.
 
 Teď nastane okamžik, kdy práci musíte ale přerušit a dodělat nějaký detail na jiné branchi. Ovšem Vaše změny na současné branchi nejsou vůbec dodělané ve fázi, že byste je chtěli commitnout. Jedná se o nějaký nástřel Vašich myšlenek, ale vůbec nevíte jestli je to správná cesta. Nechcete změny commitnout, ale zároveň o změny ani nechcete přijít. Chcete na ně po dokončení prioritnějšího úkolu navázat. Potřebujete je jen dočasně někam uložit. První vás napadne změny by se mohli uložit automaticky... Takhle ale Git nefunguje ve chvíli, kdy se budete chtít přepnout z větve, kde jsou provedené změny, ale nejsou commitnuté, měli byste dostat nějakou takovouhle hlášku:
 
-```
+```sh
 $ git switch <different_branch>
 
 error: Your local changes to the following files would be overwritten by checkout:
@@ -215,7 +215,7 @@ Tento příkaz vám umožní uložit si změny, které jsou v danou chvíli ve `
 
 V praxi použití příkazu `git stash` může vypadata nějak takto:
 
-```
+```sh
 $ git status
 
 On branch master Changes to be committed:
@@ -239,7 +239,7 @@ Pokud budete chtít změny uložené v gitu zase aplikovat do svého projektu po
 
 Tento příkaz aplikuje změny ve stash do vašeho projektu a zároveň tyto změny ze stash vymaže.
 
-```
+```sh
 $ git status
 On branch master nothing to commit, working tree clean
 
@@ -255,7 +255,7 @@ Dropped refs/stash@{0} (32b3aa1d123dfe6d57b3c3cc2c45cbf3f456cc6a)
 
 Tento příkaz aplikuje změny ve stash do vašeho projektu (větve), ale změny uložené ve stash zachová. To se může hodit například pokud chcete stash aplikovat do více větví.
 
-```
+```sh
 $ git stash apply
 On branch master Changes to be committed:
     new file: hello.py
@@ -412,9 +412,7 @@ Jedná se o soubory, v kterých jsou napsána hesla, API klíče nebo citlivé �
 
 Cesta k tomuto souboru je:
 
-```
-.git/info/exclude
-```
+`.git/info/exclude`
 
 # Další nástroje, které se používají společně s gitem
 
