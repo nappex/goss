@@ -3,17 +3,10 @@ Title: Install python and handle virtual environments on MacOS
 Date: 2020-11-25
 Category: Python
 Tags: python, intermediate
-Slug: python-virtualenvs-installation
-Authors: David
-Summary: How to handle different versions of python and virtual environments on MacOS
-Status: published
 ---
 
 
-
-# Intro
-
-# Install python to MacOS
+## Install python to MacOS
 
 There are two main ways how to install python to MacOS:
 
@@ -64,19 +57,19 @@ But point 4. must not be meet.
 
 So to install Command Line Tools fo Xcode just write to terminal:
 
-```shell
+```sh
 $ xcode-select --install
 ```
 
 Next step is install homebrew package manager:
 
-```shell
+```sh
 $ /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)"
 ```
 
 Finally check if installation was success
 
-```shell
+```sh
 $ brew doctor
 Your system is ready to brew.
 ```
@@ -89,25 +82,25 @@ Your system is ready to brew.
 
 Shows you what is installed
 
-```shell
+```sh
 $ brew list
 ```
 
 resp. for cask
 
-```shell
+```sh
 $ brew list --cask
 ```
 
 ##### brew install
 
-```shell
+```sh
 $ brew install python3
 ```
 
 resp.
 
-```shell
+```sh
 $ brew uninstall python3
 ```
 
@@ -121,7 +114,7 @@ Steps are take from this article [KEEP MACOS CLEAN](https://medium.com/@waxzce/k
 
 Update command will update the local base of available packages and versions, to be able to know what is updatable.
 
-```shell
+```sh
 $ brew update
 ```
 
@@ -129,7 +122,7 @@ $ brew update
 
 It actually installs new version of outdated packages
 
-```shell
+```sh
 $ brew upgrade
 ```
 
@@ -143,7 +136,7 @@ This cleanup will apply to homebrew-cask also.
 
 Homebrew cask is a brew extension for GUI and binary packages, some software are installed with it for simplicity of updates.
 
-```shell
+```sh
 $ brew cleanup -s
 ```
 
@@ -151,7 +144,7 @@ $ brew cleanup -s
 
 Will show you any problem with your brew installation, it will help a lot to maintain a healthy system all the time.
 
-```shell
+```sh
 $ brew doctor
 $ brew missing
 ```
@@ -161,13 +154,13 @@ $ brew missing
 
 With homebrew you can install latest version of python3.
 
-```shell
+```sh
 $ brew install python3
 ```
 
 If you want to install python2
 
-```shell
+```sh
 $ brew install python@2
 ```
 
@@ -179,7 +172,7 @@ For managing different versions of python it is handy to know some commands whic
 
 Check what version of python is used:
 
-```shell
+```sh
 $ python -V
 
 Python 2.7.16
@@ -187,7 +180,7 @@ Python 2.7.16
 
 or
 
-```shell
+```sh
 $ python3 --version
 
 Python 3.9.0
@@ -195,7 +188,7 @@ Python 3.9.0
 
 If we want to check where is situated executable file of python which we promt `python` in terminal we will find out with:
 
-```shell
+```sh
 $ which python
 
 /usr/bin/python
@@ -203,7 +196,7 @@ $ which python
 
 or
 
-```shell
+```sh
 $ which python3
 
 /usr/local/bin/python3
@@ -220,7 +213,7 @@ Theres is no way to install mulitply version of python 3 with homebrew.
 #### Install pyenv with homebrew
 pyenv can be installed with homebrew easily:
 
-```shell
+```sh
 $ brew install pyenv
 ```
 
@@ -230,13 +223,13 @@ Next step is set `pyenv init` to end of config file of your shell. This will ens
 
 * for **zsh**
 
-```shell
+```sh
 echo -e 'if command -v pyenv 1>/dev/null 2>&1; then\n  eval "$(pyenv init -)"\nfi' >> ~/.zshrc
 ```
 
 * for **bash**
 
-```shell
+```sh
 echo -e 'if command -v pyenv 1>/dev/null 2>&1; then\n  eval "$(pyenv init -)"\nfi' >> ~/.bash_profile
 ```
 
@@ -245,13 +238,13 @@ Some systems (Ubuntu or Fedora) with bash use for config `.bashrc` instead of `.
 
 When `pyenv init` with `echo` **restart** your shell:
 
-```shell
+```sh
 $ exec "$SHELL"
 ```
 
 or
 
-```shell
+```sh
 $ source ~/.zshrc
 ```
 
@@ -259,7 +252,7 @@ It is highly recommended to install with brew other dependecies for installing p
 
 So before installing any python to pyenv, install these dependecies:
 
-```shell
+```sh
 $ brew install openssl readline sqlite3 xz zlib
 ```
 
@@ -270,13 +263,13 @@ because macOS already provides this software and installing another version in
 parallel can cause all kinds of trouble.
 
 For compilers to find zlib you may need to set:
-```shell
+```sh
 $ export LDFLAGS="-L/usr/local/opt/zlib/lib"
 $ export CPPFLAGS="-I/usr/local/opt/zlib/include"
 ```
 
 For pkg-config to find zlib you may need to set:
-```shell
+```sh
 $ export PKG_CONFIG_PATH="/usr/local/opt/zlib/lib/pkgconfig"
 ```
 
@@ -284,25 +277,25 @@ It is not necessary to set up. Set these variables just if problems occured
 
 Finally we can install certain version python with pyenv
 
-```shell
+```sh
 $ pyenv install 3.8.6
 ```
 
 If we want se what is installable prompt:
 
-```shell
+```sh
 $ pyenv install --list
 ```
 
 If we want to set certain version of python as global version prompt:
 
-```shell
+```sh
 $ pyenv global 3.8.6
 ```
 
 If we want to see installed versions:
 
-```shell
+```sh
 $ pyenv versions
 
   system
@@ -313,7 +306,7 @@ system = python2 on macOS
 
 Now prompt:
 
-```shell
+```sh
 $ which python3
 
 /Users/user_1/.pyenv/shims/python3
@@ -322,7 +315,7 @@ $ which python3
 Sometimes `rehash` is needed,
 if your output is `/usr/local/bin/python3` then prompt:
 
-```shell
+```sh
 $ pyenv rehash
 ```
 
@@ -342,18 +335,18 @@ Sometimes is necessary to set up path of `shims` manually to variable `PATH` of 
 Define environment variable PYENV_ROOT to point to the path where pyenv repo is cloned and add `$PYENV_ROOT/bin` to your `$PATH` for access to the pyenv command-line utility.
 
 * For bash:
-```shell
+```sh
 $ echo 'export PYENV_ROOT="$HOME/.pyenv"' >> ~/.bash_profile
 $ echo 'export PATH="$PYENV_ROOT/bin:$PATH"' >> ~/.bash_profile
 ```
 
 * For Ubuntu Desktop:
-```shell
+```sh
 $ echo 'export PYENV_ROOT="$HOME/.pyenv"' >> ~/.bashrc
 $ echo 'export PATH="$PYENV_ROOT/bin:$PATH"' >> ~/.bashrc
 ```
 * For Zsh:
-```shell
+```sh
 $ echo 'export PYENV_ROOT="$HOME/.pyenv"' >> ~/.zshrc
 $ echo 'export PATH="$PYENV_ROOT/bin:$PATH"' >> ~/.zshrc
 ```
@@ -396,7 +389,7 @@ with these tools you are able to create new virtual envinronment as your main py
 
 Installation command:
 
-```shell
+```sh
 $ python3 -m pip install virtualenvwrapper
 ```
 
@@ -432,7 +425,7 @@ Nice thing is that when you have linked your environment with your project and t
 
 to activate your virtual environemnt or show your environments
 
-```shell
+```sh
 $ workon
 
 your_env_1
@@ -440,13 +433,13 @@ your_env_2
 ```
 
 The command below will activate your_env if linked to project it will move to your project dir.
-```shell
+```sh
 $ workon your_env_1
 ```
 
 Deactivation env
 
-```shell
+```sh
 $ deactivate
 ```
 
@@ -458,7 +451,7 @@ as `$ python -m venv name_your_venv`. Make virtual env with vrtualenvwrapper is 
 **mkvirtualenv**
 Create a new environment, in the WORKON_HOME.
 
-```shell
+```sh
 $ mkvirtualenv your_env_name
 ```
 
@@ -470,7 +463,7 @@ Options:
 
 * -r option can be used to specify a text file listing packages to be installed. The argument value is passed to pip -r to be installed.
 
-```shell
+```sh
 mkvirtualenv -a $HOME/myproject -r $HOME/myproject/requirements.txt -r $HOME/myproject/requirements-dev.txt your_env_name
 ```
 
@@ -486,7 +479,7 @@ This is a temporary environment. It will be deleted when deactivated
 
 **rmvirtualenv**
 
-```shell
+```sh
 (mynewenv)$ deactivate
 $ rmvirtualenv mynewenv
 $ workon
