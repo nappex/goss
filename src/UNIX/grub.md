@@ -9,7 +9,7 @@ Summary: Jak použít grub pro opravu bootovácího procesu
 Status: published
 ---
 
-[TOC]
+
 
 # Jak vyřešit problémy pomocí zavaděče GRUB
 

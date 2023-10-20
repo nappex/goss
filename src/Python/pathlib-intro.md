@@ -9,7 +9,7 @@ Summary: How to handle paths and files with python
 Status: published
 ---
 
-[TOC]
+
 
 # 1. Knihovna pathlib
 

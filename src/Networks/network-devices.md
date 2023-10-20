@@ -9,7 +9,7 @@ Summary: Learn the main network devices
 Status: published
 ---
 
-[TOC]
+
 
 # Repeater
 

@@ -9,7 +9,7 @@ Summary: Seznam jednotlivých dostupných ovladačů na HW
 Status: published
 ---
 
-[TOC]
+
 
 # Grafická karta
 

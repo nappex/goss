@@ -9,7 +9,7 @@ Summary: OpenBSD installation with disk encryption
 Status: published
 ---
 
-[TOC]
+
 
 # Introduction
 

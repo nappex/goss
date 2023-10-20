@@ -9,7 +9,7 @@ Summary: Simple example of how to make recursion
 Status: published
 ---
 
-[TOC]
+
 
 # Recursion of paths to file originally created as dict
 

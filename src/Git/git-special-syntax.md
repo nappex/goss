@@ -12,7 +12,7 @@ Status: published
 
 ![git logo]({static}/images/git_logo.jpg)
 
-[TOC]
+
 
 
 # Push local branch to different remote branch ?

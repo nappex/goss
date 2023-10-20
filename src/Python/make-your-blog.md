@@ -9,7 +9,7 @@ Summary: How to create your own blog site from markdown articles with python sta
 Status: draft
 ---
 
-[TOC]
+
 
 Static site generators:
 

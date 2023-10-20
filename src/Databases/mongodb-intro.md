@@ -9,7 +9,7 @@ Summary: How to handle MongoDB with Python
 Status: draft
 ---
 
-[TOC]
+
 
 # 1. MongoDB
 

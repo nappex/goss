@@ -9,7 +9,7 @@ Summary: Czech translation of transcript to talk about NSA habits
 Status: published
 ---
 
-[TOC]
+
 
 # Úvod
 Tento text slouží jako český překlad přednášky NSA operation orchestra

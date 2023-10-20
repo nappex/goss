@@ -9,7 +9,7 @@ Summary: Examples of exercises which you can do in furture work
 Status: published
 ---
 
-[TOC]
+
 
 # 1. Zadání pro web scraping
 

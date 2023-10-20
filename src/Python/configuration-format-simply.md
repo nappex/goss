@@ -9,6 +9,6 @@ Summary: The list of the most used configuration formats in Python
 Status: published
 ---
 
-[TOC]
+
 
 [hackersandslackers.com/simplify-your-python-projects-configuration/](https://hackersandslackers.com/simplify-your-python-projects-configuration/)

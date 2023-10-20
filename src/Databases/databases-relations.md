@@ -9,7 +9,7 @@ Summary: Four basic relations between databases
 Status: published
 ---
 
-[TOC]
+
 
 # Databáze - obecně
 

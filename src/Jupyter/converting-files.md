@@ -9,7 +9,7 @@ Summary: How to convert jupyter notebook .ipynb file to html, slideshow, etc.
 Status: published
 ---
 
-[TOC]
+
 
 # 1. Vytvoření prezentace (slideshow) ze souboru .ipynb
 

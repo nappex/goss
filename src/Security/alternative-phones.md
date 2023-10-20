@@ -9,7 +9,7 @@ Summary: List of alternative mobile phones especially operation system to not be
 Status: published
 ---
 
-[TOC]
+
 
 # Introduction
 Nowadays you can hear very often that mobile phones are the ones of the

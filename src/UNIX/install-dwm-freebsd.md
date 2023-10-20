@@ -9,7 +9,7 @@ Summary: Jak nainstalovat window manager dwm suckless na FreeBSD
 Status: published
 ---
 
-[TOC]
+
 
 # Úvod
 

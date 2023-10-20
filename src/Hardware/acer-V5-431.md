@@ -9,7 +9,7 @@ Summary: Enter to BIOS or boot menu at start-up of Acer V5 431 with windows 10
 Status: published
 ---
 
-[TOC]
+
 
 # Introduction
 

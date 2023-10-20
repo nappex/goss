@@ -9,7 +9,7 @@ Summary: How to handle different versions of python and virtual environments on 
 Status: published
 ---
 
-[TOC]
+
 
 # Intro
 

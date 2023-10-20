@@ -9,7 +9,7 @@ Summary: Main (confusing) differences between zsh and bash
 Status: published
 ---
 
-[TOC]
+
 
 # Introduction
 This article aims only to differences between zsh and bash. Author has no

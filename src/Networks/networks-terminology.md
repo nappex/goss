@@ -9,7 +9,7 @@ Summary: Learn the basics about networks through terminology which you will meet
 Status: published
 ---
 
-[TOC]
+
 
 # Resources
 

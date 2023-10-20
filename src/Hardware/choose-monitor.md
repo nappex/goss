@@ -9,7 +9,7 @@ Summary: Abychom mohli správně vybrat monitor musíme vědět co znamenají je
 Status: published
 ---
 
-[TOC]
+
 
 # Úvod
 

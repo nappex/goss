@@ -9,7 +9,7 @@ Summary: How to find your IP addresses on macOS and other IP addresses connected
 Status: published
 ---
 
-[TOC]
+
 
 # IP addresses
 

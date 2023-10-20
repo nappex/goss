@@ -9,7 +9,7 @@ Summary: How to write highly portable shell script
 Status: published
 ---
 
-[TOC]
+
 
 # Introduction
 

@@ -11,7 +11,7 @@ Status: published
 ---
 
 
-[TOC]
+
 
 # Intro
 

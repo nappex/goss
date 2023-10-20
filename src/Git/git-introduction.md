@@ -12,7 +12,7 @@ Status: published
 
 ![git logo]({static}/images/git_logo.jpg)
 
-[TOC]
+
 
 
 # Co je Git ?

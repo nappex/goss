@@ -9,7 +9,7 @@ Summary: Elixir data types
 Status: published
 ---
 
-[TOC]
+
 
 # Integery
 

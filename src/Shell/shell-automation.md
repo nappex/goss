@@ -9,7 +9,7 @@ Summary: How you can automate you often task by write your commands to shell scr
 Status: published
 ---
 
-[TOC]
+
 
 # Executable files
 

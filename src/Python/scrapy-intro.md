@@ -9,7 +9,7 @@ Summary: Basic about how to scrap web pages via python
 Status: published
 ---
 
-[TOC]
+
 
 # 1. Jak začít ....
 

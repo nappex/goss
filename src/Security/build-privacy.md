@@ -9,7 +9,7 @@ Summary: How to configure your phone, laptop and lifestyle for better privacy
 Status: published
 ---
 
-[TOC]
+
 
 The main part of texts was created as notes during the reading [cyberyozh online book](https://book.cyberyozh.com/).
 

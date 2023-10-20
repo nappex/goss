@@ -11,7 +11,7 @@ Status: published
 
 ![git logo]({static}/images/git_logo.jpg)
 
-[TOC]
+
 
 # 1. Změna posledního commitu
 

@@ -9,7 +9,7 @@ Summary: How to quickly grep filename in content of multiple directories
 Status: published
 ---
 
-[TOC]
+
 
 # Introduction
 I have a problem find files with my mac on windows server, especially if I am

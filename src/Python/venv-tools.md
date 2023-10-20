@@ -9,7 +9,7 @@ Summary: Article how to know a huge amount of tools for working with virtual env
 Status: draft
 ---
 
-[TOC]
+
 
 
 Don't feel obligated to use pipenv. It is generally recommended to help people who are intimidated by virtualenvs, and is not appropriate for all use cases. It actually relies on pip and virtualenv, so virtualenv is not going away. There are also some common criticisms of pipenv. See this blog post for some (examples)[https://chriswarrick.com/blog/2018/07/17/pipenv-promises-a-lot-delivers-very-little/].

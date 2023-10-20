@@ -9,7 +9,7 @@ Summary: English transcript of FOSDEM talk about NSA habits
 Status: published
 ---
 
-[TOC]
+
 
 # Introduction
 This is text representation of FOSDEM 2014 talk about NSA, privacy and security.

@@ -9,7 +9,7 @@ Summary: Seznam licencí a jejich rozdíly
 Status: published
 ---
 
-[TOC]
+
 
 # Úvod
 

@@ -9,7 +9,7 @@ Summary: Seznam užitečných nástrojů pro začínající uživatele FreeBSD
 Status: published
 ---
 
-[TOC]
+
 
 # Nástroje built-in
 Tedy vestavěné, které jsou součástí instalace FreeBSD. Tyto nástroje

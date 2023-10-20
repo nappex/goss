@@ -9,7 +9,7 @@ Summary: How we can compare objects in python and where are differents
 Status: published
 ---
 
-[TOC]
+
 
 # Comparison operators
 

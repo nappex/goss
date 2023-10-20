@@ -9,7 +9,7 @@ Summary: How to handle work with modules and packages. How to start bigger proje
 Status: draft
 ---
 
-[TOC]
+
 
 
 https://realpython.com/python-modules-packages/

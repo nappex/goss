@@ -9,7 +9,7 @@ Summary: How to control your command line with shortcuts
 Status: published
 ---
 
-[TOC]
+
 
 # Introduction
 If you want to operate your computer as master, then necessary skill is to control your `command line`. Each of beginners have a strange feelings about `command line`. I undestand it. `Graphical` environment is for basic work more intuitive without any extra knowledge. At first view of somebody who has no experience with terminal it could seem as something more difficult for same result as we can do with `graphical` env. The half of that opinion is true, you need to learn some extra knowledge to use terminal and the learning path will be more difficult and longer than to learn how to use `graphical` env. But when you learn the terminal you will be faster, preciser, and more powerful user of your computer because you get option to setup whatever you want. The `graphical` environment is just layer around commands in terminal with buttons and fancy windows. If you setup something in `graphical` env and click to button `apply` or `OK`, then some command is sent to computer and the command will be somthing in shell on background. And there you can see limitation of `graphical` environment. You can not have buttons to all setup, all commands, or the all combinations of commands. Then the `graphical` environment will lost their simplicity and intuitive. So if you don't want to use your computer more deep and you wanna just browsing the internet than `graphical` environment is absolutely ok without touch the terminal tool.

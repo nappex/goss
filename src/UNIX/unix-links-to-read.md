@@ -9,7 +9,7 @@ Summary: Seznam odkazů na zajimávě čtení o UNIX systémech
 Status: published
 ---
 
-[TOC]
+
 
 # BSD Family
 
