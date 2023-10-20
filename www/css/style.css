@@ -27,6 +27,10 @@ p {
     text-align: justify;
 }
 
+ol li {
+  margin-bottom: 3px;
+}
+
 /* CSS Simple Pre Code */
 code {
     background-color: lightgrey;
