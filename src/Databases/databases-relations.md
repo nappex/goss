@@ -1,6 +1,6 @@
 ---
 Title: Relace (vztah) mezi databázemi (tabulkami)
-Date: 2020-9-2
+Date: 2020-09-02
 Category: Databases
 Tags: databases, beginners, relations
 Slug: databases-relations

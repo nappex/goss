@@ -1,6 +1,6 @@
 ---
 Title: Python knihovny pro práci se soubory
-Date: 2020-9-2
+Date: 2020-09-02
 Category: Python
 Tags: python, beginners
 Slug: files-introduction

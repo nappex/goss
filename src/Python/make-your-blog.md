@@ -1,6 +1,6 @@
 ---
 Title: Create your own blog site
-Date: 2020-9-2
+Date: 2020-09-02
 Category: Python
 Tags: python, beginners, blog, static site generator
 Slug: make-your-blog

@@ -1,6 +1,6 @@
 ---
 Title: Konverze Jupyter notebooku do dalších formátů
-Date: 2020-9-2
+Date: 2020-09-02
 Category: Jupyter
 Tags: python, beginners
 Slug: jupyter-convertion

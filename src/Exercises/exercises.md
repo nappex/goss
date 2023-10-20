@@ -1,6 +1,6 @@
 ---
 Title: Cvičení k programování
-Date: 2020-9-3
+Date: 2020-09-03
 Category: Exercises
 Tags: exercises, beginners, scrapy
 Slug: exercises

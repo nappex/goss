@@ -1,6 +1,6 @@
 ---
 Title: Introduction to web scraping with python
-Date: 2020-9-3
+Date: 2020-09-03
 Category: Python
 Tags: python, beginners, scrapy
 Slug: python-scraping-introduction

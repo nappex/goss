@@ -1,6 +1,6 @@
 ---
 Title: Git - fix your history
-Date: 2020-8-31
+Date: 2020-08-31
 Category: Git
 Tags: git, intermediate
 Slug: git-fix-history

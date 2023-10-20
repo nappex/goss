@@ -1,6 +1,6 @@
 ---
 Title: Handle recursion
-Date: 2021-6-25
+Date: 2021-06-25
 Category: Exercises
 Tags: exercises, beginners, recursion
 Slug: handle_recursion

@@ -1,6 +1,6 @@
 ---
 Title: Confused about tools for virtual environment?
-Date: 2020-9-2
+Date: 2020-09-02
 Category: Python
 Tags: python, beginners, virtualenv
 Slug: virtual-environments-tools

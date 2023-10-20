@@ -1,6 +1,6 @@
 ---
 Title: Python a NoSql databáze mongoDB
-Date: 2020-9-3
+Date: 2020-09-03
 Category: Databases
 Tags: databases, beginners, mongodb
 Slug: python-mongodb-introduction
