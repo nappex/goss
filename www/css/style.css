@@ -31,6 +31,16 @@ ol li {
   margin-bottom: 3px;
 }
 
+span#pubdate, span#moddate {
+  font-size: 10pt;
+  font-style: italic;
+  color: grey;
+}
+
+h1 + p span#pubdate, h1 + p span#moddate {
+  font-size: 12pt;
+}
+
 /* CSS Simple Pre Code */
 code {
     background-color: lightgrey;
