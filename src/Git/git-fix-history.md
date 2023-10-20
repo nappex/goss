@@ -9,7 +9,7 @@ Summary: How can you fix your git history
 Status: published
 ---
 
-![git logo]({static}/images/git_logo.jpg)
+![git logo](/images/git_logo.jpg)
 
 
 

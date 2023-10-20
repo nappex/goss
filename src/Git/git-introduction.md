@@ -10,7 +10,7 @@ Summary: Basics about using git
 Status: published
 ---
 
-![git logo]({static}/images/git_logo.jpg)
+![git logo](/images/git_logo.jpg)
 
 
 
@@ -388,7 +388,7 @@ Abychom to mohli poslat do `originu` který není náš, musíme nejdříve na g
 
 ![Diagram workflow](https://naucse.python.cz/course/pyladies/git/collaboration/static/gh-workflow-diagram.svg)
 
-![scheme workflow]({static}/images/git_stages_flow.png)
+![scheme workflow](/images/git_stages_flow.png)
 
 # Ignorování souborů
 

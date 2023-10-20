@@ -15,7 +15,7 @@ Status: published
 
 Your home computer always contains two IP addresses. How local network works is described in picture below.
 
-![git logo]({static}/images/ip_scheme.png)
+![git logo](/images/ip_scheme.png)
 
 Icons used in image was created by [Mithun Raj](https://freeicons.io/profile/752) on [freeicons.io](https://freeicons.io). Thank you :)
 

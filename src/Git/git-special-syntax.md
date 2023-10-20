@@ -10,7 +10,7 @@ Summary: Tricks, tips and uncommon Syntax
 Status: published
 ---
 
-![git logo]({static}/images/git_logo.jpg)
+![git logo](/images/git_logo.jpg)
 
 
 

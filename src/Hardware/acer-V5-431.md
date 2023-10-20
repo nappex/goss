@@ -157,18 +157,18 @@ located on MotherBoard, see pictures below.
 
 First remove this cover on the back of the laptop.
 
-![Plastic cover]({static}/images/remove_cover.jpg)
+![Plastic cover](/images/remove_cover.jpg)
 
 If you have a RAM above the pins you have to remove the RAM.
 
 Then just short two pin below the G2101 for 20 - 30 second with for example steel tweezer.
 Finally disconnect cable leading under the case of laptop of left side.
 
-![Cooper pins G2101]({static}/images/motherboard.jpg)
+![Cooper pins G2101](/images/motherboard.jpg)
 
 Disconnected cable under the plastic case of laptop.
 
-![Disconnected cable]({static}/images/remove_cable.jpg)
+![Disconnected cable](/images/remove_cable.jpg)
 
 Firstly I was little scaried about to short some contacts on motherboard and
 it sounds crazy and really dangerous to me. But this approach really work for me
