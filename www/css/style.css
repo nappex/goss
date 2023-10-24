@@ -47,6 +47,37 @@ p.warning {
   color: red;
 }
 
+table {
+  border-collapse: collapse;
+  background: lightgrey;
+  border-radius: 15px;
+}
+
+table caption {
+  font-weight: bold;
+  font-style: italic;
+  text-decoration: underline;
+}
+
+th, td {
+  border: 1px solid white;
+  text-align: center;
+  padding: 3px 20px 3px 20px;
+}
+
+th {
+  background: grey;
+  color: lightsalmon;
+}
+
+th:first-child {
+  border-radius: 14px 0 0 0;
+}
+
+th:last-child {
+  border-radius: 0 14px 0 0;
+}
+
 /* CSS Simple Pre Code */
 code {
     background-color: lightgrey;
