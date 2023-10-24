@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="license" content="https://creativecommons.org/licenses/by/4.0/">
+    <meta name="referrer" content="origin">
+<meta name="referrer" content="origin">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta itemprop="publish-date" content="2023-10-19">
+    <title>Get metada of file with portable way</title>
+    <link rel="icon" type="image/png" size="16x16" href="/images/favicon-16x16.png">
+    <link rel="stylesheet" href="/css/style.css">
+  </head>
+
+
+  <body>
+
+<!--    Navigation is made by Erik Terwan    -->
+<!--          24th of November 2015          -->
+<!--              MIT License                -->
+
+    <nav role="navigation">
+      <div id="menuToggle">
+        <!--
+        A fake / hidden checkbox is used as click reciever,
+        so you can use the :checked selector on it.
+        -->
+        <input type="checkbox" />
+
+        <!--
+        Some spans to act as a hamburger.
+        They are acting like a real hamburger,
+        not that McDonalds stuff.
+        -->
+        <span></span>
+        <span></span>
+        <span></span>
+
+        <!--
+        Too bad the menu has to be inside of the button
+        but hey, it's pure CSS magic.
+        -->
+        <ul id="menu">
+          <a href="/"><li>Home</li></a>
+          <a href="/posts/"><li>Posts</li></a>
+          <a href="/categories/"><li>Categories</li></a>
+          <a href="/resources/"><li>Resources</li></a>
+          <a href="/about/"><li>About</li></a>
+          <a href="/contact/"><li>Contact</li></a>
+        </ul>
+      </div>
+    </nav>
+
+    <header>
+    </header>
+
+    <main>
+
+      <h1>Get metada of file with portable way</h1>
+      <p><span id="pubdate">Published on: 2023-10-19</span></p>
+      <h2>Try to use command <code>stat</code> with portable way</h2>
+      <p>
+        The command <code>stat</code> is not POSIX and if you'd like to use same syntax
+        on UNIX machines as macOS, *BSD or Linux you have a problem. The interface is different
+        for BSD derivates and Linux world. The reason is that BSD comes from AT&T code and
+        Linux uses GNU coreutils which has some differences.
+      </p>
+
+      <p>
+        I met this problem when I wanted to get and check modification time of files.
+        If you want to format output to show only modification time with <code>stat</code> comes from GNU/coreutils you'll write:
+      </p>
+
+      <pre><code class="language-sh">
+$ stat -c %Y file.txt
+      </code></pre>
+
+      <p>
+        ,but if you use <code>stat</code> from BSD, then:
+      </p>
+
+      <pre><code class="language-sh">
+$ stat -f %m file.txt
+      </code></pre>
+
+      <p>
+        You can see that <code>stat</code> is different for both the <code>option</code> and <code>formatting character</code>.
+      </p>
+
+      <h2>Hack with <code>awk</code> or <code>grep</code></h2>
+      <p>
+        Fortunately the BSD version of <code>stat</code> contains option <code>-x</code>, which
+        caused the output will be same as in Linux. Thanks to that we can use <code>awk</code> or <code>grep</code>
+        to get modification of timestamp.
+      </p>
+
+      <h3><code>grep</code></h3>
+
+      <pre><code class="language-sh">
+$ stat -x file.html | grep -i modify | cut -c 9-
+      </code></pre>
+
+      <h3><code>awk</code></h3>
+
+      <pre><code class="language-sh">
+$ stat -x file.html | awk '/Modify:/ {printf $0}' | cut -c 9-
+      </code></pre>
+
+      <p>
+        This approach has several drawbacks.
+        <ol>
+          <li>you get modify time in format which is difficult to use for comparisons for example</li>
+          <li>this output gives you only one type of time format and other format has to be get by other way</li>
+          <li>you have to distinct if you use command <code>stat</code> on Linux or BSD derivate, because the option <code>-x</code> can be used only in BSD derivates</li>
+        </ol>
+      </p>
+
+      <h3>Summary</h3>
+      It is not recommended easy portable way how to get modification time.
+
+      <h2>Find out which type of <code>stat</code> is used</h2>
+
+      <p>
+        Other approach is to find out which version of <code>stat</code> is used and pass
+        suitable option and formatting character to the command. See example below to get
+        modification timestamp.
+      <pre><code class="language-sh">
+# GNU coreutils have option --version
+if $(stat --version &>/dev/null)
+then
+  mod_time_fmt="-c %Y"
+else
+  mod_time_fmt="-f %m"
+fi
+      </code></pre>
+
+      <p>
+        By the code above we'll create portable version of <code>stat</code>. Except for example solaris which does not contain
+        command <code>stat</code> at all.
+      </p>
+
+      <p>
+        Same approach can be used when we was hacking with <code>awk</code> or <code>grep</code>, but here we get timestamp in seconds,x 
+        which can be easily compared.
+      </p>
+
+      <p>
+        Same approach can be done with type of system, run <code>uname</code> to get information if platform is Linux, Darwin(macOS) or BSD.
+      </p>
+
+      <h2>Use language for scripting as <code>Perl</code> or <code>Python</code></h2>
+
+      <p>
+        If you make something difficult or complicated you should leave scripting in shell
+        and instead use language which was created for or language which is more suitable to achieve your goal.
+        Perl and Python are scripting languages which are found on most systems (their scripts are very portable)
+        and their syntax is much more friendly then shell scripting.
+        They should contains any ordinary function which you need to get info about files.
+      </p>
+
+      <p>
+        If you still want to use only shell script you can use oneline call from shell script with scripting language.
+        Run Perl or Python code in shell script can be done with run the certain interpreter with option <code>-e</code> resp. <code>-c</code>.
+      </p>
+
+      <pre><code class="language-sh">
+$ file=path/to/file.txt
+$ perl -e "print((stat(\"$file\"))[9])"
+$ python -c "import os; print(os.stat(\"$file\").st_mtime, end='')"
+      </code></pre>
+
+      <h2>Check if one file is newer then other with POSIX</h2>
+
+      <p>
+        There is one POSIX solution to get information if FILE1 is newer than FILE2 (<code>FILE1 -nt FILE2</code>).
+        The solution below is described in <a href="https://man.freebsd.org/cgi/man.cgi?query=test&sektion=1&manpath=FreeBSD+13.2-RELEASE+and+Ports#EXAMPLES">FreeBSD documentation</a>.
+      </p>
+
+      <pre><code class="language-sh">
+$ test -n "$(find -L -- FILE1 -prune -newer FILE2 2>/dev/null)"
+      </code></pre>
+
+      <h2>Get modification time with <code>date</code> command</h2>
+      <p>
+        Unfortunately it is not POSIX solution, but it can be used on Linux and macOS.
+        Command <code>date</code> can show modification date with option <code>-r</code>. Other nice feature of <code>date</code>
+        is formatting the output of time with leading plus character <code>+</code>. After plus char you specify wanted output format. See example below.
+      </p>
+      <pre><code class="language-sh">
+$ date -r file.txt +%Y-%m-%d
+2023-10-20
+$ date -r file.txt +%Y/%m
+2023/10
+      </code></pre>
+
+      <h2>Resources</h2>
+
+      <ul>
+        <li><a href="https://unix.stackexchange.com/questions/349555/stat-modification-timestamp-of-a-file#349624" target="_blank">UNIX-stackexhange modification timestamp of files</a></li>
+        <li><a href="https://stackoverflow.com/questions/67199616/unix-file-metadata-portable-parsable-solution-e-g-posix-ubiquitous" target="_blank">UNIX file metadata portable solution</a></li>
+        <li><a href="https://stackoverflow.com/questions/27828585/posix-analog-of-coreutils-stat-command" target="_blank">POSIX analog for coreutils stat</a></li>
+        <li><a href="https://unix.stackexchange.com/questions/16640/how-can-i-get-the-size-of-a-file-in-a-bash-script/16645#16645" target="_blank">Get size of file portable solution</a></li>
+        <li><a href="https://unix.stackexchange.com/questions/128985/why-not-parse-ls-and-what-to-do-instead/129120#129120" target="_blank">Why not parse ls output</a></li>
+      </ul>
+
+    </main>
+
+    <footer>
+    </footer>
+
+  </body>
+
+</html>
+
