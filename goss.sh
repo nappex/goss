@@ -60,40 +60,79 @@ else
     MTIME_FMT="-f %Sm -t %Y-%m-%d"
 fi
 
-create_homepage() {
-    # list of last modified 10 posts, sorted by option -t
-    LAST_MODIFIED_POSTS=$(ls -t www/posts/*/** | grep -vi index.html | head -n 10)
-    # find www/posts/ -type f ! -name index.html printf "%"
-    #
-    # better approach will be to use find we can specify
-    # -type f && we specify ! -name index.html && we can print
-    # by printf dates of creation and modification a delimit by
-    # spaces. Then we have all need information about files which can be
-    # used as parameteres
+write_links_to_file() {
+    OUTPUT_FILE="$1"
+    FILES_LIST="$2"
 
-    cat $BEGIN_POST >$HOME_PAGE
-    printf "%${INDENT}s<h2>Last modified posts</h2>\n" >>$HOME_PAGE
-    printf "%${INDENT}s<ol>\n" >>$HOME_PAGE
+    printf "%${INDENT}s<ol>\n" >>$OUTPUT_FILE
 
     li_indent=$(( ${INDENT} + 2 ))
-    for file in $LAST_MODIFIED_POSTS
+    for file in $FILES_LIST
     do
         title=$(sed -n 's|.*<title>\(.*\)</title>.*|\1|p' $file)
-        pub_date=$(sed -n 's|.*date".*content="\(.*\)">.*|\1|p' $file)
+        pub_date=$(sed -n 's|.*date".*content="\(.*\)">$|\1|p' $file)
         mod_date=$(stat $MTIME_FMT $file | cut -d " " -f 1)
 
-        printf "%${li_indent}s<li><a href=%s>%s</a></br>\n" " " "${file#www}" "$title" >>$HOME_PAGE
-
-        if [ -n "$pub_date" ] && [ "$pub_date" != "$mod_date" ]
+        if [ -z "$pub_date" ]
         then
-            printf "%${li_indent}s<span id=\"pubdate\">Published on: %s</span> | <span id=\"moddate\">Modified on: %s</span></li>\n" " " "$pub_date" "$mod_date" >>$HOME_PAGE
+            echo ERROR Missing publish date: $file
+            return 1
+        fi
+
+        printf "%${li_indent}s<li><a href=%s>%s</a></br>\n" " " "${file#www}" "$title" >>$OUTPUT_FILE
+
+        if [ "$pub_date" != "$mod_date" ]
+        then
+            printf "%${li_indent}s<span id=\"pubdate\">Published on: %s</span> | <span id=\"moddate\">Modified on: %s</span></li>\n" " " "$pub_date" "$mod_date" >>$OUTPUT_FILE
         else
-            printf "%${li_indent}s<span class=\"home-pubdate\">Published on: %s</span></li>\n" " " "$pub_date" >>$HOME_PAGE
+            printf "%${li_indent}s<span class=\"home-pubdate\">Published on: %s</span></li>\n" " " "$pub_date" >>$OUTPUT_FILE
         fi
 
     done
 
-    printf "%${INDENT}s</ol>\n" >>$HOME_PAGE
+    printf "%${INDENT}s</ol>\n" >>$OUTPUT_FILE
+
+    return 0
+
+}
+
+create_homepage() {
+
+    cat $BEGIN_POST >$HOME_PAGE
+
+    # all posts sorted descending by modification time
+    # (recent modified as first)
+    POSTS="$(ls -t www/posts/*/** | grep -vi index.html)"
+
+    # NEW ADDED POSTS
+    tmp_dir="tmp"
+    mkdir "$tmp_dir"
+    tmp_file=".tmp/tmp.txt"
+    sorted=".tmp/sorted.txt"
+    for file in $POSTS
+    do
+        pub_date=$(sed -n 's|.*date".*content="\(.*\)">$|\1|p' $file)
+        printf "%s %s\n" $pub_date $file >>$tmp_file
+    done
+
+    cat $tmp_file | sort -r | head -n 10 | cut -d " " -f2 >>$sorted
+
+    printf "%${INDENT}s<h2>New posts</h2>\n" >>$HOME_PAGE
+    write_links_to_file "$HOME_PAGE" "$(cat $sorted)"
+    rm -r $tmp_dir
+
+    # LAST MODIFIES POSTS
+    printf "%${INDENT}s<h2>Last modified posts</h2>\n" >>$HOME_PAGE
+    # find www/posts/ -type f ! -name index.html printf "%"
+    # -type f && we specify ! -name index.html && we can print
+    # by printf dates of creation and modification and delimit by
+    # spaces. Unfortunately not all implemetation of find contains
+    # option -printf
+    #
+    # list of last modified 10 posts, sorted by option -t
+    write_links_to_file "$HOME_PAGE" "$(echo "$POSTS" | head -n 10)"
+
+
     cat $END_POST >>$HOME_PAGE
 
     return 0
