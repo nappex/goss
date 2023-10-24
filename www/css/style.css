@@ -41,6 +41,12 @@ h1 + p span#pubdate, h1 + p span#moddate {
   font-size: 12pt;
 }
 
+p.warning {
+  font-weight: bold;
+  font-style: italic;
+  color: red;
+}
+
 /* CSS Simple Pre Code */
 code {
     background-color: lightgrey;
