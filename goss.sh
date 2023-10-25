@@ -115,7 +115,7 @@ create_homepage() {
         printf "%s %s\n" $pub_date $file >>$tmp_file
     done
 
-    cat $tmp_file | sort -r | head -n 10 | cut -d " " -f2 >>$sorted
+    cat $tmp_file | sort -r | head | cut -d " " -f2 >>$sorted
 
     printf "%${INDENT}s<h2>New posts</h2>\n" >>$HOME_PAGE
     write_links_to_file "$HOME_PAGE" "$(cat $sorted)"
@@ -130,7 +130,7 @@ create_homepage() {
     # option -printf
     #
     # list of last modified 10 posts, sorted by option -t
-    write_links_to_file "$HOME_PAGE" "$(echo "$POSTS" | head -n 10)"
+    write_links_to_file "$HOME_PAGE" "$(echo "$POSTS" | head)"
 
 
     cat $END_POST >>$HOME_PAGE
@@ -169,7 +169,7 @@ render_md_to_html() {
                 --html-no-head-ids \
                 $file >>$html_file
 
-            #pub_date
+            # pub_date
             # sed -i "" '/<h1>/ a\'$'\n'"$pub_date"$'\n' $html_file
             # \a append new line after all match
             # sed -i "" '/<meta name/ a\'$'\n'"$meta_license"$'\n' $html_file
