@@ -115,7 +115,7 @@ create_homepage() {
         printf "%s %s\n" $pub_date $file >>$tmp_file
     done
 
-    cat $tmp_file | sort -r | head | cut -d " " -f2 >>$sorted
+    sort -r <$tmp_file | head | cut -d " " -f2 >>$sorted
 
     printf "%${INDENT}s<h2>New posts</h2>\n" >>$HOME_PAGE
     write_links_to_file "$HOME_PAGE" "$(cat $sorted)"
