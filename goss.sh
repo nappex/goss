@@ -107,8 +107,8 @@ create_homepage() {
     # NEW ADDED POSTS
     tmp_dir="tmp"
     mkdir "$tmp_dir"
-    tmp_file=".tmp/tmp.txt"
-    sorted=".tmp/sorted.txt"
+    tmp_file="tmp/tmp.txt"
+    sorted="tmp/sorted.txt"
     for file in $POSTS
     do
         pub_date=$(sed -n 's|.*date".*content="\(.*\)">$|\1|p' $file)
