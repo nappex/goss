@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="date" scheme="YYYY-MM-DD" content="2020-11-19">
+    <meta name="license" content="https://creativecommons.org/licenses/by/4.0/">
+    <meta name="referrer" content="origin">
+    <link rel="icon" type="image/png" size="16x16" href="/images/favicon-16x16.png">
+    <link rel="stylesheet" href="/css/style.css">
+    <title>Comparing objects in python</title>
+  </head>
+
+
+  <body>
+<!--    Navigation is made by Erik Terwan    -->
+<!--          24th of November 2015          -->
+<!--              MIT License                -->
+    <nav role="navigation">
+      <div id="menuToggle">
+        <!--
+        A fake / hidden checkbox is used as click reciever,
+        so you can use the :checked selector on it.
+        -->
+        <input type="checkbox" />
+
+        <!--
+        Some spans to act as a hamburger.
+        They are acting like a real hamburger,
+        not that McDonalds stuff.
+        -->
+        <span></span>
+        <span></span>
+        <span></span>
+
+        <!--
+        Too bad the menu has to be inside of the button
+        but hey, it's pure CSS magic.
+        -->
+        <ul id="menu">
+          <a href="/"><li>Home</li></a>
+          <a href="/posts/"><li>Posts</li></a>
+          <a href="/categories/"><li>Categories</li></a>
+          <a href="/resources/"><li>Resources</li></a>
+          <a href="/about/"><li>About</li></a>
+          <a href="/contact/"><li>Contact</li></a>
+        </ul>
+      </div>
+    </nav>
+
+
+    <header>
+    </header>
+
+    <main>
+
+<h1>Comparing objects in python</h1>
+      <p><span id=pubdate>Published on: 2020-11-19</span></p>
+<h1>Comparison operators</h1>
+<p><strong>Python basic comparison operators:</strong></p>
+<p>These operators compare the <strong>values</strong> of comparing objects. In other words we are comparing values saved inside the variable. Each int, float or string type is saved in memory as object in python. And we want to compare content of these objects with operators below.</p>
+<p>In generally, its are operators which we&#8217;ve already known from school.</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: center">Operator</th>
+<th style="text-align: center">Name</th>
+<th style="text-align: center">Example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: center"><code>==</code></td>
+<td style="text-align: center">equal</td>
+<td style="text-align: center">x == y</td>
+</tr>
+<tr>
+<td style="text-align: center"><code>!=</code></td>
+<td style="text-align: center">not equal</td>
+<td style="text-align: center">x != y</td>
+</tr>
+<tr>
+<td style="text-align: center"><code>&#62;</code></td>
+<td style="text-align: center">bigger</td>
+<td style="text-align: center">x &#62; y</td>
+</tr>
+<tr>
+<td style="text-align: center"><code>&#60;</code></td>
+<td style="text-align: center">lower</td>
+<td style="text-align: center">x &#60; y</td>
+</tr>
+<tr>
+<td style="text-align: center"><code>&#62;=</code></td>
+<td style="text-align: center">bigger or equal to</td>
+<td style="text-align: center">x &#62;= y</td>
+</tr>
+<tr>
+<td style="text-align: center"><code>&#60;=</code></td>
+<td style="text-align: center">lower or equal to</td>
+<td style="text-align: center">x &#60;= y</td>
+</tr>
+</tbody>
+</table>
+<hr/>
+<p><strong>Python identical operators:</strong></p>
+<p>These operators compared if two objects are same objects.
+For better understanding. Every object in python has its own <strong>id number</strong>.
+We can get id number of certain object in python by method <code>id()</code>.
+So when two objects are identical than they have same id number.</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: center">Operator</th>
+<th style="text-align: center">Description</th>
+<th style="text-align: center">Example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: center"><code>is</code></td>
+<td style="text-align: center">Returns True if compared objects are same, if id number is same for both</td>
+<td style="text-align: center">x is y</td>
+</tr>
+<tr>
+<td style="text-align: center"><code>is not</code></td>
+<td style="text-align: center">Returns True if compared objects are not same</td>
+<td style="text-align: center">x is not y</td>
+</tr>
+</tbody>
+</table>
+<p>See example below.</p>
+<p>Variable <code>a</code> and <code>b</code> have same values saved in but they have different id.</p>
+<pre><code class="language-shell">&#62;&#62;&#62; a = 3100
+&#62;&#62;&#62; b = 3100
+&#62;&#62;&#62; id(a)
+4332864560
+&#62;&#62;&#62; id(b)
+4332864880
+</code></pre>
+<h1>Identical objects - The singletones</h1>
+<p>The singleton is one of the simplest design pattern of object in Python.</p>
+<p>Examples of singleton are:</p>
+<ul>
+<li><code>None</code></li>
+<li><code>True</code></li>
+<li><code>False</code></li>
+</ul>
+<p>What does it means ? Whenever we create one of these object above in our code
+always will be one same object.</p>
+<p>It can&#8217;t be two <code>None</code> objects with different id number.</p>
+<p>Although if we have two and more <code>None</code> in our code, always it is referenced to one object saved in memory.</p>
+<pre><code class="language-shell">&#62;&#62;&#62; id(None)
+4407467184
+</code></pre>
+<p>All <code>None</code> objects in my certain code have id number equal to <strong>4407467184</strong>.</p>
+<h1>Difference between <code>==</code> and <code>is</code> in examples</h1>
+<pre><code class="language-shell">&#62;&#62;&#62; a = 3100
+&#62;&#62;&#62; b = 3100
+&#62;&#62;&#62; id_a = id(a)
+&#62;&#62;&#62; id_b = id(b)
+&#62;&#62;&#62; id_a
+4332864560
+&#62;&#62;&#62; id_b
+4332864880
+&#62;&#62;&#62; a is b
+False
+&#62;&#62;&#62; a == b
+True
+
+</code></pre>
+<p>Comparison <code>a is b</code> can be rewrite as <code>id_a == id_b</code>, so we just compare id number of each object, in other words if two id integers are same. In some cases it is much faster than compare values of objects, expecially when we compare list of values.</p>
+<p>Comparison <code>a == b</code> compares values saved in each variable. In this case we compare two integers saved in <code>3100 == 3100</code>.</p>
+<p>This explanation is same for <code>!=</code> and <code>is not</code>. But with vice versa logic.</p>
+<h1>Compare objects identical number in examples</h1>
+<p><strong><code>None</code> examples:</strong></p>
+<pre><code class="language-shell">&#62;&#62;&#62; def my_func():
+...     return None
+...
+&#62;&#62;&#62; oliver = {"age": 20}
+&#62;&#62;&#62; my_func() is None
+True
+&#62;&#62;&#62; oliver.get("height", None) is None
+True
+&#62;&#62;&#62; oliver.get("age", None) is None
+False
+&#62;&#62;&#62; oliver.get("age", None) is not None
+True
+</code></pre>
+<p><strong><code>True</code> examples:</strong></p>
+<pre><code class="language-shell">&#62;&#62;&#62; 3 == 3 is True
+True
+</code></pre>
+<p>Python will evaluate like that:</p>
+<p><code>3 == 3</code> = <code>True</code>, than <code>id(True) is id(True)</code> = <code>True</code></p>
+<p><strong>Two lists:</strong></p>
+<pre><code class="language-shell">&#62;&#62;&#62; a = [1, 2, 3]
+&#62;&#62;&#62; b = a
+&#62;&#62;&#62; a is b
+True
+&#62;&#62;&#62; a == b
+True
+&#62;&#62;&#62; b.append(4)
+&#62;&#62;&#62; a
+[1, 2, 3, 4]
+&#62;&#62;&#62; b
+[1, 2, 3, 4]
+&#62;&#62;&#62; a is b
+True
+&#62;&#62;&#62; a == b
+True
+&#62;&#62;&#62; del a
+&#62;&#62;&#62; a
+Traceback (most recent call last):
+  File "&#60;stdin&#62;", line 1, in &#60;module&#62;
+NameError: name &#39;a&#39; is not defined
+&#62;&#62;&#62; b
+[1, 2, 3, 4]
+&#62;&#62;&#62; a = [1, 2, 3, 4]
+&#62;&#62;&#62; a is b
+False
+&#62;&#62;&#62; a == b
+True
+</code></pre>
+<p>Notice at the end of code I&#8217;ve created new list <code>a</code> which has same values as list <code>b</code>. But when I&#8217;ve created new list, than the new list is a new object with new <code>id</code> number.</p>
+
+    </main>
+
+    <footer>
+    </footer>
+
+  </body>
+
+</html>
+

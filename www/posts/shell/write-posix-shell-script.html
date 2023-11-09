@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="date" scheme="YYYY-MM-DD" content="2023-02-26">
+    <meta name="license" content="https://creativecommons.org/licenses/by/4.0/">
+    <meta name="referrer" content="origin">
+    <link rel="icon" type="image/png" size="16x16" href="/images/favicon-16x16.png">
+    <link rel="stylesheet" href="/css/style.css">
+    <title>How to write POSIX shell script</title>
+  </head>
+
+
+  <body>
+<!--    Navigation is made by Erik Terwan    -->
+<!--          24th of November 2015          -->
+<!--              MIT License                -->
+    <nav role="navigation">
+      <div id="menuToggle">
+        <!--
+        A fake / hidden checkbox is used as click reciever,
+        so you can use the :checked selector on it.
+        -->
+        <input type="checkbox" />
+
+        <!--
+        Some spans to act as a hamburger.
+        They are acting like a real hamburger,
+        not that McDonalds stuff.
+        -->
+        <span></span>
+        <span></span>
+        <span></span>
+
+        <!--
+        Too bad the menu has to be inside of the button
+        but hey, it's pure CSS magic.
+        -->
+        <ul id="menu">
+          <a href="/"><li>Home</li></a>
+          <a href="/posts/"><li>Posts</li></a>
+          <a href="/categories/"><li>Categories</li></a>
+          <a href="/resources/"><li>Resources</li></a>
+          <a href="/about/"><li>About</li></a>
+          <a href="/contact/"><li>Contact</li></a>
+        </ul>
+      </div>
+    </nav>
+
+
+    <header>
+    </header>
+
+    <main>
+
+<h1>How to write POSIX shell script</h1>
+      <p><span id=pubdate>Published on: 2023-02-26</span></p>
+<h2>Introduction</h2>
+<p>Bourne shell - was the default shell for Version 7 Unix. Unix-like systems continue to have <code>&#47;bin&#47;sh</code>—which will be the Bourne shell, but rather a symbolic link or hard link to a compatible shell(ksh, bash, zsh, &#8230;)—even when other shells are used by most users.[3]</p>
+<p>POSIX - The Portable Operating System Interface (POSIX, with pos pronounced as in positive, not as in pose[1]) is a family of standards specified by the IEEE Computer Society for maintaining compatibility between operating systems.[2]</p>
+<p>Nowadays <code>&#47;bin&#47;sh</code> is not a Bourne shell on any system anymore.
+Even the Solaris was one of the last major system which included it has now switched to a POSIX <code>sh</code> for its <code>&#47;bin&#47;sh</code> in Solaris 11.[1]
+During early 70s the <code>&#47;bin&#47;sh</code> was the <strong>Thompson shell</strong>.[1]
+The <strong>Bourne shell</strong> replaced the <strong>Thompson shell</strong> in Unix V7 in 1979.[1]
+The <code>&#47;bin&#47;sh</code> has been the <strong>Bourne shell</strong> for many years thereafter (or the <strong>Almquist shell</strong>, a free reimplementation on BSDs).[1]</p>
+<p>One shell that is compatible with most other simple shells, is dash, Debian default system shell, which is a derivative of the older BSD ash.[6]</p>
+<h2>Portability</h2>
+<p>Unfortunately, making a shell script &#8216;POSIX-compliant&#8217; is usually easier than making it run on any real-world shell. The only real-world sensible recommendation is test your script in several shells. Like the list: dash, posh, lksh, and bash &#8211;posix. Solaris is a world on its own, probably you will need to test against &#47;bin&#47;sh and xpg4&#47;sh.[6]</p>
+<p>Unfortunately, <strong>&#8216;portable&#8217;</strong> is usually a stronger requirement than <strong>&#8216;POSIX-compliant&#8217;</strong> for shell scripts. That is, writing something that runs on any POSIX shell isn&#8217;t too hard, but getting it to run on any <strong>real-world shell</strong> is harder.[7]</p>
+<p>You can start by installing every shell in your package manager, in particular debian&#8217;s <strong>posh</strong> sounds like what you want (Policy-compliant Ordinary SHell). Debian&#8217;s policy is POSIX with a few exceptions (echo -n specified, local&#8230;).[7]</p>
+<p>Beyond that though, testing has to cover a few shells (&#47;bin&#47;sh especially) on a range of platforms. I test on Solaris (&#47;bin&#47;sh and xpg4&#47;sh), and BSD. AIX and HP-UX are very compliant and don&#8217;t cause problems. bash is a little world of its own.[7]</p>
+<p>I&#8217;d recommend the <a href="http://www.gnu.org/software/autoconf/manual/autoconf.html#Portable-Shell">Autoconf guide to portable shell</a>, which is absolutely brilliant and saves a lot of time. Large chunks of it are obsolete, but that&#8217;s OK; just skip TruUnix and Ultrix and so on if you don&#8217;t care![7]</p>
+<h2>Arrays</h2>
+<p>The Bourne shell or the POSIX sh language specification don&#8217;t support arrays. Or rather they have only one array: the positional parameters ($1, $2, $@, so one array per function as well).[1]</p>
+<p><code>ksh88</code> did have arrays which you set with <code>$ set -A</code>, but that <strong>didn&#8217;t get specified in the POSIX sh</strong> as the syntax is <strong>awkward</strong> and <strong>not very usable!!!</strong>[1] Example: <code>$ set -A array_name 1 2 3</code>, but when you run this line in bash you have a problem. Do not use this kind of array in POSIX shell script.</p>
+<p>Other shells with array&#47;lists variables include: <code>csh&#47;tcsh</code>, <code>rc</code>, <code>es</code>, <code>bash</code>, <code>yash</code>, <code>zsh</code>, <code>fish</code> each handle arrays with a different syntax.
+<code>csh&#47;tcsh</code>, <code>rc</code>, <code>es</code>, <code>bash</code>  mostly copied the ksh syntax the ksh93 way.
+<code>rc</code> the shell of the once to-be successor of Unix.
+<code>fish</code> and <code>zsh</code> being the most consistent ones.[1]</p>
+<p>In standard <code>sh</code> (also works in modern versions of the Bourne shell):</p>
+<pre><code class="language-sh">set &#39;1st element&#39; 2 3 # setting the array
+
+set -- "$@" more # adding elements to the end of the array
+
+shift 2 # removing elements (here 2) from the beginning of the array
+
+printf &#39;&#60;%s&#62;\n&#39; "$@"    # passing all the elements of the $@ array
+                        # as arguments to a command
+
+for i do # looping over the  elements of the $@ array ($1, $2...)
+  printf &#39;Looping over "%s"\n&#39; "$i"
+done
+
+printf &#39;%s\n&#39; "$1" # accessing individual element of the array.
+                   # up to the 9th only with the Bourne shell though
+                   # (only the Bourne shell), and note that you need
+                   # the braces (as in "${10}") past the 9th in other
+                   # shells (except zsh, when not in sh emulation and
+                   # most ash-based shells).
+
+printf &#39;%s\n&#39; "$# elements in the array"
+
+printf &#39;%s\n&#39; "$*" # join the elements of the array with the
+                   # first character (byte in some implementations)
+                   # of $IFS (not in the Bourne shell where it&#39;s on
+                   # space instead regardless of the value of $IFS)
+</code></pre>
+<p>Note:
+In the Bourne shell and ksh88, $IFS must contain the space character for &#8220;$@&#8221; to work properly (a bug), and in the Bourne shell, you can&#8217;t access elements above $9 (${10} won&#8217;t work, you can still do shift 1; echo &#8220;$9&#8221; or loop over them)).[1]</p>
+<p>Also check:
+<a href="https://www.baeldung.com/linux/posix-shell-array">POSIX shell array article</a>, where is recommend to use the command <code>set</code> with double-dash. The double-dash mark the end of options.</p>
+<pre><code class="language-sh">$ set -- 1 2 3
+</code></pre>
+<p>Manual page of <code>ksh93</code> say about <code>set --</code> following:</p>
+<p><code>--</code>      Do not change any of the options; useful in setting $1 to a value beginning with -. If no arguments follow this option then the positional parameters are unset.</p>
+<p><a href="https://stackoverflow.com/questions/53747156/array-under-sh-shell-not-bash">stackoverflow topic</a></p>
+<h2>Indirect variable reference</h2>
+<p>If we want to get value from variable, which name is saved to another variable.</p>
+<pre><code class="language-sh">$ x=10
+$ myvar=x
+$ eval "value=\${$myvar}"
+$ echo "$value"
+10
+</code></pre>
+<h1>Sources</h1>
+<ul>
+<li>[1] <a href="https://unix.stackexchange.com/questions/137566/arrays-in-unix-bourne-shell/137571#137571">stackexchange answer</a></li>
+<li>[2] <a href="https://en.wikipedia.org/wiki/POSIX">wikipedia POSIX</a></li>
+<li>[3] <a href="https://en.wikipedia.org/wiki/Bourne_shell">wikipedia Bourne shell</a></li>
+<li>[4] <a href="https://steinbaugh.com/posts/posix.html">POSIX shell scripting</a></li>
+<li>[5] Check POSIX syntax of your script <a href="https://www.shellcheck.net/">online</a></li>
+<li>[6] <a href="https://stackoverflow.com/a/40922501">stackoverflow answer</a></li>
+<li>[7] <a href="https://unix.stackexchange.com/questions/48786/how-can-i-test-for-posix-compliance-of-shell-scripts">unix.stackexchange answer</a></li>
+</ul>
+
+    </main>
+
+    <footer>
+    </footer>
+
+  </body>
+
+</html>
+

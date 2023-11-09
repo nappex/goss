@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="date" scheme="YYYY-MM-DD" content="2020-11-02">
+    <meta name="license" content="https://creativecommons.org/licenses/by/4.0/">
+    <meta name="referrer" content="origin">
+    <link rel="icon" type="image/png" size="16x16" href="/images/favicon-16x16.png">
+    <link rel="stylesheet" href="/css/style.css">
+    <title>Python project structure</title>
+  </head>
+
+
+  <body>
+<!--    Navigation is made by Erik Terwan    -->
+<!--          24th of November 2015          -->
+<!--              MIT License                -->
+    <nav role="navigation">
+      <div id="menuToggle">
+        <!--
+        A fake / hidden checkbox is used as click reciever,
+        so you can use the :checked selector on it.
+        -->
+        <input type="checkbox" />
+
+        <!--
+        Some spans to act as a hamburger.
+        They are acting like a real hamburger,
+        not that McDonalds stuff.
+        -->
+        <span></span>
+        <span></span>
+        <span></span>
+
+        <!--
+        Too bad the menu has to be inside of the button
+        but hey, it's pure CSS magic.
+        -->
+        <ul id="menu">
+          <a href="/"><li>Home</li></a>
+          <a href="/posts/"><li>Posts</li></a>
+          <a href="/categories/"><li>Categories</li></a>
+          <a href="/resources/"><li>Resources</li></a>
+          <a href="/about/"><li>About</li></a>
+          <a href="/contact/"><li>Contact</li></a>
+        </ul>
+      </div>
+    </nav>
+
+
+    <header>
+    </header>
+
+    <main>
+
+<h1>Python project structure</h1>
+      <p><span id=pubdate>Published on: 2020-11-02</span></p>
+<h1>Intro</h1>
+<p>There is no way how to make scheme of python project universal or general. Python let you done your project how do you want and there are no restrictions.
+But there are some common files or directories which you can notice in almost every project. These cases are described below.</p>
+<h1>Files</h1>
+<h2>README</h2>
+<ul>
+<li>README</li>
+<li>README.txt</li>
+<li>README.rst</li>
+<li>README.md</li>
+</ul>
+<h3>Jak má vypadat README</h3>
+<ol>
+<li>název projektu,</li>
+<li>stručný popis projektu (jedna až dvě věty),</li>
+<li>krátký návod k instalaci projektu,</li>
+<li>krátký návod ke spuštění projektu,</li>
+<li>krátký návod k používání projektu, případně odkaz na rozsáhlejší dokumentaci,</li>
+<li>pokud má projekt testy, informace o tom, jak je spustit,</li>
+<li>informace o tom, jak se zapojit do vývoje projektu,</li>
+<li>informace o autorech projektu,</li>
+<li>informace o licenci (více se licencích dozvíš později).</li>
+</ol>
+<p>Více info na: <a href="naucse.python.cz/2020/brno-jaro-pondeli/git/collaboration/">naucse.python.cz&#47;2020&#47;brno-jaro-pondeli&#47;git&#47;collaboration&#47;</a></p>
+<h2>LICENSE</h2>
+<h2>setup</h2>
+<ul>
+<li>setup.py</li>
+<li>setup.cfg</li>
+</ul>
+<h2>script</h2>
+<h2>modules</h2>
+<h2>tox.ini</h2>
+<h2>requirements.txt</h2>
+<ul>
+<li>test_requirements.txt</li>
+<li>dev_requirements.txt</li>
+<li>requirements-dev.txt</li>
+</ul>
+<h2>.gitignore</h2>
+<h2>.travis.yml</h2>
+<h2>.python-version</h2>
+<p>This file we can see in project which using tool <a href="https://github.com/pyenv">pyenv</a>.
+This library handle python versions in PC, virtual environments etc.
+With that file pyenv recognize which python version or which virtual
+environment is set for this project.</p>
+<h2>Makefile</h2>
+<h1>Directories</h1>
+<h2>docs</h2>
+<h2>tests</h2>
+<h2>.github</h2>
+
+    </main>
+
+    <footer>
+    </footer>
+
+  </body>
+
+</html>
+

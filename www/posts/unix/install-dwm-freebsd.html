@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="date" scheme="YYYY-MM-DD" content="2022-06-01">
+    <meta name="license" content="https://creativecommons.org/licenses/by/4.0/">
+    <meta name="referrer" content="origin">
+    <link rel="icon" type="image/png" size="16x16" href="/images/favicon-16x16.png">
+    <link rel="stylesheet" href="/css/style.css">
+    <title>Instalace suckless dwm na FreeBSD</title>
+  </head>
+
+
+  <body>
+<!--    Navigation is made by Erik Terwan    -->
+<!--          24th of November 2015          -->
+<!--              MIT License                -->
+    <nav role="navigation">
+      <div id="menuToggle">
+        <!--
+        A fake / hidden checkbox is used as click reciever,
+        so you can use the :checked selector on it.
+        -->
+        <input type="checkbox" />
+
+        <!--
+        Some spans to act as a hamburger.
+        They are acting like a real hamburger,
+        not that McDonalds stuff.
+        -->
+        <span></span>
+        <span></span>
+        <span></span>
+
+        <!--
+        Too bad the menu has to be inside of the button
+        but hey, it's pure CSS magic.
+        -->
+        <ul id="menu">
+          <a href="/"><li>Home</li></a>
+          <a href="/posts/"><li>Posts</li></a>
+          <a href="/categories/"><li>Categories</li></a>
+          <a href="/resources/"><li>Resources</li></a>
+          <a href="/about/"><li>About</li></a>
+          <a href="/contact/"><li>Contact</li></a>
+        </ul>
+      </div>
+    </nav>
+
+
+    <header>
+    </header>
+
+    <main>
+
+<h1>Instalace suckless dwm na FreeBSD</h1>
+      <p><span id=pubdate>Published on: 2022-06-01</span></p>
+<h1>Úvod</h1>
+<p>Tento článek je stále pod vývojem. Ne všechny body jsou mi zcela jasné.
+Nicméně, už nyní zde najdete postup, který je možno úspěšně použít a bude
+vše fungovat.</p>
+<p>Později bych rád doplnil i instalaci přes porty, ale nemám je ještě dostatečně
+zvládnuty a pro začátek si vystačíme s instalalcí předkompilovaných balíčků.
+Pokročilejší zvládnou instalaci pomocí portů i bez tohoto návodu.</p>
+<p>Anglická verze <a href="">zde</a> nebo na konci článku.
+English version <a href="">here</a> or at bottom of this article.</p>
+<h1>Příprava</h1>
+<h2>Instalace git</h2>
+<p>Program <code>git</code> budeme potřebovat abychom byli schopni
+stáhnout zdrojové kódu projektu dwm pomocí příkazu <code>git clone</code>.
+Zdrojové kódy lze stáhnout i jako <code>.tar</code> soubory, ovšem při různých změnách
+konfiguračních souborů se tyto změny lépe spravují pomocí <code>git</code> hned od začátku.
+To je čistě můj laický názor, který se může v budoucnu změnit.</p>
+<pre><code class="language-sh">$ sudo pkg install git
+</code></pre>
+<h2>Instalace xorg</h2>
+<p>Program <code>xorg</code> je open source X Window System, který poskytuje
+grafické prostředí pro uživatele. Funguje na komunikaci
+mezi XServer a XClient, kde XClient posílá požadavky typu, potřebuji
+vykreslit takové okno apod. <code>Xorg</code> neurčuje, jak co má vypadat, umístění
+jednotlivých prvků jako tlačítka nebo způsob pohybu jendotlivých oken.
+Tohle celé nechává na window managerech, jako je např. dwm
+nebo na robustnějších desktop prostředích jako je GNOME nebo KDE.
+Desktop prostředí už obsahuje i celé sady aplikací,
+které jsou vytvořené přímo na dané prostředí.
+U malých sítí nebo jednotlivých počítačích je většinou Xserver a XClient
+na jednom počítači.</p>
+<p>Níže uvedený příkaz nainstaluje i věci, které nejsou pro <code>dwm</code> nutné.
+Bohužel v tuto chvíli nejsem schopen s jistotou
+říct, které balíčky jsou nutné a které nikoliv. Daní za instalaci celého
+<code>xorg</code> v tomto návodu je, že budete
+mít nějaké balíčky navíc, což není hrůza, ale do budoucna
+je dobré mít věci pod kontrolou a chci tuto část přepracovat, aby byla přesná.</p>
+<pre><code class="language-sh">$ sudo pkg install xorg
+</code></pre>
+<p>Instalace <code>xorg</code> je součástí oficiální
+<a href="https://docs.freebsd.org/en/books/handbook/x11/">Handbook pro FreeBSD</a>,
+kde naleznete další uvedené kroky.</p>
+<p>Pokud <code>xorg</code> instalujete na počítač, kde historicky už <code>xorg</code> instalován
+byl, je lepší resetovat konfigurační soubory
+v domovském adresáři daného uživatele.</p>
+<pre><code class="language-sh">$ mv &#47;etc&#47;X11&#47;xorg.conf ~&#47;xorg.conf.etc
+$ mv &#47;usr&#47;local&#47;etc&#47;X11&#47;xorg.conf ~&#47;xorg.conf.localetc
+</code></pre>
+<p>Dále je dobré přidat uživatale do skupiny <code>wheel</code> nebo <code>video</code>
+kvůli 3D akceleraci.</p>
+<pre><code class="language-sh">$ pw groupmod video -m jru || pw groupmod wheel -m jru
+</code></pre>
+<p>V tuto chvíli si můžete zapnout defaultní window manager <code>TWM</code>,
+který byl nainstalován také, pomocí příkazu:</p>
+<pre><code class="language-sh">$ startx
+</code></pre>
+<p>Pokud chcete <code>TWM</code> window manager vypnout napište do terminálu <code>exit</code></p>
+<p>### Nastavení xorg</p>
+<p>Tato kapitola se dodělává.</p>
+<h2>Instalace závislostí pro dwm</h2>
+<p>NEODZKOUŠENO</p>
+<pre><code class="language-sh">$ pkg install git xorg-server xorg-fonts-truetype gcr devel&#47;glib20 \
+xorg-fonts-type1 p5-X11-Xlib p5-PkgConfig xauth xrandr xinit libXft xrdb webkit2-gtk3 \
+feh xf86-input-mouse xf86-input-keyboard linux-c7-libpng
+</code></pre>
+<h1>Instalace suckless tools - dwm, dmenu, st</h1>
+<p>Podobný článek jako je tento je například <a href="https://horodistea.wordpress.com/2020/02/06/compiling-suckless-tools-on-freebsd/">zde</a></p>
+<p>Nejdříve si uděláme složku, kde jednotlivé budeme mít uloženy zdrojáky
+jednotlivých nástrojů.</p>
+<pre><code class="language-sh">$ cd ~
+$ mkdir .suckless_dwm
+$ cd .suckless_dwm
+</code></pre>
+<p>Následně stáhneme všechny zdrojové kódy pomocí <code>git clone</code></p>
+<pre><code class="language-sh">$ git clone https:&#47;&#47;git.suckless.org&#47;dwm
+$ git clone https:&#47;&#47;git.suckless.org&#47;dmenu
+$ git clone https:&#47;&#47;git.suckless.org&#47;st
+</code></pre>
+<h2>Instalace dwm</h2>
+<p>K instalaci jsem použil <a href="https://forums.freebsd.org/threads/solved-setting-up-dwm-in-freebsd.81729/">vlákno</a> z FreeBSD fóra.</p>
+<p>Přesuneme se do složky se zdrojovým kódem <code>dwm</code></p>
+<pre><code class="language-sh">$ cd ~&#47;.suckless_dwm&#47;dwm
+</code></pre>
+<p>Poté musíme upravit konfigurační soubour <code>~&#47;.suckless_dwm&#47;dwm&#47;config.mk</code></p>
+<pre><code class="language-sh">$ vim `~&#47;.suckless_dwm&#47;dwm&#47;config.mk`
+</code></pre>
+<p>V souboru <code>config.mk</code> je nutno provést tyto změny:</p>
+<pre><code>X11INC = &#47;usr&#47;X11R6&#47;include             -&#62;  X11INC = &#47;usr&#47;local&#47;include
+X11LIB = &#47;usr&#47;X11R6&#47;lib                 -&#62;  X11LIB = &#47;usr&#47;local&#47;lib
+FREETYPEINC = &#47;usr&#47;include&#47;freetype2    -&#62;  FREETYPEINC = &#47;usr&#47;local&#47;include&#47;freetype2
+</code></pre>
+<p>Nakonec provedeme samotnou instalaci</p>
+<pre><code class="language-sh">$ cd ~&#47;.suckless_dwm&#47;dwm
+$ make
+$ sudo make clean install
+</code></pre>
+<p>Zde bych rád vysvětlit posloupnost jednotlivých příkazů, které nemusí
+být začátečníkovi, který nemá zkušenost s kompilací hned zřejmé.
+Vycházím z tohoto <a href="https://stackoverflow.com/questions/10961439/why-always-configure-make-make-install-as-3-separate-steps">vlákna na stackoverflow</a>.</p>
+<p>První <code>make</code> je ve skutečnosti zkratka pro <code>make all</code> a udělá build systému,
+který se může skládat z několika různých kroků, které si autor nastaví.
+Většinou tento příkaz není potřeba dělat, protože projekty jsou většinou
+vytvořeny tak, že fungují správně i když zadáte samotný příkaz <code>make install</code>.
+Ale pro jistotu je vždy lepší udělat tento mezikrok.</p>
+<p><code>make clean install</code> - už přímo instaluje požadované věci do systému. <code>clean</code>
+většinou odstraní soubory o kterých se ví, že nahradí při instalaci novými.</p>
+<p>Posledním bodem je vytvoření souboru <code>.xinitrc</code></p>
+<pre><code class="language-sh">$ echo "exec dwm" &#62;&#62; ~&#47;.xinitrc
+</code></pre>
+<p>nebo celou cestu</p>
+<pre><code class="language-sh">$ echo "exec &#47;usr&#47;local&#47;bin&#47;dwm" &#62;&#62; ~&#47;.xinitrc
+</code></pre>
+<p>Teď když zadáme příkaz <code>startx</code>, tak se nám už místo defaultního <code>TWM</code>
+spustí <code>dwm</code>.</p>
+<h2>Instalace dmenu</h2>
+<p>Instalace je skoro totožná jako v případě <code>dwm</code>.</p>
+<p>Přesuneme se do složky se zdrojovým kódem <code>dmenu</code></p>
+<pre><code class="language-sh">$ cd ~&#47;.suckless_dwm&#47;dmenu
+</code></pre>
+<p>Poté musíme upravit konfigurační soubour <code>~&#47;.suckless_dwm&#47;dmenu&#47;config.mk</code></p>
+<pre><code class="language-sh">$ vim `~&#47;.suckless_dwm&#47;dmenu&#47;config.mk`
+</code></pre>
+<p>V souboru <code>config.mk</code> je nutno provést tyto změny:</p>
+<pre><code>X11INC = &#47;usr&#47;X11R6&#47;include             -&#62;  X11INC = &#47;usr&#47;local&#47;include
+X11LIB = &#47;usr&#47;X11R6&#47;lib                 -&#62;  X11LIB = &#47;usr&#47;local&#47;lib
+FREETYPEINC = &#47;usr&#47;include&#47;freetype2    -&#62;  FREETYPEINC = &#47;usr&#47;local&#47;include&#47;freetype2
+</code></pre>
+<p>Nakonec provedeme samotnou instalaci</p>
+<pre><code class="language-sh">$ cd ~&#47;.suckless_dwm&#47;dmenu
+$ make
+$ sudo make clean install
+</code></pre>
+<h2>Instalace st</h2>
+<p>Instalace je skoro totožná jako v případě <code>dwm</code> a <code>dmenu</code>.</p>
+<p>Přesuneme se do složky se zdrojovým kódem <code>st</code></p>
+<pre><code class="language-sh">$ cd ~&#47;.suckless_dwm&#47;st
+</code></pre>
+<p>Poté musíme upravit konfigurační soubour <code>~&#47;.suckless_dwm&#47;st&#47;config.mk</code></p>
+<pre><code class="language-sh">$ vim `~&#47;.suckless_dwm&#47;st&#47;config.mk`
+</code></pre>
+<p>V souboru <code>config.mk</code> je nutno provést tyto změny:</p>
+<pre><code>X11INC = &#47;usr&#47;X11R6&#47;include             -&#62;  X11INC = &#47;usr&#47;local&#47;include
+X11LIB = &#47;usr&#47;X11R6&#47;lib                 -&#62;  X11LIB = &#47;usr&#47;local&#47;lib
+
+tímto řadkem si nejsem jistý
+FREETYPEINC = &#47;usr&#47;include&#47;freetype2    -&#62;  FREETYPEINC = &#47;usr&#47;local&#47;include&#47;freetype2
+</code></pre>
+<p>Namísto <code>FREETYPEINC</code> zkus najít <code>PKG_CONFIG</code>
+a jeho hodnotu změň na:</p>
+<pre><code>PKG_CONFIG=&#47;usr&#47;local&#47;bin&#47;pkg-config
+</code></pre>
+<p>Nakonec provedeme samotnou instalaci</p>
+<pre><code class="language-sh">$ cd ~&#47;.suckless_dwm&#47;dmenu
+$ make
+$ sudo make clean install
+</code></pre>
+<p>Zde byste měli dostat chybu něco jako:</p>
+<pre><code class="language-sh">tic -sx st.info
+
+Error: exec(tic) file not found
+</code></pre>
+<p>Tímto problémem se zabývá toto <a href="https://forums.freebsd.org/threads/st-terminal-convert-terminfo-to-termcap.75326/">vlákno</a>, které jsem v zásadě použil
+i pro vyřešení tohoto problému.</p>
+<p>Musíme nainstalovat <code>ncurses</code>, čímž získáme <code>tic</code>.</p>
+<pre><code class="language-sh">$ sudo pkg install ncurses
+</code></pre>
+<p>Instalace by měla automaticky nalézt i závislost <code>term-db</code></p>
+<p>Po těchto krocích už instalace projde bez errorů. Nicméně je nutné ji
+ještě prozkoumat a zanalyzovat.</p>
+<h1>Jak používat dwm</h1>
+<ul>
+<li>https:&#47;&#47;dwm.suckless.org&#47;tutorial&#47;</li>
+<li>https:&#47;&#47;srobb.net&#47;dwm.html</li>
+</ul>
+
+    </main>
+
+    <footer>
+    </footer>
+
+  </body>
+
+</html>
+

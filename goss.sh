@@ -20,36 +20,7 @@ then
     set -o shwordsplit 2>/dev/null
 fi
 
-#TEMPLATES
-HEAD_TPL="templates/_head.html"     # 1. part
-NAV_TPL="templates/_nav.html"       # 2. part
-HEADER_TPL="templates/_header.html" # 3. part
-# between 3. and 4. part insert content of yout html page
-TAIL_TPL="templates/_tail.html"     # 4. part
-
-# first part of post template, everythign above <main> (incl.)
-BEGIN_POST="templates/begin_post.html"
-cat $HEAD_TPL >$BEGIN_POST
-cat $NAV_TPL >>$BEGIN_POST
-cat $HEADER_TPL >>$BEGIN_POST
-
-# last part of post template, everythign below </main> (incl.)
-END_POST="templates/end_post.html"
-cat $TAIL_TPL >$END_POST
-
-# CREATE POST TEMPLATE
-POST_TPL="templates/post.html" # is 1+2+3+4
-cat $BEGIN_POST >$POST_TPL
-cat $END_POST >>$POST_TPL
-
-
-#GENERATED PAGES
-HOME_PAGE="www/index.html"
-POSTS="www/posts/index.html"
-PYTHON="www/posts/python/index.html"
-
-#VARIABLES FOR TEXT MODIFICATION
-INDENT=6
+source ./config.sh
 
 # Set formatting to get mod_date via stat
 # for Linux coreutils stat and BSD stat
@@ -60,66 +31,111 @@ else
     MTIME_FMT="-f %Sm -t %Y-%m-%d"
 fi
 
-write_links_to_file() {
-    OUTPUT_FILE="$1"
-    FILES_LIST="$2"
+# all posts sorted descending by modification time
+# (recent modified as first)
+POSTS="$(ls -t www/posts/*/** | grep -vi index.html)"
 
-    printf "%${INDENT}s<ol>\n" >>$OUTPUT_FILE
+capitalize_str() {
+    if [ -z "$1" ]; then
+        echo "ERROR: capitalize_str missing argument" >&2
+        return 1
+    fi
+    word="$1"
 
-    li_indent=$(( ${INDENT} + 2 ))
-    for file in $FILES_LIST
-    do
-        title=$(sed -n 's|.*<title>\(.*\)</title>.*|\1|p' $file)
-        pub_date=$(sed -n 's|.*date".*content="\(.*\)">$|\1|p' $file)
-        mod_date=$(stat $MTIME_FMT $file | cut -d " " -f 1)
+    # take substring and with 'tr' change cas to upper
+    local capitalized_char="$(expr "$word" : '\(^.\).*' | tr '[a-z]' '[A-Z]')"
+    # cut all after first char with 'cut'
+    local rest="$( echo $word | cut -c2- )"
 
-        if [ -z "$pub_date" ]
-        then
-            echo ERROR Missing publish date: $file
+    printf "%s%s\n" "$capitalized_char" "$rest"
+
+    return 0
+}
+
+path_to_html_link() (
+    local filepath="$1"
+    local indent=$(( INDENT + ${3:-2} ))
+
+    if [ -f $filepath ]; then
+        local title=$(sed -n 's|.*<title>\(.*\)</title>.*|\1|p' $filepath)
+        local pub_date=$(sed -n 's|.*date".*content="\(.*\)">$|\1|p' $filepath)
+        local mod_date=$(stat $MTIME_FMT $filepath | cut -d " " -f 1)
+
+        if [ -z "$pub_date" ]; then
+            echo ERROR Missing publish date: $filepath >&2
             return 1
         fi
 
-        printf "%${li_indent}s<li><a href=%s>%s</a></br>\n" " " "${file#www}" "$title" >>$OUTPUT_FILE
+    fi
 
-        if [ "$pub_date" != "$mod_date" ]
-        then
-            printf "%${li_indent}s<span id=\"pubdate\">Published on: %s</span> | <span id=\"moddate\">Modified on: %s</span></li>\n" " " "$pub_date" "$mod_date" >>$OUTPUT_FILE
+    if [ -z "$title" ]; then
+        title="$( capitalize_str "${filepath##*/}" )"
+        title="${title%.*}"
+    fi
+
+    printf "%${indent}s<li><a href=%s>%s</a></br>\n" " " "${filepath#www}" "$title"
+
+    if [ -f $filepath ]; then
+        if [ "$pub_date" != "$mod_date" ]; then
+            printf "%${indent}s<span id=\"pubdate\">Published on: %s</span> | <span id=\"moddate\">Modified on: %s</span></li>\n" " " "$pub_date" "$mod_date"
         else
-            printf "%${li_indent}s<span class=\"home-pubdate\">Published on: %s</span></li>\n" " " "$pub_date" >>$OUTPUT_FILE
+            printf "%${indent}s<span class=\"home-pubdate\">Published on: %s</span></li>\n" " " "$pub_date"
         fi
-
-    done
-
-    printf "%${INDENT}s</ol>\n" >>$OUTPUT_FILE
+    fi
 
     return 0
+)
 
+write_html_links_to_file() {
+    local files_list="$1"
+    local output_file="$2"
+
+    printf "%${INDENT}s<ol>\n" >>$output_file
+
+    for file in $files_list; do
+        path_to_html_link $file 2 >>$output_file
+    done
+
+    printf "%${INDENT}s</ol>\n" >>$output_file
+
+    return 0
+}
+
+random_picture_html() {
+    local picture_html=$(\
+        find templates/images -type f ! -name "*_homepage*"\
+            | sort --random-sort \
+            | head -n 1
+    )
+
+    printf "%s\n" "$picture_html"
+    return 0
 }
 
 create_homepage() {
-
     cat $BEGIN_POST >$HOME_PAGE
+    cat $IMG_HOMEPAGE >>$HOME_PAGE
+    cat $INTRO_HOMEPAGE >>$HOME_PAGE
 
-    # all posts sorted descending by modification time
-    # (recent modified as first)
-    POSTS="$(ls -t www/posts/*/** | grep -vi index.html)"
+    local tmp_dir="tmp"
+    mkdir "$tmp_dir" &>/dev/null
+    local tmp_file="tmp/tmp.txt"
 
-    # NEW ADDED POSTS
-    tmp_dir="tmp"
-    mkdir "$tmp_dir"
-    tmp_file="tmp/tmp.txt"
-    sorted="tmp/sorted.txt"
-    for file in $POSTS
-    do
+    local pub_date
+    for file in $POSTS; do
         pub_date=$(sed -n 's|.*date".*content="\(.*\)">$|\1|p' $file)
         printf "%s %s\n" $pub_date $file >>$tmp_file
     done
 
-    sort -r <$tmp_file | head | cut -d " " -f2 >>$sorted
+    cat $tmp_file | sort -r >$SORTED_POSTS
 
     printf "%${INDENT}s<h2>New posts</h2>\n" >>$HOME_PAGE
-    write_links_to_file "$HOME_PAGE" "$(cat $sorted)"
+    write_html_links_to_file "$(cat $SORTED_POSTS | head | cut -d " " -f2)" "$HOME_PAGE"
     rm -r $tmp_dir
+
+    # random picture
+    local random_pic="$(random_picture_html)"
+    cat $random_pic >>$HOME_PAGE
 
     # LAST MODIFIES POSTS
     printf "%${INDENT}s<h2>Last modified posts</h2>\n" >>$HOME_PAGE
@@ -130,29 +146,46 @@ create_homepage() {
     # option -printf
     #
     # list of last modified 10 posts, sorted by option -t
-    write_links_to_file "$HOME_PAGE" "$(echo "$POSTS" | head)"
+    write_html_links_to_file "$(printf "%s\n" $POSTS | head)" "$HOME_PAGE"
 
+    random_pic="$(random_picture_html)"
+    cat $random_pic >>$HOME_PAGE
 
     cat $END_POST >>$HOME_PAGE
 
     return 0
 }
 
+create_posts_page() {
+    cat $BEGIN_POST >$POSTS_PAGE
+
+    local files=$(cat $SORTED_POSTS | cut -d " " -f2)
+
+    printf "%${INDENT}s<h2>All posts</h2>\n" >>$POSTS_PAGE
+    write_html_links_to_file "$files" "$POSTS_PAGE"
+
+    cat $END_POST >>$POSTS_PAGE
+}
+
 render_md_to_html() {
 # $1 - directory with md files
-    src="${1:-./src}"
-    md_files=$(find ${src%/} -type f -name "*.md")
+    local src="${1:-$MARKDOWNS_SRC}"
+    local md_files=$(find ${src%/} -type f -name "*.md")
 
-    meta_license='    <meta name="license" content="https://creativecommons.org/licenses/by/4.0/">'
-    link_icon='    <link rel="icon" type="image/png" size="16x16" href="/images/favicon-16x16.png">'
+    local meta_license='    <meta name="license" content="https://creativecommons.org/licenses/by/4.0/">'
+    local link_icon='    <link rel="icon" type="image/png" size="16x16" href="/images/favicon-16x16.png">'
 
-    for file in $md_files
-    do
+    local html_suffix
+    local trimmed
+    local html_file
+    local title
+    local pub_date
+
+    for file in $md_files; do
         html_suffix="${file%.md}.html"
         trimmed=$(echo $html_suffix | sed -n 's|^\(\.*/*\)[^/]\{1,\}/||p')
-        html_file="www/posts/${trimmed}"
+        html_file="${POSTS_DIR}/${trimmed}"
         mkdir -p "${html_file%/*}"
-
 
         if [ ! -f $html_file ]
         then
@@ -183,8 +216,49 @@ render_md_to_html() {
             sed -i "" "s|$meta_date_pattern|\1\"$pub_date\"|" $html_file
             printf "/<h1>/a\n$pub_date_fmtted\n.\nw\nq\n" | ed $html_file >/dev/null
             cat $END_POST >>$html_file
+        else
+            printf "[SKIP - markdown rendering] %s already exists\n" "$html_file"
         fi
     done
+}
+
+generate_index_files() (
+    local dir_path="${1%/}"
+    local dir_name="${dir_path##*/}"
+    # make uppercase from dir name
+    local title=$(echo "$dir_name" | awk '{print toupper($0)}')
+    local output_file="${dir_path}/index.html"
+
+    cat $BEGIN_POST >$output_file
+    echo "<h1>$title</h1>" >>$output_file
+
+    printf "%${INDENT}s<ol>\n" >>$output_file
+
+    for file in $(ls "$dir_path" | grep -vi index.html); do
+        filepath="${dir_path}/${file}"
+        if [ -d $filepath ]; then
+            generate_index_files $filepath
+        else
+            path_to_html_link $filepath >>$output_file
+        fi
+    done
+
+    printf "%${INDENT}s</ol>\n" >>$output_file
+    cat $END_POST >>$output_file
+)
+
+categories_page() {
+    cat $BEGIN_POST >$CATEGORY_PAGE
+    echo "<h1>CATEGORIES</h1>" >>$CATEGORY_PAGE
+
+    printf "%${INDENT}s<ol>\n" >>$CATEGORY_PAGE
+
+    for category in $( find www/posts -d 1 -type d ! -name ".*" ); do
+        path_to_html_link $category >>$CATEGORY_PAGE
+    done
+
+    printf "%${INDENT}s</ol>\n" >>$CATEGORY_PAGE
+    cat $END_POST >>$CATEGORY_PAGE
 }
 
 
@@ -193,3 +267,10 @@ render_md_to_html
 
 # CREATE HOME PAGE
 create_homepage
+
+generate_index_files "www/posts"
+
+create_posts_page
+
+categories_page
+

@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="date" scheme="YYYY-MM-DD" content="2022-07-20">
+    <meta name="license" content="https://creativecommons.org/licenses/by/4.0/">
+    <meta name="referrer" content="origin">
+    <link rel="icon" type="image/png" size="16x16" href="/images/favicon-16x16.png">
+    <link rel="stylesheet" href="/css/style.css">
+    <title>Datové typy v programovacím jazyce Elixir</title>
+  </head>
+
+
+  <body>
+<!--    Navigation is made by Erik Terwan    -->
+<!--          24th of November 2015          -->
+<!--              MIT License                -->
+    <nav role="navigation">
+      <div id="menuToggle">
+        <!--
+        A fake / hidden checkbox is used as click reciever,
+        so you can use the :checked selector on it.
+        -->
+        <input type="checkbox" />
+
+        <!--
+        Some spans to act as a hamburger.
+        They are acting like a real hamburger,
+        not that McDonalds stuff.
+        -->
+        <span></span>
+        <span></span>
+        <span></span>
+
+        <!--
+        Too bad the menu has to be inside of the button
+        but hey, it's pure CSS magic.
+        -->
+        <ul id="menu">
+          <a href="/"><li>Home</li></a>
+          <a href="/posts/"><li>Posts</li></a>
+          <a href="/categories/"><li>Categories</li></a>
+          <a href="/resources/"><li>Resources</li></a>
+          <a href="/about/"><li>About</li></a>
+          <a href="/contact/"><li>Contact</li></a>
+        </ul>
+      </div>
+    </nav>
+
+
+    <header>
+    </header>
+
+    <main>
+
+<h1>Datové typy v programovacím jazyce Elixir</h1>
+      <p><span id=pubdate>Published on: 2022-07-20</span></p>
+<h1>Integery</h1>
+<p>Jedná se o klasická celá čísla (&#8230;, -2, -1, 0, 1, 2, &#8230;). Elixir programátora neomezuje jak velké či malé celé číslo musí být. V Elixiru lze pracovat i s opravdu velkými čísly, pokud k tomu je dostatek paměti RAM. Opravdu obrovská čísla mají vliv na čas výpočtu, ale pro lidské vnímání je tohle zpomalení naprosto zanedbatelné.</p>
+<pre><code class="language-elixir">iex(32)&#62; 1234567891213138138138138138138138138 * 123214214214921472183210381203210302183 * 2137219321893821932819382198321939218312397219372179397213792173921 * 1232197321382109380213802183021830218302183021830218321083
+
+400594646853992190082002975842596344158763794851066296804174448360912820881791327328524271478958550937298500527252420039610916215518991162308707268780961153676937620548947878554152771938882068481522
+</code></pre>
+<p>Pro lepší čitelnost čísel můžeme číslice oddělit podrtžítkem do skupin dle naší libosti, jak to umožňuje například i jazyk Python. Na čas kompilace to nemá žádný vliv. Elixir tyto podtržítka zcela ignoruje.</p>
+<pre><code class="language-elixir">iex&#62; 34_677_455_123
+34677455123
+iex&#62; 34_4_1
+3441
+</code></pre>
+<p>Pro práci s celými čísly jazyk Elixir poskytuje celou řadu užitečných funkcí nebo Guards. Některé funkce jako <code>div</code> nebo <code>abs</code> nalezneme jako součást jádra jazyka Elixir <a href="https://hexdocs.pm/elixir/1.13.4/Kernel.html">Kernel</a>.</p>
+<pre><code class="language-elixir">iex&#62; div(10, 3)
+3
+iex&#62; rem(10, 3)
+1
+</code></pre>
+<p>Další užitečné funkce jako například <code>digits</code> a <code>pow</code>, nebo tzv. Guards jako <code>is_even</code> nalezneme v modulu <a href="https://hexdocs.pm/elixir/1.13.4/Integer.html">Integer</a>.</p>
+<pre><code class="language-elixir">iex&#62; Integer.digits(10)
+[1, 0]
+iex&#62; Integer.pow(3, 2)
+9
+</code></pre>
+<p>Datový typ <em>Integer</em> můžeme mezi sebou sčítat, odečítat, násobit či dělit. V případě dělení je výsledek automaticky převeden na datový typ <em>Float</em>.
+<code>elixir
+iex&#62; 3 + 4
+7
+iex&#62; 2 - 4
+-2
+iex&#62; 3 * 4
+12
+iex&#62; 12 &#47; 3
+4.0
+</code></p>
+<p>Integers lze také pomocí předpony v zápisu zapsat v různých číselných soustavách:</p>
+<ul>
+<li>binární (dvojková),</li>
+<li>oktální (osmičková),</li>
+<li>hexadecimální (šestnáctková).</li>
+</ul>
+<pre><code class="language-elixir">iex&#62; 0b0111
+7
+iex&#62; 0o345
+229
+iex&#62; 0xFF
+255
+</code></pre>
+<h1>Floaty</h1>
+<p>Jedná se o čísla s plovoucí čárkou, zjednodušeně desetinná čísla.
+Jedná se o čísla, která mají alespoň jedno desetinné místo - desetinná čísla. I když se tyto čísla někdy nazývají s také jako čísla s plouvoucí čárkou, v jazyce Elixir je zapisujeme pomocí tečky.
+<code>elixir
+iex&#62; float_number = 8.34
+8.34
+iex&#62; i float_number
+Term
+  8.34
+Data type
+  Float
+Reference modules
+  Float
+Implemented protocols
+  IEx.Info, Inspect, List.Chars, String.Chars
+iex&#62; IEx.Info.info(8.34)
+[{"Data type", "Float"}, {"Reference modules", "Float"}]
+</code></p>
+<p>Jazyk Elixir používá formát 64-bit s dvojitou přesností.
+They use the 64-bit double precision floating-point format.</p>
+<p>Práce s čísly typu Float je velmi podobná jako s Integers.</p>
+<p>Například podtržítka fungují stejně.</p>
+<pre><code class="language-elixir">iex&#62; 23_34.43_222
+2334.43222
+</code></pre>
+<p>Užitečné funkce pro práci s Floats nalezneme opět v Kernelu a v modulu <a href="https://hexdocs.pm/elixir/1.13.4/Float.html">Float</a></p>
+<p>Elixir má podporu vědeckého zápisu čísel typu float pomocí exponentu <code>e</code>.
+<code>elixir
+iex&#62; 12345.999e-2
+123.45999
+</code></p>
+<p>Pozor si musíme dát na jemnou nepřesnost při výpočtech desetinné části. Z tohoto důvodu se nedoporučuje tento typ používat na výpočty financí. S tímto problémem se ovšem potýká více programovacích jazyků. Pro přesné výpočty se používají speciální datové type jako například v C# čísla s pevnou desetinnou tečkou (fixed-point number).</p>
+<pre><code class="language-elixir">iex&#62; 3.34 - 3.35
+-0.010000000000000231
+</code></pre>
+<h1>Atomy</h1>
+<p>Atom je konstanta, jehož jméno je zároveň jeho hodnotou. Jedná se o stejnou filosofii s jakou Symboly fungují v jazyce Ruby.</p>
+<p>Upřímně, dlouho mi trvalo než jsem atomy dostal trochu více pod kůži. Moc jsem nechápal jejich přidanou hodnotu a proč nestačí mít pouze datový typ string. Všude přítomné vysvětlení, že se jedná o konstantu, jejíž jméno je zároveň její hodnotou, mi úplně nepomohlo. Naštěstí jsem nalezl docela užítečný článek[1], který se o této problematice rozepisuje trochu více. Je dobré si uvědomit, že atomy jsou konstanty s unikátní hodnotou. Často se tak setkáte s atomy <code>:ok</code> nebo <code>:error</code>, které vyjadřují stav nějaké operace. Tento případ přímo vybízí k použití něčeho jako jsou atomy.</p>
+<pre><code class="language-elixir">iex&#62; :pes == :kocka
+false
+iex&#62; :pes == :pes
+true
+</code></pre>
+<p>Díky své unikátnosti se atomy hodí také jako klíče to struktur typu klíč - hodnota. Atomy se v jazyce Elixir ukládájí do jakési tabulky atomů, kde jsou uloženy po celou dobu. Jakmile jednou vytvoříte atom, tak už jej nevymažete.  Jejich vnitřní hodnotu nelze změnit.[4] Není tedy dobrý nápad vytvářet velký počet atomů. Navíc, maximální počet atomů je v Erlang virtual machine omezen na 1,048,576.[1] Když uložíte do více proměnných stejný atom, tak tento atom existuje ve skutečnosti pouze jednou a je všemi proměnnými sdílen.
+Atomy jsou unikátní napříč celým runtime prostředím, což je velmi užitečná vlastnost pro komunikaci napříč procesy. Atomy jsou vlastně takové globální proměnné. Naproti tomu většina dat v Elixiru včetně stringů zůstavají alokována v daném procesu. Další výhodou oproti stringům je fakt, že práce s atomy je daleko efektivnější. Atomy jsou vnitřně ukládány jako integers, takže například porovnávání atomů je daleko rychlejší než mezi stringy.[1][4] Z výše uvedených důvodů se nedoporučuje zacházet s atomy s jako dynamickými daty, napříkladukládat vstupy uživatelů v datovém typu atom. Posledním faktem je, že Erlang VM má postavený celý koncept paralelizace na atomech.[1]</p>
+<p>Zápis atomu začíná dvojtečkou <code>:</code>, za kterou musí následovat text.</p>
+<pre><code class="language-elixir">iex&#62; :foo
+:foo
+iex&#62; i(:foo)
+Term
+  :foo
+Data type
+  Atom
+Reference modules
+  Atom
+Implemented protocols
+  IEx.Info, Inspect, List.Chars, String.Chars
+</code></pre>
+<p>Všechny atomy musí začínat po dvojtečce písmenem, v opačném případě dostaneme <code>SyntaxError</code>.</p>
+<pre><code class="language-elixir">iex&#62; :4ee
+** (SyntaxError) iex:25:1: unexpected token: ":" (column 1, code point U+003A)
+iex&#62; :@ab
+** (SyntaxError) iex:55:3: syntax error before: ab
+iex&#62; :e43
+:e43
+iex&#62; :foo@bar
+:foo@bar
+</code></pre>
+<p>Více slovní atomy oddělujeme podtržítkem.</p>
+<pre><code class="language-elixir">iex&#62; :atom_z_vice_slov
+:atom_z_vice_slov
+</code></pre>
+<p>Pokud potřebujeme použít zakázané znaky na začátku atomu (čísla, @, !, ? &#8230;) nebo použít mezer mezi slovy, musíme celý název atomu obalit do uvozovek.</p>
+<pre><code class="language-elixir">iex&#62; :"atom z vice slov"
+:"atom z vice slov"
+iex&#62; :"12"
+:"12"
+iex&#62; :"@ab"
+:"@ab"
+</code></pre>
+<p>Ke kontrole, zda je daný objekt atom či nikoliv můžeme použít vestavěnou funkci <code>is_atom</code>.</p>
+<pre><code class="language-elixir">iex&#62; is_atom(:foo)
+true
+iex&#62; is_atom :foo
+true
+iex&#62; is_atom "foo"
+false
+iex&#62; is_atom 444
+false
+</code></pre>
+<p>Existuje i několik výjimek u kterých se nemusí psát počáteční dvojtečka. Jedná se o <code>true</code>, <code>false</code> a <code>nil</code>. V těchto případech vůbec nezáleží jestli před ně dvojtečku napíšeme či nikoliv a pořád se jedná o jeden stejný objekt.</p>
+<pre><code class="language-elixir">iex&#62; is_atom(true)
+true
+iex&#62; is_atom(:true)
+true
+iex&#62; true == :true
+true
+iex&#62; is_atom(nil)
+true
+ies&#62; nil == :nil
+true
+</code></pre>
+<p>Další objekty u kterých bychom nejspíš nečekali, že budou atomy jsou aliasy a názvy modulů včetně modulů, které nejsou deklarované. U těchto atomů se totiž dvojtečky vůbec nepíšou. Neplatí pro ně jako v předchozím příkladu, že v případě objektu s dvojtečkou a bez se jedná o totéž.</p>
+<pre><code class="language-elixir">iex&#62; is_atom(Ahoj)
+true
+iex&#62; is_atom(:Ahoj)
+true
+iex(8)&#62; Ahoj == :Ahoj
+false
+iex&#62; is_atom(MojeAplikace.MujModul)
+true
+</code></pre>
+<p>Atomy se používají také v názvu Erlangových modulů při odkazování na konkrétní funkci.[3] Erlangové moduly na rozdíl od elixírových začínají malým písmenem, nejedná se u nich tedy o <code>Aliasy</code>. Volání erlanogových modulů je v Elixíru vyřešeno pomocí <code>Atomů</code>. Více to bude možná jasnější z kapitoly <a href="##aliasy">Aliasy</a>.</p>
+<pre><code class="language-elixir">iex&#62; :crypto.strong_rand_bytes 3
+&#60;&#60;23, 104, 108&#62;&#62;
+</code></pre>
+<h2>Aliasy</h2>
+<p>Aliasy jsou atomy, ale začínají místo dvojtečky <code>:</code> velkým písmenem.</p>
+<pre><code class="language-elixir">iex&#62; is_atom(Ahoj)
+true
+</code></pre>
+<p>Aliasy se v Elixíru nastavují následujícím způsobem.</p>
+<pre><code class="language-elixir">iex&#62; alias :nejaky_dlouhy_atom, as: MujAlias
+:nejaky_dlouhy_atom
+iex&#62; MujAlias
+:nejaky_dlouhy_atom
+iex&#62; Atom.to_string(MujAlias)
+:nejaky_dlouhy_atom
+</code></pre>
+<p>Alias lze použít i bez toho, aniž bychom jej dopředu nastavili. Výchozí hodnota takového Aliasu je nastavena jako atom :"Elixir.DalsiAlias&#8221;. Voláme-li námi definovaný modul hledá se pod cestou Elixir.NasModul. Vytvoříme-li soubor zviratka.ex a nadefinujeme si s v něm moduly <code>Pes</code> a <code>Kočka</code>, po kompilaci budeme mít k dispozici <code>Elixir.Pes.beam</code> a <code>Elixir.Kočka.beam</code>.</p>
+<pre><code class="language-elixir">iex&#62; DalsiAlias
+DalsiAlias
+iex&#62; Atom.to_string(DalsiAlias)
+"Elixir.DalsiAlias"
+iex&#62; DalsiAlias == "Elixir.DalsiAlias"
+false
+iex&#62; DalsiAlias == :"Elixir.DalsiAlias"
+true
+</code></pre>
+<p>Definice aliasu lze zapsat takě bez nově definovaného jména (odkazu).</p>
+<pre><code class="language-elixir">alias MyApp.Account.User
+# je totéž jako bychom napsali
+alias MyApp.Account.User, as: User
+</code></pre>
+<p>Aliasy se používají především v případech, kde potřebujeme vytvořit odkaz například na modul pod kratším či vhodnějším jménem. V příkladu níže si pomocí aliasu můžeme nastavit zkrácené jméno (odkaz) <code>I</code> pro modul Integer, nově tak můžeme modul Integer volat pouze pomocí odkazu <code>I</code>.</p>
+<pre><code class="language-elixir">alias Integer, as: I
+I.pow(2, 3)
+</code></pre>
+<p>Dobrým zvykem je definovat aliasy na začátku modulu.</p>
+<h1>Booleans</h1>
+<p>Programovací jazyk Elixir podporuje dvě boolean hodnoty a to <code>true</code> a <code>false</code>. Velmi zajímavé je, že ve skutečnosti jsou tyto booleanovské hodnoty pouze odkazy k atomům <code>:true</code> a <code>:false</code>. Hodnoty <code>true</code> a <code>false</code> jsou tedy čistě jen pseudonymy pro atomy.</p>
+<p>Všechny boolean hodnoty jsou atomy a ne všechny atomy jsou booleany.[1]</p>
+<pre><code class="language-elixir">iex(27)&#62; true == :true
+true
+iex(28)&#62; true === :true
+true
+</code></pre>
+<h1>Strings</h1>
+<h1>Binaries</h1>
+<h1>Bitstrings</h1>
+<h1>Charlists</h1>
+<h1>Ranges</h1>
+<h1>Collection types</h1>
+<h2>Tuples</h2>
+<h2>Lists</h2>
+<h2>Keyword lists</h2>
+<h2>Maps</h2>
+<h2>Sets</h2>
+<h2>Binaries&#47;Bitstrings</h2>
+<h2>Structs</h2>
+<h1>Sigils</h1>
+<h2>regex</h2>
+<h1>Speciální datové typy</h1>
+<h2>Port</h2>
+<h2>Reference</h2>
+<h2>pid</h2>
+<h1>Zdroje</h1>
+<p>[1] <a href="https://inquisitivedeveloper.com/lwm-elixir-6/">inquisitivedeveloper</a>
+[2] <a href="https://elixir-lang.org/getting-started/basic-types.html">elixir-lang.org</a>
+[3] <a href="https://elixirschool.com/en/lessons/basics/basics">elixirschool.com</a>
+[4] <a href="https://exercism.org/tracks/elixir/concepts/">exercism</a>
+[5] <a href="https://www.tutorialspoint.com/elixir/elixir_data_types.htm">tutorialspoint</a></p>
+
+    </main>
+
+    <footer>
+    </footer>
+
+  </body>
+
+</html>
+

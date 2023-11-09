@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="date" scheme="YYYY-MM-DD" content="2020-08-31">
+    <meta name="license" content="https://creativecommons.org/licenses/by/4.0/">
+    <meta name="referrer" content="origin">
+    <link rel="icon" type="image/png" size="16x16" href="/images/favicon-16x16.png">
+    <link rel="stylesheet" href="/css/style.css">
+    <title>Git - fix your history</title>
+  </head>
+
+
+  <body>
+<!--    Navigation is made by Erik Terwan    -->
+<!--          24th of November 2015          -->
+<!--              MIT License                -->
+    <nav role="navigation">
+      <div id="menuToggle">
+        <!--
+        A fake / hidden checkbox is used as click reciever,
+        so you can use the :checked selector on it.
+        -->
+        <input type="checkbox" />
+
+        <!--
+        Some spans to act as a hamburger.
+        They are acting like a real hamburger,
+        not that McDonalds stuff.
+        -->
+        <span></span>
+        <span></span>
+        <span></span>
+
+        <!--
+        Too bad the menu has to be inside of the button
+        but hey, it's pure CSS magic.
+        -->
+        <ul id="menu">
+          <a href="/"><li>Home</li></a>
+          <a href="/posts/"><li>Posts</li></a>
+          <a href="/categories/"><li>Categories</li></a>
+          <a href="/resources/"><li>Resources</li></a>
+          <a href="/about/"><li>About</li></a>
+          <a href="/contact/"><li>Contact</li></a>
+        </ul>
+      </div>
+    </nav>
+
+
+    <header>
+    </header>
+
+    <main>
+
+<h1>Git - fix your history</h1>
+      <p><span id=pubdate>Published on: 2020-08-31</span></p>
+<p><img src="/images/git_logo.jpg" alt="git logo" /></p>
+<h1>1. Změna posledního commitu</h1>
+<p>S příkazem <code>commit</code> můžeme použít tzv. <code>flags</code>, které upravují chování tohoto příkazu. Jedním z takových <code>flags</code> je <code>--amend</code>. Pomocí tohoto flags měníme poslední commit.</p>
+<p>Pomocí přikzu <code>$ git commit --amend</code> můžeme:
+1. kombinovat změny, které máme v tuto chvíli ve <code>staged</code> fázi s posledním <code>commitem</code>
+2. změnit poslední <code>commit message</code>, v které jsme udělali chybu nebo překlep. Ovšem tato změna změní uložení commitu a v historii ji budeme vidět s hvězdičkou (*). Tedy vytvoří se nový commit se stejnými informacemi, ale jinou zprávou a navíc bude obsahovat hvězdičku.</p>
+<p><strong>1. Přidat soubory ve staged fázi do posledního commitu</strong></p>
+<p>Představme si následující sled událostí:</p>
+<p>Editujeme soubory <code>hello.py</code> a <code>main.py</code>. Po ukončení změn přidáme do gitu pouze <code>main.py</code> a provedeme commit. V příkazové řádce by úkony vapadly nějak takto:</p>
+<pre><code>$ git add main.py
+$ git commit
+</code></pre>
+<p>V tuto chvíli si autor uvědomí, že zapomněl přidat do gitu také soubor <code>hello.py</code>, který chtěl mít ve společném commitu také se souborem <code>main.py</code>, který už je ale v tuto chvíli commitnutý. Tento problém se při vývoji objevuje poměrně čast a git si s touto situací umí hravě poradit.</p>
+<p>Postup opravy může vypadat takto:</p>
+<pre><code>$ git add hello.py
+$ git commit --amend --no-edit
+</code></pre>
+<p>Použitý flag <code>--no-edit</code> nám zajistí, že se zapomenutý soubor přidá do posledního commitu, ale <code>commit message</code> se nezmění. Tedy flag <code>--no-edit</code> = chceme přidat nové změny do posledního commitu bez úpravy <code>commit message</code>.</p>
+<p><strong>2. Změna zprávy v posledním commitu</strong></p>
+<p>Pro změnu poslední <code>commit message</code> použijeme tento příkaz:</p>
+<pre><code>$ git commit --amend
+</code></pre>
+<p>Tímto příkazem se nám objeví námi defaultně nastavený editor textu pro git a v něm poslední zpráva tu můžeme libovolně upravit a následně změny potvrdit, jak jsme zvyklý u běžných <code>commitů</code>.</p>
+<p>Jednořádková změna <code>commit message</code> se provádí pomocí príkazu:</p>
+<pre><code>$ git commit --amend -m "your new or updated commit message"
+</code></pre>
+<p>Když přídáme do příkazu options <code>-m</code> můžeme změnit ři přepsat <code>commit message</code> přímo v příkazové řádce aniž bychom museli otevírat textový editora celý proces se takto výrazně zrychlí.</p>
+<p><strong><em>Upozornění</em>:</strong> Příkaz amend nepoužívejte pokud jste změny už poslali do public prostoru třeba na GitHub. Jelikož <code>--amend</code> udělá nový commit, tak bude problém jej pushnout do stejné větve na remote. Jak jsme si řekli <code>--amend</code> udělá nový commit na větvi a ten starý z ní zmizí, při pushnutí této změny dojde ke konfliktu.</p>
+<h1>2. Změna jednoho, libovolně starého commitu</h1>
+<p>Změna se provádí pomocí příkazu <code>git rebase</code>. Tento příkaz je poněkud složitější a podíváme se tedy na něj v kapitole <a href="#4.-git-rebase">Git rebase</a> trochu blíže.</p>
+<p>Pro změnu konkrétního starého commitu můžeme použít tento příkaz:</p>
+<pre><code>$ git rebase &#60;id_old_commit&#62;
+</code></pre>
+<p><strong><em>id</em></strong> - bude hash commitu</p>
+<p>Tento příkaz započne proces <code>rebase</code>. Proces se zastaví a dá nám na výběr co můžeme udělat.
+Většinou pomocí příkazu <code>--amend</code> uděláme změny a následně řekneme procesu <code>rebase</code>, že může pokračovat. Proces by mohl vypadat nějak takhle:</p>
+<pre><code>$ git commit --amend
+$ git rebase --continue
+</code></pre>
+<h1>3. Změna několika, libovolně starých commitů</h1>
+<p>Pro změnu několika commitů najednou se používá tzv. <strong>interaktivní rebase</strong>. Tento typ <code>rebase</code> se zapíná pomocí příkazu:</p>
+<pre><code>$ git rebase -i
+</code></pre>
+<p>nebo</p>
+<pre><code>$ git rebase --interactive
+</code></pre>
+<p>Během <code>rebase</code> několika commitů najednou máme možnost si vybrat z několika možností jak takové commity spojit dohromady.</p>
+<ol>
+<li><strong>Reword nebo zkráceně &#8216;r&#8217;</strong> - zastaví proces <code>rebase</code> a nechá Vás přepsat konkrétní <code>commit message</code></li>
+<li><strong>Squash nebo kráceně &#8216;s&#8217;</strong> - během procesu <code>rebase</code>, všechny commity označené pomocí <code>s</code> se sloučí s posledním commitem. Proces <code>rebase</code> se pozastaví a budeme vyzvání k přepsání posledního commitu.</li>
+<li><strong>Fixup nebo zkráceně &#8216;f&#8217;</strong> - se chová podobně jako <code>squash</code>. Narozdíl od <code>squashe</code>, tak <code>fixup</code> nepozastaví proces <code>rebase</code> k otevření textového editoru. <code>commit meassage</code> zůstane stejná jako je poslední v posledním <code>commitu</code> pouze se tomuto poslednímu commitu přilepí commity, které jsme označili písmenem <code>f</code>. <code>commit messages</code> obsažené v commitech, které jsme označili pomocí <code>f</code> jsou zahozeny.</li>
+</ol>
+<p><strong>drop</strong></p>
+<p>Kromě spojování commitů, je možné v interaktivním rebase také commity smazat pomocí slovíčka <code>drop</code> nebo <code>d</code>. Smazat commit je také možné pokud před daný commit nedáte žádné specialní slovo.</p>
+<p><strong>pickup</strong></p>
+<p>Slovo <code>pickup</code> nebo <code>p</code> znamená, že tento commit chceme zachovat vzít.</p>
+<p>V interaktivním rebase můžeme také <strong>přehazovat pořadí jednotlivých commitů</strong>, jak v historii gitu půjdou za sebou.</p>
+<h1>4. Git rebase</h1>
+<p>Pro lepší pochopení celého kontextu se nevyhneme detailnímu popsání příkazu <code>git rebase</code>.</p>
+<p>Na začátek <code>git rebase</code> a <code>git merge</code> jsou v základu stejné příkazi. Oba dva slučují jednu větev do druhé. Ale každý to dělá jinak. Na konci článku je část, která se zabývá přímo srovnáním těchto dvou příkazů.</p>
+<p>Příkaz <code>git rebase</code> je možné používat ve dvou módech:</p>
+<ol>
+<li>standardní či manuální mód</li>
+<li>interaktivní mód (pomocí přepínače <code>-i</code> nebo <code>--interactive</code>)</li>
+</ol>
+<p>Nejčastejší použití rebase můžeme vidět, když máme projekt, který je na větvi <code>master</code>. Tento projekt potřebuje vyvinout novou featuru. Pro tyto účely si založíme novou větev <code>feature_branch</code>. Na nové feature budeme pracovat nějaký čas. A v tomto čase, kdy mi budeme pracovat na feature, kterou jsme dostali za úkol, bude zbytek týmu pracovat na dalších features projektu. Tím se samozřejmě podoba větve <code>master</code> změní od podoby, z které jsme vytvořili novou větev <code>feature_branch</code>. Tento proces můžeme vidět na diagramu níže:</p>
+<pre><code>a - b - c - g - h  (master)
+     \
+      d - e   (feature_branch)
+</code></pre>
+<p>Novou větev <code>feature_branch</code> jsme vytvořili když větev <code>master</code> měla poslední commit <code>c</code>. Nyní když bych chtěl mou featuru mergnout tak větev <code>master</code> se posunula o další dva commity <code>g</code> a <code>h</code>. Abychom mohli naši větev pěkně mergnout musíme na ni udělat nejříve udělat <code>rebase</code>. Tedy chceme založit naše další změny na změnách ostatních - “I want to base my changes on what everybody has already done.”</p>
+<h1>Užitečné odkazy - další studium</h1>
+<p>Text článku byl čerpán hlavně z těchto zdrojů:</p>
+<ul>
+<li><p><a href="https://www.atlassian.com/git/tutorials/rewriting-history">https:&#47;&#47;www.atlassian.com&#47;git&#47;tutorials&#47;rewriting-history</a></p></li>
+<li><p><a href="https://www.atlassian.com/git/tutorials/rewriting-history/git-rebase">https:&#47;&#47;www.atlassian.com&#47;git&#47;tutorials&#47;rewriting-history&#47;git-rebase</a></p></li>
+<li><p><a href="https://dev.to/martinbelev/how-to-effectively-use-git-rebase-onto-5b85">https:&#47;&#47;dev.to&#47;martinbelev&#47;how-to-effectively-use-git-rebase-onto-5b85</a></p></li>
+</ul>
+
+    </main>
+
+    <footer>
+    </footer>
+
+  </body>
+
+</html>
+

@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="date" scheme="YYYY-MM-DD" content="2020-09-02">
+    <meta name="license" content="https://creativecommons.org/licenses/by/4.0/">
+    <meta name="referrer" content="origin">
+    <link rel="icon" type="image/png" size="16x16" href="/images/favicon-16x16.png">
+    <link rel="stylesheet" href="/css/style.css">
+    <title>Python knihovny pro práci se soubory</title>
+  </head>
+
+
+  <body>
+<!--    Navigation is made by Erik Terwan    -->
+<!--          24th of November 2015          -->
+<!--              MIT License                -->
+    <nav role="navigation">
+      <div id="menuToggle">
+        <!--
+        A fake / hidden checkbox is used as click reciever,
+        so you can use the :checked selector on it.
+        -->
+        <input type="checkbox" />
+
+        <!--
+        Some spans to act as a hamburger.
+        They are acting like a real hamburger,
+        not that McDonalds stuff.
+        -->
+        <span></span>
+        <span></span>
+        <span></span>
+
+        <!--
+        Too bad the menu has to be inside of the button
+        but hey, it's pure CSS magic.
+        -->
+        <ul id="menu">
+          <a href="/"><li>Home</li></a>
+          <a href="/posts/"><li>Posts</li></a>
+          <a href="/categories/"><li>Categories</li></a>
+          <a href="/resources/"><li>Resources</li></a>
+          <a href="/about/"><li>About</li></a>
+          <a href="/contact/"><li>Contact</li></a>
+        </ul>
+      </div>
+    </nav>
+
+
+    <header>
+    </header>
+
+    <main>
+
+<h1>Python knihovny pro práci se soubory</h1>
+      <p><span id=pubdate>Published on: 2020-09-02</span></p>
+<h1>1. Knihovna pathlib</h1>
+<p>Jedná se o knihovnu, která je od pythonu 3.4 built-in a není tedy potřeba ji doinstalovávat.</p>
+<p>Základní použití knihovny vypadá následovně</p>
+<pre><code>    import pathlib
+
+    pathlib.Path("folder1&#47;folder2&#47;run.exe")
+
+    Output: PosixPath(&#39;folder1&#47;folder2&#47;run.exe&#39;)
+</code></pre>
+<p>Výše je základní příkaz třídy Path pomocí které se vytváří cesta - objekt cesty. Výstupem tohoto příkazu je <code>PosixPath("cesta")</code></p>
+<p>Základem používání této knihovyn je vytvoření objektu ze stringu pomocí příkazu <code>pathlib.Path(&#39;vase&#47;cesta&#47;nekam&#39;)</code>. Po vytvoření objektu <code>PosixPath</code> si můžete s touto cestou hrát dle své libosti pomocí široké škály method a atributů, které tento objekt na danou cestu poskytuje.</p>
+<p>Třída Path se dá použít i bez toho, aniž bychom museli zadat cestu. Třída disponuje metodami jako například <code>cwd()</code> - vypíše current working directory nebo <code>home()</code> - který vypíše absolutní cestu k vaší domovské složce.</p>
+<p>Z dokumentace můžete být trochu zmatení z těchto dvou příkazů <code>pathlib.Path()</code> vs <code>pathlib.PurePath()</code> na první pohled totiž není mezi nimi většího rozdílu. Nicméně po detailním prostudování dokumentace <a href="https://docs.python.org/3/library/pathlib.html">Pathlib dokumentace</a> zjistíme tyto rozdíly:</p>
+<ol>
+<li>Každý dělá jiný typ objektu - <code>Path()</code> vytvoří objekt <code>PosixPath</code> kdežto <code>PurePath</code> vytvoří <code>PurePosixPath</code>.</li>
+<li><code>Path()</code> disponuje navíc dalšími metodami, kterými si může šáhnout do souborů na počítači. <code>PurePosixPath</code> naopak nemá přístup do systému.</li>
+</ol>
+<h2>Spojování cest</h2>
+<p>Vytvářet či spojovat cesty můžeme několika způsoby:</p>
+<p><code>from pathlib import Path</code></p>
+<ol>
+<li><code>p = Path(&#39;&#47;home&#47;george&#47;Documents&#47;hello.txt)</code></li>
+<li><code>p = Path(&#39;&#47;&#39;, &#39;home&#39;, &#39;george&#39;, &#39;Documents&#39;, &#39;hello.txt&#39;)</code></li>
+<li><code>p = Path(&#39;&#47;home&#39;) &#47; &#39;george&#39; &#47; Path(&#39;Documents&#39;, &#39;hello.txt&#39;)</code></li>
+<li><code>p = Path(&#39;&#47;home&#39;).joinpath(&#39;george&#39;, &#39;Documents&#39;, &#39;hello.txt&#39;)</code></li>
+</ol>
+<hr/>
+<p><code>pathlib.Path.cwd()</code></p>
+<p>Zjistí v našem systému current working directory. Tedy složku v které se právě nacházíme.</p>
+<pre><code>pathlib.Path.cwd()
+
+Output: PosixPath(&#39;&#47;Users&#47;your_name&#47;Documents&#47;Python&#39;)
+</code></pre>
+<hr/>
+<p><code>pathlib.Path.home()</code></p>
+<p>Vypíše domovskou adresu našeho účtu v operačním systému. Na linuxu by mohla výstupní cesta vypadat jako &#47;home&#47;user_1&#47;</p>
+<pre><code>pathlib.Path.home()
+
+Output: PosixPath(&#39;&#47;Users&#47;your_name&#39;)
+</code></pre>
+<hr/>
+<p><code>pathlib.Path("relativni_cesta").resolve()</code></p>
+<p>Tato metoda nám vytvoří z relativní cesty cestu absolutní. Ovšem pozor, pokud zadáte cestu, která obsahuje lomítko na začátku cesty, tak tento zápis cesty znamená, že zadávate už absolutní cestu.</p>
+<p><strong>Cesta s lomítkem</strong></p>
+<pre><code>pathlib.Path(&#39;&#47;files_introduction&#47;index.ipynb&#39;).resolve()
+
+Output: PosixPath(&#39;&#47;files_introduction&#47;index.ipynb&#39;)
+</code></pre>
+<p><strong>Cesta bez lomítka</strong></p>
+<pre><code>pathlib.Path("files_introduction&#47;index.ipynb").resolve()
+
+Output: PosixPath(&#39;&#47;Users&#47;your_name&#47;Documents&#47;files_introduction&#47;index.ipynb&#39;)
+</code></pre>
+<h2>1. Otevírání souborů</h2>
+<p>Klasické otevírání souborů vypadá nějak takto:</p>
+<p><code>with open(path, mode="r", encoding="UTF-8") as file_:</code></p>
+<p>S knihovnou pathlib lze soubory otevírat velmi podobným způsobem:</p>
+<p><code>with pathlib.Path("cesta").open(mode="r", encoding="UTF-8") as file_:</code></p>
+<p>nebo také to samé rozepsáno:</p>
+<p><code>path = pathlib.Path("cesta")</code></p>
+<p><code>with path.open(mode="r", encoding="UTF-8") as file_:</code></p>
+<p>Tímto způsobem je spuštěno open() stejně jako v prvním přikladě, ovšem zápis může být pro někoho příjemnější nebo intuitivnější. V zásadě se ale jedná o totéž.</p>
+<p>Pomocí třídy Path můžete pro zápis nebo čtení souborů, otevírání souborů rovnou přeskočit pomocí method - <strong>read_text()</strong>, <strong>read_bytes()</strong>, <strong>write_text()</strong>, <strong>write_bytes()</strong><br></p>
+<p><code>pathlib.Path("cesta").read_text()</code></p>
+<h1>2. Knihovna os.path</h1>
+<p>Knihovna os nám pomáhá při práci s počítačem všeobecně. Konkrétně os.path je určena pro práci s cestami. Knihovna je velmi podobná knihovně pathlib, s tím rozdílem, že pathlib je o něco intuitivnější a jeho metody a atribute se mohou svými nazvy lišit. Nicméně pro základní používání najdete obou v knihovnách metody se stejnou funkcí. Tabulku, kde uvidíte, které metody jsou pro obě stejné naleznete v <a href="https://docs.python.org/3/library/pathlib.html#correspondence-to-tools-in-the-os-module">dokumentaci pathlib - corresponding to os module</a> úplně na konci.</p>
+<h1>3. fnmatch</h1>
+<p>Pomocí tohoto modulu vytváříme patterny, dle kterých hledáme soubory či adresáře.</p>
+<p>Nejedná se o regexy to je úplně něco jiného</p>
+<p><a href="https://docs.python.org/3/library/fnmatch.html">fnmatch</a></p>
+<h1>4. glob</h1>
+<p>Metoda glob se používá pro vyhledávání souborů, se specifickým názvem (např. vyhledej v adresáři všechny soubory s příponou .txt), tento název konfigurujeme pomocí <a href="https://docs.python.org/3/library/fnmatch.html">fnmatch</a></p>
+<p>viz. <a href="https://docs.python.org/3/library/pathlib.html#pathlib.Path.glob">dokumentaci pathlib - glob</a></p>
+<p>nebo v <a href="https://naucse.python.cz/2020/pyladies-ostrava-podzim-pokrocili/intro/pathlib/">naucse.cz</a></p>
+<h1>Použité zdroje - další studium</h1>
+<ul>
+<li>Portál naučse:</li>
+</ul>
+<p><a href="https://naucse.python.cz/2019/brno-jaro-2019-pondeli/intro/pathlib/">naucse.python.cz&#47;2019&#47;brno-jaro-2019-pondeli&#47;intro&#47;pathlib&#47;</a></p>
+<ul>
+<li>RealPython:</li>
+</ul>
+<p><a href="https://realpython.com/python-pathlib/">realpython.com&#47;python-pathlib&#47;</a></p>
+
+    </main>
+
+    <footer>
+    </footer>
+
+  </body>
+
+</html>
+

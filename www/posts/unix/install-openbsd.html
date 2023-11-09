@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="date" scheme="YYYY-MM-DD" content="2023-03-11">
+    <meta name="license" content="https://creativecommons.org/licenses/by/4.0/">
+    <meta name="referrer" content="origin">
+    <link rel="icon" type="image/png" size="16x16" href="/images/favicon-16x16.png">
+    <link rel="stylesheet" href="/css/style.css">
+    <title>Installation OpenBSD 7.2 within disk encryption</title>
+  </head>
+
+
+  <body>
+<!--    Navigation is made by Erik Terwan    -->
+<!--          24th of November 2015          -->
+<!--              MIT License                -->
+    <nav role="navigation">
+      <div id="menuToggle">
+        <!--
+        A fake / hidden checkbox is used as click reciever,
+        so you can use the :checked selector on it.
+        -->
+        <input type="checkbox" />
+
+        <!--
+        Some spans to act as a hamburger.
+        They are acting like a real hamburger,
+        not that McDonalds stuff.
+        -->
+        <span></span>
+        <span></span>
+        <span></span>
+
+        <!--
+        Too bad the menu has to be inside of the button
+        but hey, it's pure CSS magic.
+        -->
+        <ul id="menu">
+          <a href="/"><li>Home</li></a>
+          <a href="/posts/"><li>Posts</li></a>
+          <a href="/categories/"><li>Categories</li></a>
+          <a href="/resources/"><li>Resources</li></a>
+          <a href="/about/"><li>About</li></a>
+          <a href="/contact/"><li>Contact</li></a>
+        </ul>
+      </div>
+    </nav>
+
+
+    <header>
+    </header>
+
+    <main>
+
+<h1>Installation OpenBSD 7.2 within disk encryption</h1>
+      <p><span id=pubdate>Published on: 2023-03-11</span></p>
+<h1>Introduction</h1>
+<p>This article can be consider as following part to article <a href="https://nappex.github.io/myblog/Acer-V5-431-BIOS-OCC">how to give a new life
+of old computer</a>
+particulary to laptop Acer. The main motivation of giving a new life
+was to install OpenBSD as main OS. Another motivation was article about Old Computer Chanllenge - OCC.
+I am planning if everything happen well, to try using it as my main developing machine.
+The following article should be about what to do after installation.</p>
+<p>All articles about installation OpenBSD I&#8217;ve met declared that installation process of OpenBSD is so
+easy! That&#8217;s true if we presume that your level of knowledge meets certain conditions.</p>
+<p>IMHO level of knowledge should be:</p>
+<ul>
+<li>how to mount disk and how the mounting works</li>
+<li>know the diff between partitioning scheme (table) and partitions</li>
+<li>what means &#47;dev&#47;sd0 resp. &#47;dev&#47;rsd0</li>
+<li>how work disks and their drivers on OpenBSD</li>
+<li>how work RAID and why it is useful (for encryption)</li>
+</ul>
+<p>Someone can complain that is not necessary. Yes that&#8217;s true. You can just follow installation
+guide and try to insert defaults which should work in the most cases. And if the defaults won&#8217;t work,
+you will just switch to another option. Especially if you combine this approach with reading
+<a href="https://www.openbsd.org/faq/index.html">OpenBSD FAQ</a> then the success will come for sure.</p>
+<p>Honestly I do not like this approach but I understand it. When someone just started and wants
+to learn things it is good way to start no matter how. Learn by little steps. It is not possible to
+learn everything at the start. Amount of knowledge in IT world is huge.
+Maybe I suggest to start with something easier. I&#8217;ve started with Linux distros as Ubuntu, Mint, Fedora.
+These distros have easier installation process than OpenBSD in my opinion. When you gain
+some knowledge from easier distros then you will enjoy process with openbsd more.
+A lot of info metinoned in <a href="https://www.openbsd.org/faq/index.html">OpenBSD FAQ</a> assume
+some your knowledge. Nevertheless the FAQ are written very nice. I had just one problem.
+I was hurry and then I overlooked some important information. Read the FAQ carefully.
+Most of the time all info you need is mention there but sometimes the info you need is not,
+so highligt that you notice it at first sight.
+That knowledge can be obtained by reading a several books or by trying things
+with user friendly linux distro where a lot things are pre-set for user.</p>
+<p>Personally I had some basic knowledge when I was started with OpenBSD installation. Because of
+tweaking Linux distros as Mint, Fedora, Debian, Artix, Void in past. Even so I have to read
+some books to know what I am doing. I wanted to make the install properly and I want to know
+what I&#8217;ve set to my PC. When I have the OS which has features as
+open source, flexible, customizable and gives me the power to fully operate my computer
+I want to use that advantage. I love the power to operate my PC by my rules and not rely
+to external service or settings as Windows or Mac do. Books which I strongly recommend for proper installation
+are from <a href="https://mwl.io/">Michael W. Lucas</a>. I really love this author. He writes books with
+style which perfect suits to my expectations. He explains things from the ground with the context
+and he goes after some introduction context deeper and deeper with language of &#8220;ordinary&#8221; people.
+He does not use difficult technical naming or describiton on every corner if not necessary.
+The books which helps me a lot with OpenBSD are <a href="https://mwl.io/nonfiction/os#omf">OpenBSD Mastery: Filesystems</a>
+and <a href="https://mwl.io/nonfiction/os#ao2e">Absolute OpenBSD 2nd edition</a>. The latter book can be little bit
+obsolete because it was written at 2014.</p>
+<p>Installation starts with laptop Acer V5 431, where I am able to boot both legacy and UEFI.
+The tech spec of laptop are:</p>
+<ul>
+<li>Laptop model: Acer V5-431 (BIOS V2.18)</li>
+<li>CPU: Intel Celeron 1007U (2 cores) 1500GHz</li>
+<li>RAM: 4 Gb DDR3 (max is 8GB)</li>
+<li>Disk: Seagate ST500LT012 500GB SATA (find out it by <code>$disklabel -p g sd0</code> and check the label)</li>
+<li>Wifi card: Atheros AR9462 (not supported)</li>
+<li>Ethernet: Realtek 8168 (proprietary <a href="https://www.notebookcheck.net/Review-Acer-Aspire-V5-431-Notebook.83411.0.html#1021134-7">dongle</a>)</li>
+<li>GPU: Mesa Intel HD Graphics 2500 (IVB GT1)</li>
+<li>Audio: Realtek ALC269</li>
+<li>Card reader: Realtek RTL8411</li>
+</ul>
+<p>The article describes installation of OpenBSD
+* version 7.2
+* CPU architecture <code>amd64</code>
+* image filename <code>install72.img</code></p>
+<h1>Install preparation</h1>
+<h2>Hardware review, drivers availability</h2>
+<h3>CPU</h3>
+<p>Process unit is amd64 with two cores. Everything should works fine.</p>
+<h3>GPU</h3>
+<p>Laptop contains Mesa Intel HD Graphics 2500, which is supported by OpenBSD driver <code>intel(4)</code>.
+Manual page for this driver declares that support Intel&#174; HD Graphics: 2000-6000.</p>
+<p>Only one problem occurs. During startup screen is blinking. When X server is loaded, blinking will stop.
+So far I dont know if it is problem with OpenBSD or laptop.</p>
+<h3>Wireless network card</h3>
+<p>Unfortunately my wifi card is not support. OpenBSD does not provide driver for it.
+So I solve that issue that I am using external USB wifi card Atheros 9271 which is supported
+by driver <code>athn</code>. This USB wifi card should be available for purchase in most eshops.</p>
+<p>Another USB wifi card which should be fine, working and available in eshops is TP-Link TL-WN722N.
+I dont test TP-Link card, but driver <code>urtwn(4)</code> listed this WiFi.</p>
+<p>There are dozens of USB wifi cards which are supported by OpenBSD, but I found two problems
+with them. First problem is that most of them is difficult to buy in eshops and second problem
+is that reviews were not quite good about the quality and reliability.</p>
+<h3>Ethernet</h3>
+<p>There is also little problem because laptop contain proprietary
+<a href="https://www.notebookcheck.net/Review-Acer-Aspire-V5-431-Notebook.83411.0.html#1021134-7">dongle</a>
+where can be connected either RJ45 or VGA, but special adapter is needed for both.</p>
+<p>Fortunately ordinary adapter USB-RJ45 from apple worked fine.</p>
+<h3>Disk</h3>
+<p>Disk is handled by driver <code>sd</code> without any problem.</p>
+<h3>Audio</h3>
+<p>Audio is working pretty well without any extra tweaking after installation.</p>
+<h3>WebCam</h3>
+<p>My first attempt failed, but I did not explore too much so far.</p>
+<h3>Fucntion key to control volume and screen brightness</h3>
+<p>The <code>Fn</code> on keyboard in combination with other keys. Specifically arrow keys on Acer V5.
+This functionality is working out of the box immediately after installation.
+It is really cool. Most of the time I had problem with that funcionality on FreeBSD or Linux distros.</p>
+<h3>Conclusion</h3>
+<p>I do not recommend to buy this old laptop for OpenBSD because of problematic network interfaces.
+You can handle it with a several adapters, but you will find more old laptops whose network
+interfaces will be more compatible (without need of extra adapters) and accexible with OpenBSD.</p>
+<p>That is pity because other things working quite well. Unfortunately network interfaces are
+really important aspect for comfortable usage in my opinion.</p>
+<h2>Wireless network</h2>
+<p>If your laptop has only wifi card without ethernet socket there is a little problem with driver.
+There is problem with driver also if OpenBSD support your wifi card. OpenBSD image does not
+contain all available drivers out of the box. OpenBSD does not want to mess your system with
+drivers which are not intend to use. I like that approach, but it has a drawback.
+You can easily install all available drivers with command <code>fw_update</code>. It will detect your
+hardware and download just drivers you need nothing more. Unfortunately this command takes
+the drivers from internet. If you can not connect to the internet by other option than a wifi.
+You have to manually download on other computer particular driver for your wifi, put on USB and
+install with <code>fw_update</code> manually. Note the install proces does not need the internet.
+So you can solve missing driver after installation. Theres are instructions in FAQ chapter
+<a href="https://www.openbsd.org/faq/faq4.html#WifiOnly">Bootstrapping wireless firmware</a>. You will
+find there a link to all available firmwares and download the needed one.</p>
+<h2>Preparation of install media</h2>
+<p>I&#8217;ll cover only preparation of USB stick. Nowadays other devices are not use a lot.</p>
+<h3>Donwload the right image of OpenBSD</h3>
+<p>Go to <a href="https://www.openbsd.org/faq/faq4.html#Download">download page</a>. There is main table
+where you click the version you want and directly download the image file.</p>
+<p>There are some little bit confusing parts. If you directly download image you just download
+the image without signing key and without file containing hashes to verify donwloaded image.
+Unfortunately further links to these files are not showed at first sight.</p>
+<p>You have to look at the first sentence below the table and there is html link to <a href="https://www.openbsd.org/ftp.html">mirror sites</a>.
+Currently you can choose the mirror from a list you most prefer. When I was exploring some of these mirrors they look ok.
+The latest version of OpenBSD should be found at all of mirrors, but some of mirrors
+contains also older version for example the 6.8 and older. On top of that in mirrors you found
+all needed files to installation - images, patches, file sets (image contains its, but you can download it separately here).
+You will find there the file with hashes, signature file, public key to verify your image.
+I strongly recommend to verify every file you download from the internet to avoid future problems.
+There is located also file with name <code>INSTALL.&#60;CPU_architecure&#62;</code>. This file is very handy because
+it describes how to install OpenBSD on specific CPU architecture. If you do not want to read
+any book I recommend to you read this file and <a href="https://www.openbsd.org/faq/index.html">FAQ</a> at least.</p>
+<p>To choose right image you have to know the type of CPU architecture. Most of laptops are
+amd64 in nowadays, but some of them can be also ARM. Neverthless you should not have a problem
+to find image for your CPU architecture if you don&#8217;t have really exotic hardware.</p>
+<h3>Verify the image file</h3>
+<p>I will not describe how to verify the image. Nice tutorial how to do it is in <a href="https://www.openbsd.org/faq/faq4.html#Download">Download section</a>. Under the table with images available to download. I just mention that you will find
+link to public key in text, but there is no link for file with SHA256 hashes and signature.
+These files you will find in mirrors link.</p>
+<h3>Create install media - USB</h3>
+<p>There are dozen of articles how to write image file of OS to USB so I will not replicate them.
+OpenBSD FAQ show usage with <code>dd</code> program on OpenBSD or Linux. You can use <code>BalenaEtcher</code> on
+MacOS or <code>RUFUS</code> on Windows.</p>
+<h1>Installation OpenBSD with disk Encryption</h1>
+<p>It seems that the encryption itself how I am describing will not be necessary from OpenBSD 7.3.
+This version should have encryption of disk included in regular installation mode and you will not
+have to make it manually from shell.</p>
+<p>When you have prepared USB stick as install media boot it, perhaps with <code>F12</code>. If OpenBSD booting went well
+you should see four option to choose in terminal. (I)nstall, (U)pgrade, (A)utoinstall, (S)hell.
+Type a leading letter and enter to confirm the choice. The reason why the letters are in parentheses.
+Install ordinary install process. Upgrade I have not used it yet, but it will be likely option when
+you have already installed OpenBSD and you want to upgrade it to higher version.
+Autoinstall, it should make automatic installation for you, but I did not try it. So I don&#8217;t know
+details. Shell is shell.
+If you choose any other option than shell you can enter to shell with exclamation mark <code>!</code> and
+if you want to return back type exit. It is not recommended to use <code>Ctrl-C</code>. This information is written
+in prompt. READ carefully what Installer write to you, all needed informations are mentioned there.</p>
+<h2>Indetify the disk for installation</h2>
+<p>Choose from option Shell. Now you can operate your computer from live OpenBSD.
+Indetifying disk is one of thing which are not documented well in FAQ. I didn&#8217;t find it at least.
+There is a point when OpenBSD documentation assume that the reader has some basic knowledge.
+I did not have it. I suppose all OSes I&#8217;ve tried in past before OpenBSD served me
+names and basic info about disk in really nice and easy overview. I saw all connected disks
+and the decision which to choose was really without any thinking. OpenBSD will not serve you
+these information. When you want to install OpenBSD you have to know which disk you want to use.
+Disk names are create from the name of driver which operates the disk and number. Choosing the right
+driver for the disk OpenBSD makes automatically. For example we have one SATA disk. SATA disks are
+operated by driver <code>sd</code>. The name of disk will be <code>sd0</code>. If you connect another SATA disk it&#8217;ll be
+<code>sd1</code> and so on. USB sticks are operated by <code>sd</code> also.</p>
+<p>Information about connected disks can be found out with several tools.</p>
+<h3>sysctl</h3>
+<p>First tool is <a href="https://man.openbsd.org/man2/sysctl.2">sysctl(2)</a> - command to get or set system information.</p>
+<pre><code class="language-sh">$ sysctl hw.disknames
+hw.disknames=sd0:,sd1:,wd0:ced4326a18397569,cd0:
+</code></pre>
+<p>It lists all connected disks, if there is hex number after identificator it means Filesystem was recognize by
+OpenBSD. If not there is no native filesystem to OpenBSD on disk (native filesystem is FFS).</p>
+<p>Advantage is - easy command to memorize. Quick usage to get quick basic overview about disks.</p>
+<p>Disadvantage of this tool is you do not see details about disk. Only the name and if
+the filesystem is native to OpenBSD.</p>
+<h3>dmesg</h3>
+<p>Other tool for to find out connected disks is <a href="https://man.openbsd.org/dmesg">dmesg(8)</a> (display the system message buffer).
+We can review startup messages, info during boot with this command. There are messages
+about which disks were connected.</p>
+<pre><code class="language-sh">$ dmesg | grep -E &#39;^[wsc]d\d+&#39;
+</code></pre>
+<p>We grep output for names of expected disk drivers as <code>wd</code>, <code>sd</code> and <code>cd</code> with
+at least one number and the name must be at the start of line. We don&#8217;t see only the name
+of connected disk but also the sizes and other details. Details are not written in well arranged way.
+So sometimes you have to read carefully and finding the information in output. Especially
+if output is longer.</p>
+<p>Advantage - details about disk, you have option to play with pipes and make better output.</p>
+<p>Disadvantage - write the right form of regex and format the output can be challenging for some users.</p>
+<h3>fdisk</h3>
+<p>If you want to use <code>fdisk</code> you have to know which disk you want to analyze. This
+command needs disk name as argument. You will have to list available disks with
+<code>sysctl</code> and then you can each analyze. Finally you find out from output info which disk
+is the rigth for installation. The output will be more detailed if you use <code>verbose</code> option.</p>
+<pre><code class="language-sh">$ fdisk -v sd0
+</code></pre>
+<h3>disklabel</h3>
+<p>Same approach as for <code>fdisk</code> can be used for <code>disklabel</code> command. Disklabel just print out
+different output than <code>fdisk</code>.</p>
+<p>You can check sizes of disk by:</p>
+<pre><code class="language-sh">$ disklabel -p g sd0
+</code></pre>
+<p>or <code>verbose</code> option</p>
+<pre><code class="language-sh">$ disklabel -v sd0
+</code></pre>
+<p>There is keyname <code>label</code> which show manufacture name of your disk. It could help you for example.</p>
+<h3>Conclusion</h3>
+<p>Someone can complain that&#8217;s really annoying approach. Maybe it is not really user friendly.
+In my opinion it is not so much horrible. I was enjoying the juggling with several tools and the
+investigation process to collect info about disk.</p>
+<p>Honestly I am really happy that OpenBSD do it like that. I&#8217;ve learned a lot by this way.
+It pushed me to learn how do it and why&#8230; Now I know what is under the hood.
+When you will use operation system which show you disk and everthing about them, you don&#8217;t have any
+reason to learn or dig where the information come from until problems occur.
+I have to admit that I like user friendly gui window where all info about disk are listed
+and you just click to disk which you want to choose without any work too.
+But I feel much better when I know what is happening behind the scene. And what to do manually
+if automatic process will fail.</p>
+<h2>Fill your disk with random data</h2>
+<p>New harddisks are filled with zeroes or ones. If you install OS on you laptop some parts change
+to real data. Aversary can recognize which parts of disk is used for real data and which parts
+are unused.</p>
+<p>Firstly, we have to create special files which will be representing your disk. If you are
+little skilled in unix you know that is files located in <code>&#47;dev</code>. These files are created automatically
+on other unix most of the time. In OpenBSD you have to make it manually if you handle your disk
+from shell by script <code>MAKEDEV</code>.</p>
+<pre><code class="language-sh">$ cd &#47;dev &#38;&#38; sh MAKEDEV sd0
+</code></pre>
+<p>You have to change directory to dev, because <code>MAKEDEV</code> will create special files in
+current dir. Then just run script on the disk. It will create file sd0a, sd0b, &#8230;., sd0p
+and rsd0a, rsd0b, &#8230;., rsd0p. sd0<letter> is just ordinary special files for your disk. This
+file you will want to use most of the time. rsd<letter> is raw representation of data in your disk.
+This file you will use if you will want to write data on your disk by special way. Carefully
+check if is used sd or rsd in command.</p>
+<p>To write random data on your disk use command below, when you created special files in your
+dev directory.</p>
+<pre><code class="language-sh">$ dd if=&#47;dev&#47;urandom of=&#47;dev&#47;rsd0c bs=1m
+</code></pre>
+<p>It can take a long time. For 250GB SSD disk it takes about 2 hours. Theres is <code>rsd0c</code>
+so we using raw special file. Partition <code>c</code> is intended for whole disk in OpenBSD.</p>
+<h2>Prepare disk for encryption</h2>
+<p>If you want to encrypt your disk you have to prepare disk from shell before installation.
+This should not be needed from OpenBSD 7.3.</p>
+<p>OpenBSD uses two commands for disk preparation.</p>
+<p><code>fdisk</code> - is used to create partition scheme (table) as GPT or MBR.</p>
+<p>and</p>
+<p><code>disklabel</code> - is used to create one or more partitions(logical subsections of harddisk) on disk.</p>
+<p>OpenBSD makes encryption with RAID. We have to prepare disk as RAID. Finally we can use special
+features of RAID to encrypt the disk. We can imagine as the low layer is physical disk,
+another layer is software representation of disk by operation system and finally we create
+another layer RAID where encryption is applied.</p>
+<h3>Create partition scheme</h3>
+<p>I cover only creation of GPT scheme. It is most used partition scheme, currently.</p>
+<pre><code class="language-sh">$ fdisk -gy -b960 sd0
+</code></pre>
+<p>Option <code>-g</code> create GPT scheme. Option <code>-y</code> answer to all question yes.
+Option <code>-b960</code> reserved first space of disk to EFI, boot, PMBR and so on. This space
+will be used for booting. More info can be found <a href="https://man.openbsd.org/boot_amd64.8">boot_amd64(8)</a>
+or <a href="https://man.openbsd.org/boot.8">boot(8)</a></p>
+<h3>Create partition as RAID type</h3>
+<p>When we&#8217;ve created the partition scheme we can fill the scheme(table) with partitions.
+We will need just one for whole disk with RAID type.</p>
+<p>To create partitions we use command <code>disklabel</code>.</p>
+<p>To edit partitions on certain disk use command:</p>
+<pre><code class="language-sh">$ disklabel -E sd0
+</code></pre>
+<p>It invokes new edit prompt.</p>
+<pre><code class="language-sh">sd0&#62; a a
+</code></pre>
+<p>First <code>a</code> means add partition, second <code>a</code> means partition with name <code>a</code>.</p>
+<p>Other lines are about the setting of new partition. Size, type, etc&#8230;</p>
+<pre><code class="language-sh">offset:[64]
+size:[9999] *
+FS type:[4.2BSD] RAID
+sd0*&#62; w
+sd0&#62;q
+</code></pre>
+<p>Offset, just enter the default value. For size write asterisk <code>*</code> to choose whole disk.
+FS type choose <code>RAID</code>. We need RAID type to encrypt it. OpenBSD can encrypt only RAID.</p>
+<p>Finaly <code>w</code>, means write changes to disk. <code>q</code> means quit edit prompt of disklabel.</p>
+<h3>Encrypt the disk</h3>
+<p>Currently we have disk <code>sd0</code>, we&#8217;ve already created special files <code>sd0</code> and <code>rsd0</code> in <code>&#47;dev</code>.
+Then we&#8217;ve already create partition scheme GPT on disk and finally create one partition
+marked with letter <code>a</code> as whole disk.</p>
+<p>Command to manage RAID in OpenBSD is <code>bioctl</code>.</p>
+<p>To encrypt prepared disk write:</p>
+<pre><code class="language-sh">$ bioctl -c C -l sd0a softraid0
+New passphrase:
+Re-type passphrase:
+sd1 at scsibus2 targ 1 lun 0: &#60;OPENBSD, SR CRYPTO, 005&#62; SCSI2 0&#47;direct fixed
+sd1: 19445MB, 512 bytes&#47;sector, 39824607 sectors
+softraid0: CRYPTO volume attached as sd1
+</code></pre>
+<p>Option <code>-c</code> is to select RAID discipline(raidlevel). <code>C</code> discipline is encrypt discipline to encrypt disk.
+For example discipline <code>1C</code> means <code>RAID1</code> + <code>CRYPTO</code> = encrypting and mirroring disks discipline.</p>
+<p>Option <code>-l</code> select disk to encrypt.</p>
+<p>softraid0 is softraid managment device node.</p>
+<p>It is important to notice that it creates a whole new virtual disk <code>sd1</code>, which is created from <code>sd0a</code>.</p>
+<p>We encrypt the disk with a password. It means we create a key which is located at disk and we just
+make password for this key. It has advantage that we can change the password any time we need.</p>
+<p>There is an option to create key and save to disk. Official documentation of OpenBSD label as Keydisk.
+There are also instructions how to make key disk. This approach is probably more safe, but
+you can not change the key. It is really recommended to create backup of key disk if you
+choose this option.
+Personally I did not try to create Keydisk. I&#8217;d like to try in future. Then I&#8217;ll update this section.</p>
+<h3>Add zeroes at the start of disk</h3>
+<p>It is recommended fill start of new disk with zeroes, because info about softraid at the start
+can confuse kernel.</p>
+<p>To add zeroes run:</p>
+<pre><code class="language-sh">$ dd if=&#47;dev&#47;zero bs=1m count=1 of=&#47;dev&#47;rsd1c
+</code></pre>
+<p>Currently, we have prepared encrypted disk <code>sd1</code> for installation. Now you can write <code>exit</code>
+to go back to installation.</p>
+<h2>Installation</h2>
+<p>I don&#8217;t cover all questions just the most important in my opinion.</p>
+<p><strong>Which disk is the root? sd1</strong></p>
+<p>It is a disk we created with encryption from RAID partition.</p>
+<p><strong>Setup a user? <username></strong></p>
+<p>I recommend to create a new user. But you can create it later if you want.</p>
+<p><strong>Start sshd(8) by default?[yes] no</strong></p>
+<p>It can be enabled later. If you want to use as laptop I assume you don&#8217;t need sshd.</p>
+<p><strong>Do you expect to run X Window System?[yes]</strong></p>
+<p>If you are installing on laptop, yes will be probably the right answer.</p>
+<p><strong>Do you want the X Window System to be started by xenodm?[no] yes</strong></p>
+<p>X Window System can be started by <code>startx</code> or <code>xenodm</code>. <code>xenodm</code> should be more secure.
+If you are not sure you can choose no, it can be enabled later.</p>
+<p><strong>Use (W)hole disk MBR, whole disk(G)PT, &#8230; (E)dit? [whole] G</strong></p>
+<p>It sets the partition scheme.
+Use what is suitable for you. This article uses GPT.</p>
+<p><strong>Use (A)uto layout, (E)dit auto layout, &#169;ustom? [a] c</strong></p>
+<p>It sets layout of partitions.
+Custom layout invoke <code>disklabel</code> command to editing prompt.</p>
+<p>There are several rules to follow.</p>
+<ul>
+<li>Don&#8217;t add partition with letter <code>c</code>. This partition is reserver by OpenBSD for whole disk.</li>
+<li>If you use GPT scheme automatically (set by installer). Don&#8217;t use partition <code>i</code> it reserved by default
+to EFI boot.</li>
+</ul>
+<p>There are several recommendations.</p>
+<ul>
+<li>Use partition <code>a</code> for mountpoint <code>&#47;</code> (root).</li>
+<li>Use partition <code>b</code> for swap.</li>
+</ul>
+<p>Example of layout. It does not include sizes, because it depends on your needs and size of
+your harddisk.</p>
+<table>
+<caption>Layout of OpenBSD disk</caption>
+<thead>
+<tr>
+<th>PARTITION</th>
+<th>Mountpoint</th>
+<th>Note</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>a</td>
+<td>&#47;</td>
+<td>root</td>
+</tr>
+<tr>
+<td>b</td>
+<td>swap</td>
+<td>swap space</td>
+</tr>
+<tr>
+<td>c</td>
+<td></td>
+<td>whole disk</td>
+</tr>
+<tr>
+<td>d</td>
+<td>&#47;tmp</td>
+<td>temporary files</td>
+</tr>
+<tr>
+<td>e</td>
+<td>&#47;var</td>
+<td>variable data</td>
+</tr>
+<tr>
+<td>f</td>
+<td>&#47;usr</td>
+<td>user system resources</td>
+</tr>
+<tr>
+<td>g</td>
+<td>&#47;usr&#47;X11R6</td>
+<td>X applications</td>
+</tr>
+<tr>
+<td>h</td>
+<td>&#47;usr&#47;local</td>
+<td></td>
+</tr>
+<tr>
+<td>i</td>
+<td></td>
+<td>EFI BOOT</td>
+</tr>
+<tr>
+<td>j</td>
+<td>&#47;usr&#47;src</td>
+<td></td>
+</tr>
+<tr>
+<td>k</td>
+<td>&#47;usr&#47;obj</td>
+<td></td>
+</tr>
+<tr>
+<td>l</td>
+<td>&#47;home</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Location of sets? (cd0 disk &#8230;)  [cd0] disk</strong></p>
+<p>This question can be little bit complicated.
+Disk means sd0, sd1, wd0, &#8230;. USB stick is disk.
+Sets mean file sets to install. File sets are locate on USB stick.
+Unfortunately the USB stick itself is not mounted. We just boot OpenBSD to RAM, but
+USB is not mounted.
+We select disk, because installation is from USB. Then we have to choose which disk is
+out USB.</p>
+<p><strong>Is disk already mounted [yes]: no</strong></p>
+<p><strong>Which disk contains install media [sd0]: sd2</strong></p>
+<p>Most of the time <code>sd0</code> is main harddisk. USB should be <code>sd1</code> or <code>sd2</code>.
+This part will mount your USB.</p>
+<p><strong>Which sd2 partitions has install sets [a]:</strong></p>
+<p>Select default a.</p>
+<p><strong>Pathname to sets [7.2&#47;amd64]:</strong></p>
+<p>Select default.
+Then select sets which you want to install. How to select or deselect is nicely described
+in installer.</p>
+<p>Congratulations!</p>
+<p>After sets install, the installation is done.
+When you restart your laptop it should ask you for password to de-encrypt harddisk.</p>
+<p>I&#8217;d like to make other articles about steps after installation. There will be info about
+how to setup you <code>cwm</code>, <code>xterm</code>, <code>X Window System</code> or how speed up your system.</p>
+
+    </main>
+
+    <footer>
+    </footer>
+
+  </body>
+
+</html>
+

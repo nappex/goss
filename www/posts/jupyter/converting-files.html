@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="date" scheme="YYYY-MM-DD" content="2020-09-02">
+    <meta name="license" content="https://creativecommons.org/licenses/by/4.0/">
+    <meta name="referrer" content="origin">
+    <link rel="icon" type="image/png" size="16x16" href="/images/favicon-16x16.png">
+    <link rel="stylesheet" href="/css/style.css">
+    <title>Konverze Jupyter notebooku do dalších formátů</title>
+  </head>
+
+
+  <body>
+<!--    Navigation is made by Erik Terwan    -->
+<!--          24th of November 2015          -->
+<!--              MIT License                -->
+    <nav role="navigation">
+      <div id="menuToggle">
+        <!--
+        A fake / hidden checkbox is used as click reciever,
+        so you can use the :checked selector on it.
+        -->
+        <input type="checkbox" />
+
+        <!--
+        Some spans to act as a hamburger.
+        They are acting like a real hamburger,
+        not that McDonalds stuff.
+        -->
+        <span></span>
+        <span></span>
+        <span></span>
+
+        <!--
+        Too bad the menu has to be inside of the button
+        but hey, it's pure CSS magic.
+        -->
+        <ul id="menu">
+          <a href="/"><li>Home</li></a>
+          <a href="/posts/"><li>Posts</li></a>
+          <a href="/categories/"><li>Categories</li></a>
+          <a href="/resources/"><li>Resources</li></a>
+          <a href="/about/"><li>About</li></a>
+          <a href="/contact/"><li>Contact</li></a>
+        </ul>
+      </div>
+    </nav>
+
+
+    <header>
+    </header>
+
+    <main>
+
+<h1>Konverze Jupyter notebooku do dalších formátů</h1>
+      <p><span id=pubdate>Published on: 2020-09-02</span></p>
+<h1>1. Vytvoření prezentace (slideshow) ze souboru .ipynb</h1>
+<p>Pokud si uděláte analýzu dat a potřebujete z ní potom udělat nějakou pěknou prezentaci třeba pro šéfa, tak jupyter notebook má své řešení. Což je super jelikož nemusíte řešit další appku či software. Celé je to celkem super easy. Jupyter notebook vytváří prezentace ve formátu <strong>html</strong>. Mě se toto řešení osobně velice líbí, protože takovou prezentaci spustíte dnes na každém počítači a není rozházená. Navíc se velmi intuitivně ovládá pomocí šipek. Abyste mohli vytvořit prezentaci tak musíte postupovat následovně.</p>
+<p>Musíte mít nainstalován v pythonu jupyter notebook. Poté stačí do příkazové řadky napsat:</p>
+<pre><code>$ python3 -m jupyter nbconvert &#60;path_to&#47;your_file.ipynb&#62; --to slides
+</code></pre>
+<p>pořádí nemá vliv
+    $ python3 -m jupyter nbconvert &#8211;to slides <path_to/your_file.ipynb></p>
+<p>Výstupem tohoto řádku je soubor <code>your_file.slides.html</code>, který se uloží do složky, v které je uložen zdrojový soubor určený ke konverzi tedy např. <code>&#47;folder1&#47;folder2&#47;your_file.ipynb</code>. Tento soubor je vaše nová hotová prezentace.</p>
+<p>A co jednotlivé části kódu znamenají ?</p>
+<p><code>python3</code> - budeme pracovat s pythonem3</p>
+<p><code>-m</code> - načti pythonní modul. Nebo budeme používat modul z python3</p>
+<p><code>jupyter</code> - modul z pythonu3, který budeme používat má název jupyter</p>
+<p><code>nbconvert</code> - z modulu jupyter použij nástroj nbconvert, který se stará o konvertování do jiných formátů</p>
+<p><code>--to</code> - je jeden z aliases nástroje nbconvert, který říká <em>do</em> jakého formátu chceme náš soubor konvertovat</p>
+<p><code>slides</code> - jeden z možných výstupních formátů. <code>slides</code> nám vytvoří formát .slides.html, ale můžeme místo slides napsat třeba jen html a dostaneme čisté hmtl.</p>
+<p><code>&#60;path_to&#47;your_file.ipynb&#62;</code> - cesta k souboru, který byl vytvořen pomocí jupyter notebooku a chceme z něj udělat prezentaci či jiný formát</p>
+<h1>2. Vytvoření prezentace bez python nebo jiného programovacího kódu</h1>
+<p>Je to stejné jako v předchozím případě, jediné v čem se to liší je použití navíc tzv flags.
+Kód do příkazové řádky:</p>
+<pre><code>$ python3 -m jupyter nbconvert your_analyze.ipynb --to slides --no-input
+</code></pre>
+<p>Oproti předchozímu příkladu přibyl jeden flag navíc a to <code>--no-input</code>. Který zajistí, že se v prezentaci nebude objevovat kód neboli buňky které nejsou typu markdown. Pro tento účel lze ještě použít flag <code>--no-prompt</code>, ale ten nemám zcela ošahaný. Jaké existují flags and aliases pro nbconvert naleznete v dokumentaci, kterou uvádím v užitečných odkazech.</p>
+<h1>3. Vytvoření html ze souboru .ipynb</h1>
+<p>Jak bylo zmíněno v <a href="#1.-Vytvo%C5%99en%C3%AD-prezentace-(slideshow)-ze%20souboru-.ipynb">kapitole 1</a> změna výstupního formátu je pouze o tom, jaký formát nastavíme pro alias <code>--to</code>.</p>
+<p>Kód by vypadal takto:</p>
+<pre><code>$ python3 -m jupyter nbconvert --to html &#60;path_to&#47;your_file.ipynb&#62;
+</code></pre>
+<h1>Použité zdroje - další studium</h1>
+<ul>
+<li><p><a href="nbconvert.readthedocs.io/en/latest/config_options.html#cli-flags-and-aliases">Flags and aliases - nbconvert</a></p></li>
+<li><p><a href="medium.com/@mjspeck/presenting-code-using-jupyter-notebook-slides-a8a3c3b59d67">Medium article about presentation</a></p></li>
+</ul>
+
+    </main>
+
+    <footer>
+    </footer>
+
+  </body>
+
+</html>
+

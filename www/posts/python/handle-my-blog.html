@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="date" scheme="YYYY-MM-DD" content="2020-11-02">
+    <meta name="license" content="https://creativecommons.org/licenses/by/4.0/">
+    <meta name="referrer" content="origin">
+    <link rel="icon" type="image/png" size="16x16" href="/images/favicon-16x16.png">
+    <link rel="stylesheet" href="/css/style.css">
+    <title>How I've published my pelican blog</title>
+  </head>
+
+
+  <body>
+<!--    Navigation is made by Erik Terwan    -->
+<!--          24th of November 2015          -->
+<!--              MIT License                -->
+    <nav role="navigation">
+      <div id="menuToggle">
+        <!--
+        A fake / hidden checkbox is used as click reciever,
+        so you can use the :checked selector on it.
+        -->
+        <input type="checkbox" />
+
+        <!--
+        Some spans to act as a hamburger.
+        They are acting like a real hamburger,
+        not that McDonalds stuff.
+        -->
+        <span></span>
+        <span></span>
+        <span></span>
+
+        <!--
+        Too bad the menu has to be inside of the button
+        but hey, it's pure CSS magic.
+        -->
+        <ul id="menu">
+          <a href="/"><li>Home</li></a>
+          <a href="/posts/"><li>Posts</li></a>
+          <a href="/categories/"><li>Categories</li></a>
+          <a href="/resources/"><li>Resources</li></a>
+          <a href="/about/"><li>About</li></a>
+          <a href="/contact/"><li>Contact</li></a>
+        </ul>
+      </div>
+    </nav>
+
+
+    <header>
+    </header>
+
+    <main>
+
+<h1>How I've published my pelican blog</h1>
+      <p><span id=pubdate>Published on: 2020-11-02</span></p>
+<p>This is not a common article it is just instructions for myself how to publish my blog. How I invented structure of git and branches to publish my blog.</p>
+<h1>Blog factory - main folder (pelican-blog&#47;)</h1>
+<p>You created first folder in your PC as pelican-blog. That blog became your first local repo. There is source raw data of everything. Every article in .md, your settings for pelican tool, your makefile, your pelican theme, your pelican plugin etc.</p>
+<p>This folder you can imagine as factory for creation of static sites.</p>
+<p>For this repo you have one branch - <code>master</code>,</p>
+<p>and one remote - your github with repo <code>nappex.github.io</code></p>
+<p>Everytime when you done some changes in factory you can send your changes like that:</p>
+<pre><code>$ git add -A
+$ git commit -m "your message"
+$ git push origin master
+</code></pre>
+<h1>Blog output (with static pages) - subfolder (output&#47;)</h1>
+<p>When you want to run static sites on GitHub pages, theres is recommendation to push your statis pages to branch with name <code>gh-pages</code></p>
+<p>So you&#8217;ve created new folder with name output which is situates as subfolder of folder pelican-blog. And you make another repo from this folder with:</p>
+<p>Only one branch - <code>gh-pages</code>,</p>
+<p>and one remote - your github with repo <code>nappex.github.io</code></p>
+<p>When you want to publish new output of static pages to GitHub, you have to make new outpu from factory.</p>
+<pre><code>$ source venv&#47;bin&#47;activate
+</code></pre>
+<p>for activation virtual environment where is installed pelican tool</p>
+<pre><code>$ make html
+</code></pre>
+<p><a href="https://docs.getpelican.com/en/stable/publish.html">more info in pelican documentation</a></p>
+<p>After that we generate new content of output&#47; folder. By default is rewrite whole content of this folder with new files so <code>.git</code> file will be deleted. When we want to preserve file <code>.git</code> we have to append variable <code>OUTPUT_RETENTION</code>, with values as a list with names of files to be preserved, to configuration file <code>pelicanconf.py</code> situated in factory folder. The second variable describe path to output folder for html files.</p>
+<pre><code>OUTPUT_RETENTION = [".git"]
+OUTPUT_PATH = &#39;output&#47;&#39;
+</code></pre>
+<p>When all files are generated we can push our changes to see them all world.
+You have to change your main repo to subrepo of output folder.</p>
+<pre><code>$ cd output&#47;
+$ git add -A
+$ git commit -m "Your message"
+$ git push origin gh-pages
+</code></pre>
+
+    </main>
+
+    <footer>
+    </footer>
+
+  </body>
+
+</html>
+

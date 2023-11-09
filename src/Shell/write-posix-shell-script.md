@@ -11,7 +11,7 @@ Status: published
 
 
 
-# Introduction
+## Introduction
 
 Bourne shell - was the default shell for Version 7 Unix. Unix-like systems continue to have `/bin/sh`—which will be the Bourne shell, but rather a symbolic link or hard link to a compatible shell(ksh, bash, zsh, ...)—even when other shells are used by most users.[3]
 
@@ -25,7 +25,7 @@ The `/bin/sh` has been the **Bourne shell** for many years thereafter (or the **
 
 One shell that is compatible with most other simple shells, is dash, Debian default system shell, which is a derivative of the older BSD ash.[6]
 
-# Portability
+## Portability
 
 Unfortunately, making a shell script 'POSIX-compliant' is usually easier than making it run on any real-world shell. The only real-world sensible recommendation is test your script in several shells. Like the list: dash, posh, lksh, and bash --posix. Solaris is a world on its own, probably you will need to test against /bin/sh and xpg4/sh.[6]
 
@@ -38,11 +38,11 @@ Beyond that though, testing has to cover a few shells (/bin/sh especially) on a 
 
 I'd recommend the [Autoconf guide to portable shell](http://www.gnu.org/software/autoconf/manual/autoconf.html#Portable-Shell), which is absolutely brilliant and saves a lot of time. Large chunks of it are obsolete, but that's OK; just skip TruUnix and Ultrix and so on if you don't care![7]
 
-# Arrays
+## Arrays
 
 The Bourne shell or the POSIX sh language specification don't support arrays. Or rather they have only one array: the positional parameters ($1, $2, $@, so one array per function as well).[1]
 
-`ksh88` did have arrays which you set with `$ set -A`, but that **didn't get specified in the POSIX sh** as the syntax is **awkward** and **not very usable!!!**[1] Example: `$ set -A array_name 1 2 3`, but when you run this line in bash you have a problem. Do not use this kind of array in POSIX shell script.
+`ksh88` did have arrays which you set with `$ set -A`, but that **didn't get specified in the POSIX sh** as the syntax is **awkward** and **not very usable!!!**[1] Example: `$ set -A array_name 1 2 3`, but when you run this line in bash you have a problem. Do not use this kind of array in POSIX shell script.
 
 Other shells with array/lists variables include: `csh/tcsh`, `rc`, `es`, `bash`, `yash`, `zsh`, `fish` each handle arrays with a different syntax.
 `csh/tcsh`, `rc`, `es`, `bash`  mostly copied the ksh syntax the ksh93 way.
@@ -93,6 +93,18 @@ Manual page of `ksh93` say about `set --` following:
 `--`      Do not change any of the options; useful in setting $1 to a value beginning with -. If no arguments follow this option then the positional parameters are unset.
 
 [stackoverflow topic](https://stackoverflow.com/questions/53747156/array-under-sh-shell-not-bash)
+
+## Indirect variable reference
+
+If we want to get value from variable, which name is saved to another variable.
+
+```sh
+$ x=10
+$ myvar=x
+$ eval "value=\${$myvar}"
+$ echo "$value"
+10
+```
 
 # Sources
 

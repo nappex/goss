@@ -1,0 +1,852 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="date" scheme="YYYY-MM-DD" content="2022-05-07">
+    <meta name="license" content="https://creativecommons.org/licenses/by/4.0/">
+    <meta name="referrer" content="origin">
+    <link rel="icon" type="image/png" size="16x16" href="/images/favicon-16x16.png">
+    <link rel="stylesheet" href="/css/style.css">
+    <title>Transcript of FOSDEM talk NSA operation orchestra</title>
+  </head>
+
+
+  <body>
+<!--    Navigation is made by Erik Terwan    -->
+<!--          24th of November 2015          -->
+<!--              MIT License                -->
+    <nav role="navigation">
+      <div id="menuToggle">
+        <!--
+        A fake / hidden checkbox is used as click reciever,
+        so you can use the :checked selector on it.
+        -->
+        <input type="checkbox" />
+
+        <!--
+        Some spans to act as a hamburger.
+        They are acting like a real hamburger,
+        not that McDonalds stuff.
+        -->
+        <span></span>
+        <span></span>
+        <span></span>
+
+        <!--
+        Too bad the menu has to be inside of the button
+        but hey, it's pure CSS magic.
+        -->
+        <ul id="menu">
+          <a href="/"><li>Home</li></a>
+          <a href="/posts/"><li>Posts</li></a>
+          <a href="/categories/"><li>Categories</li></a>
+          <a href="/resources/"><li>Resources</li></a>
+          <a href="/about/"><li>About</li></a>
+          <a href="/contact/"><li>Contact</li></a>
+        </ul>
+      </div>
+    </nav>
+
+
+    <header>
+    </header>
+
+    <main>
+
+<h1>Transcript of FOSDEM talk NSA operation orchestra</h1>
+      <p><span id=pubdate>Published on: 2022-05-07</span></p>
+<h1>Introduction</h1>
+<p>This is text representation of FOSDEM 2014 talk about NSA, privacy and security.</p>
+<p>This transcript was came out to facilitate understanding
+the video of the talk to people who dont speak english very well.</p>
+<p>This transcript was created also because of incorrect automatic english
+subtitles available in youtube video.
+Sometimes it is really difficult to understand to speaker.
+Especially non native speaker audience will have a problem to understand this interesting talk.
+But reading the transcript should be help to understand difficult parts.
+There is also <a href="https://nappex.github.io/myblog/NSA-orchestra-transcript-cz">Czech</a> translation of transcript.</p>
+<h2>Transcript subject</h2>
+<p>NSA annual state report by Poul-Henning Kamp (FreeBSD developer) - FOSDEM 2014</p>
+<p>video links:</p>
+<ul>
+<li><a href="https://www.youtube.com/watch?v=fwcl17Q0bpk">youtube</a></li>
+<li><a href="https://vimeo.com/86567061">vimeo</a></li>
+<li><a href="https://ftp.fau.de/fosdem/2014/Janson/Sunday/NSA_operation_ORCHESTRA_Annual_Status_Report.webm">FOSDEM</a></li>
+</ul>
+<p>presentation links:</p>
+<ul>
+<li><a href="http://phk.freebsd.dk/pubs/FOSDEM_2014.pdf">Poul-Henning Kamp personal page</a></li>
+</ul>
+<p>Presentation consist of this main part, thats why is named as orchestra.</p>
+<p><strong>Playlist spoiler</strong>:</p>
+<ul>
+<li><p>Electric Light ORCHESTRA: Confusion</p></li>
+<li><p>ABBA: Money, Money, Money</p></li>
+<li><p>Backman Turner OVERDRIVE: Taking Care Of Business</p></li>
+<li><p>QUEEN: Bicycle Race</p></li>
+<li><p>Beastie BOYS: Sabotage</p></li>
+<li><p>PASADENA Roof Orchestra: Pennies From Heaven</p></li>
+</ul>
+<h1>Interview with Poul-Henning Kamp before talk:</h1>
+<p>Interview with Poul-Henning Kamp.
+Poul-Henning Kamp will give a talk about
+NSA operation ORCHESTRA: Annual Status Report at FOSDEM 2014.</p>
+<ol>
+<li><p>Q: Could you briefly introduce yourself?</p>
+<p>I’m a six foot ape-descendant who makes a living doing weird stuff with computers.
+I’ve been in computing for 30 years and open source for 29.
+I used to be one of the central developers in FreeBSD,
+these days I am the man behind the Varnish HTTP accelerator.</p></li>
+<li><p>Q: What will your talk be about, exactly?</p>
+<p>My talk is about the NSA - FOSS relationship.</p>
+<p>I think we need to reevaluate it.</p></li>
+<li><p>Q: What brought you to this topic, why do you care about it?
+Why is it so important for you to talk about it?</p>
+<p>The inspiration is the disclosures by Edward Snowden,
+but while they have mainly been aimed at the general
+population and politicians,
+there is a different message for the IT world and in
+particular for the FOSS community, but most people seem to miss it.</p></li>
+<li><p>Q: Could you shed some light on the main message you want
+to convey in your talk? If there’s one thing that people
+should remember after your talk, what should it be?</p>
+<p>“Who do you trust, and why&#8230;”</p></li>
+<li><p>Q: What do you hope to accomplish by giving this talk? What do you expect?</p>
+<p>I hope that people will laugh and think.</p></li>
+<li><p>Q: What’s the role of FOSS in this age of surveillance
+by the NSA and other shady agencies? Can we fight
+the current privacy crisis with FOSS?</p>
+<p>Those are very good questions, and I hope my talk will inspire people
+to think about and investigate evidence to find the answers.</p></li>
+<li><p>Q: Have you enjoyed previous FOSDEM editions?</p>
+<p>No, I have never been to FOSDEM before.</p></li>
+</ol>
+<h1>Transcript of talk NSA operation ORCHESTRA: Annual Status Report</h1>
+<p><strong>Moderator:</strong></p>
+<p>Thank you for joining us we going to have a Poul-Henning Kamp also maybe better known as phk
+on annual status report on NSA operation orchestra, welcome.</p>
+<h2>Presentation</h2>
+<p><strong>Poul-Henning Kamp:</strong>
+Thank you.</p>
+<h3>Introduction - What it is?</h3>
+<p>So couple a years ago there was a news item that made me sit up in the chair and think.
+It&#8217;s probably not the one you think about now,
+the director of CIA had his love affair exposed by the FBI,
+because they trade this telecommunication.
+Being a security researcher which is not normally something I called myself.
+It is a matter of imagination.
+In a situation like that. You need to sit back and try to think like
+the minds who did that.</p>
+<p>Later on we&#8217;ve got Edward Snowden&#8217;s disclosures and I sat down and
+I thought what would I do if I have budget a 1 billion dollars
+and a mandate and order to collect as much communication as possible.</p>
+<h3>Operation ORCHESTRA</h3>
+<p>Then a week ago I got an email from Phillip (some guy from FOSDEM) going like:</p>
+<p>&#8220;I need a keynote speaker what are you doing next weekend&#8221;.</p>
+<p>And since I owe Phillip a lot of favors I said:</p>
+<p>&#8220;I can do that&#8221;</p>
+<p>and then I sat down and made a set of slides.
+The basic premise here is that you should imagine
+a junior NSA staffer arriving in Brussels to give a update to NATO
+on one of the NSA programs and then
+because he is American he ends up here instead.</p>
+<p>If I had a lot of time I would have done the part you knowthe black hair,
+the sunglasses and all that, but you&#8217;ll just have to imagine that.</p>
+<p>So this is Operation Orchestra and this is of course top secret
+and none of this will exit this room I am sure.</p>
+<h3>ORCHESTRA operation at a glance</h3>
+<p>So the orchestra operation has as a primary objective to reduce
+the cost of gathering information.
+NSA has in the law, that controls their funding,
+it says collect as much information as possible and as a responsible
+government agency we&#8217;re trying to do that as cost-effectively as possible.</p>
+<p>So Operation Orchestra is about reducing NSA cost of collecting information
+and all of it has to be above board.
+There&#8217;s no black ops (black operations - see wiki) allowed.
+Black ops are where you break the laws. And we have no special authorizations
+we have no 007 with the license to wiretap or anything of that sort.</p>
+<p>And the means the way we do this is we try to eliminate prevent
+of weakening encryption we try to enable access to information
+and we try to frustrate players that are trying to make it harder for us.</p>
+<h3>History</h3>
+<p>And the history about&#8230;.,
+This is actually a very old program.
+It started out very soon after the escape of the Inter-Net.</p>
+<p>The internet was meant for the military
+is not meant for grandmother and terrorists and so on. And the big problem
+with Internet is unlike the telecommunication network as we knew it
+you can plug anything into the internet you don&#8217;t have to get approval first.
+People can build their own computers and hook them up to network.
+You couldn&#8217;t do that with the old telecommunications network.
+You went to the FCC and you got a little sticker and all this stuff.</p>
+<p>So suddenly we&#8217;re in this unregulated network.
+and there&#8217;s far too many players in the network.
+It used to be we just talk to AT&#38;T who could wiretap anybody.
+And they would heavily do that.
+Now we have you know millions of Internet networks, and many of them abroad.
+We cannot negotiate with all them. We have to find scalable methods
+to deal with this.
+And our attempt to try to manipulate the outside protocols
+in instead of the tcp&#47;ip protocols unfortunately failed.
+that would have continued the connection-oriented models of the
+telephone network but that didn&#8217;t work. That was really too bad.</p>
+<h3>Orchestra Origin</h3>
+<p>The original of this is the deep thought working group
+which came up with these ideas of trying to gain control
+of the key leverage points on the internet.
+there&#8217;s still some places where things really happen.</p>
+<p>Influence the process to our advantage and to identify leverage persons,
+where low-cost can get a high impact.</p>
+<h3>ABBA operation</h3>
+<p>So one of the new things in operation in the orchestra version
+is what we call ABBA operations.</p>
+<p>And this is a very old problem.
+Some smart inventor will invent something, that makes our life more difficult.</p>
+<p>And we don&#8217;t want that.
+So what do we do?</p>
+<p>#### Old school
+So the way we used to do this is we would try to bribe him,
+try to hire him or something.
+We would classify his patent.
+So he would get a patent but he couldn&#8217;t show it to anybody.
+In some cases we can swear people to silence you know national security,
+yade yade (etc.), the president will give you a hand shaking and all this stuff,
+but there&#8217;s a lot of paperwork involved in this and it leaves a lot of traces.
+And involves many people. So it&#8217;s kind of an expensive process.</p>
+<h4>New school</h4>
+<p>So we&#8217;ve found a new way to do this.
+We&#8217;re using the raw capitalism of the market.
+We&#8217;re simply throwing money at the problem.</p>
+<p>So we spot some startup that&#8217;s going to give us problems.
+We read HackerNews and all that stuff of course.</p>
+<p>So there&#8217;s a venture capitalist who contacts them it&#8217;s like:
+&#8220;Oh I saw you on HackerNews can I drop by?&#8221;</p>
+<p>So this dude drops by and you know chats them up and
+invites them out for a fancy dinner and you know drops 10k dollars,
+get some better chairs or something you know keep me posted right.</p>
+<p>Now that he knows what they were up to,
+he comes home and we start looking for a good patent.</p>
+<p>If we&#8217;re lucky this patent is already with one of the friends of NSA
+and would draw the line to IBM and for their patent lawyers.
+And you should look at these guys because that&#8217;s awfully close to your patent.</p>
+<p>And like less not IBM we&#8217;ll send out a couple of patent lawyers
+with lots of patents and that startup will be dead.
+Very often they&#8217;ll even call to the venture capitalist back:
+&#8220;Oh we sorry&#8230;&#8221;
+So we get feedback we know they&#8217;re stopped it&#8217;s wonderful
+and it&#8217;s like 30k dollars.</p>
+<p>If the patent is not in, what we call good hands.
+We&#8217;ll obviously try to find a better patent or we&#8217;ll try
+to get it transferred.
+There&#8217;s some very cooperative patent companies out there,
+who will go out and buy a patent. So that they can use it on our behalf.</p>
+<h3>PASADENA operation</h3>
+<p>It&#8217;s a very convenient process.
+we&#8217;ve used some of the same to solve another old problem.
+We have this problem with people who are working for us
+in different situations and we need to reward them.</p>
+<p>And this used to be some kind of bogus operation,
+you know they would suddenly win the lottery.
+Some distant relative would have left them a fortune.
+We can not sorry about the Nigerian scam but that&#8217;s kind of how it started.
+People get amazing job offers. Sometimes new identities sort of stuff like that.
+And you have to bend a lot of rules to do that.
+And it&#8217;s hard to hide the trails and Google has made this incredibly difficult.
+It&#8217;s like:
+&#8220;Oh, so you suddenly have this distant relative left&#8230;
+why can&#8217;t we find any traces of this person on Google at all?&#8221;
+It&#8217;s like: &#8220;hmm?!&#8221; right.</p>
+<p>No. It&#8217;s much easier today.
+&#8220;Hey, I quit!&#8221;.
+Then he makes a startup, finds a venture capitalist who dumped
+a couple of millions on it.
+And then he sits browsing the internet for
+a couple of years or whatever he want to do and that&#8217;s it.
+Paperwork is standard there&#8217;s a tax-form for this, right?</p>
+<p>And that&#8217;s actually one of these do tax I ended up making a company that worked.
+That&#8217;s the point, Ruby.
+So this is a way to move money into our objectives.
+This is a way we can move money into people that we want to do things.</p>
+<h3>OVERDRIVE activities</h3>
+<p>So in the other end of the scale speaking of money we have what we call the overdrive activities.
+This is about influencing bussines decisions.</p>
+<p>We used NSA&#8217;s contracting we rather big purchases of IT services.
+And we can pretty much decide,
+who we give the order to ourselves.
+There&#8217;s no fair purchasing when it&#8217;s national security.
+And the good thing about contract law is you can do anything.
+It cannot be directly illegal,
+you cannot have a contract to kill somebody,
+but you can do anything that&#8217;s possible within the law with a contract.</p>
+<p>And it&#8217;s very good mechanism to solve big problems.
+The bad news is usually very big players so there&#8217;s lawyers
+and it&#8217;s kind of expensive and stuff like that.
+And that can be some objective screw,
+but it&#8217;s a good way to solve problems
+and this is actually how we solved the Skype problem.</p>
+<h4>OVERDRIVE: Skype example</h4>
+<p>Skype was peer-to-peer encrypted video and audio.
+They didn&#8217;t use standard protocols. They are out of the FTC.
+We cannot just say &#8220;this is illegal&#8221; and get them banned.
+It&#8217;s not open source and they did not buy it on our attempt to right them.
+It&#8217;s very popular with independent actors,
+human rights groups in Belorusssia for instance.</p>
+<p>It&#8217;s also very popular with a political movements
+adverse to the US course in Middle East.
+And of course terrorists use its we&#8217;re absolutely sure.</p>
+<p>So first we partnered with eBay which is a very special friend of NSA.
+For some minor considerations and foreign intelligence they bought Skype for us.
+Unfortunately they bungled it, they bought only the access to Skype.
+They didn&#8217;t get the source code they didn&#8217;t get control with the network.
+So that&#8217;s sort of like &#8220;prkk&#8221;.</p>
+<p>It&#8217;s unclear why their lawyers were not briefed, but we didn&#8217;t get what we want.
+So we had to try again but we can&#8217;t do that while eBay is sitting there.
+So we get eBay to sell it again at a loss
+and now they&#8217;re not quite as good a friend of NSA.
+We&#8217;re working in that relationship.
+So we&#8217;ve got Microsoft to buy it instead and this time they got all of it.
+Microsoft has now changed the architecture of Skype to be centralized.
+Now Skype goes through Microsoft servers very convenient,
+where it will be decrypted if need be.
+That was a pretty expensive operation, but it was necessary.
+We couldn&#8217;t have people communicating outside our jurisdiction.</p>
+<h4>OVERDRIVE: Summary</h4>
+<p>So it&#8217;s a very big hammer.
+It requires signatures very high above my pay level,
+but it&#8217;s a very good way to do things.
+And one of the interesting things here is some of these big players
+no matter what they do it&#8217;s brilliant.
+We don&#8217;t understand this but it&#8217;s brilliant.
+It doesn&#8217;t make sense but it&#8217;s brilliant, because he&#8217;s a genius we know that.
+So you can do pretty strange things this way, totally in the open,
+nobody blinks an eye, we like that.</p>
+<p>### QUEEN activities
+Then we have the Queen activities and this is we&#8217;re working this a lot.
+So open source and the internet as such is a consensus-based activity,
+which means anybody can participate.
+Nobody has special authority.
+There may be some people, who are you know the first among equals
+yade yade kind of thing, but it&#8217;s not like there&#8217;s somebody,
+who has a the letter of the law on his back and can say:
+&#8220;I say because law number bla.&#8221;</p>
+<p>It&#8217;s very much rough consensus and working code
+except it&#8217;s these days it&#8217;s more very long elaborate standard
+not very much working code.
+And there&#8217;s a heavy international participation which means
+that you cannot appeal to people&#8217;s patriotism you can&#8217;t say:
+&#8220;for the good of the country you have to&#8230;&#8221; It doesn&#8217;t really work.
+That&#8217;s a very significant talent mass which is a problem,
+because they will spot things.</p>
+<p>In theory all of this belong under the Secretary State,
+because these are foreign relations in many cases,
+but Foggy bottom is not really that tech-savy once it comes to it.
+Diplomats have absolutely no traction then setting like the IETF.
+If you come in with a tie they can looks strange on you.
+And our goals not already &#8230;&#8230; it&#8217;s,
+they may be misaligned to the Secretary State&#8217;s goals.
+And there are other players (DoC, NIST, DoD, FBI, CIA)
+involved in this also which we are not necessarily
+agreeing with in all kind of things.
+So it&#8217;s kind of a tricky space.</p>
+<p>So what we do is we leverage our existing resources.
+We have web resources embedded with friends of NSA.
+We have free agents, people who will do things for a consideration.
+And we have what we call witless volunteers people,
+who can be manipulated to do our bidding without
+ever paying them anything for it.
+It&#8217;s very good there&#8217;s no traceability.
+So what we do is we deploy very carefully designed talking points.
+Meanness if we can.
+We have a department, who have that put a sign
+on their door saying &#8220;PSYOPS for nerds&#8221;.
+And the idea is to steer discussions in these forums
+to or from particulars topics where we want them.
+And in general very often to disrupt consensus building
+that goes against our purposes.</p>
+<h4>QUEEN: success example SSC</h4>
+<p>So self signed certificates in browsers is a very good example.
+So a self signed certificate is a certificate I make that says this is me.
+So it doesn&#8217;t really authenticate me an innocence of the world,
+but if I have that on my web server you can take your browser
+and we can establish a secret channel.
+That&#8217;s not very good for us because we will have to spend very expensive
+resources decrypting that if we ever need to.
+But it&#8217;s practically free for people to do this.
+The only reason why people are not doing this is,
+because we really don&#8217;t want them to.
+It would be obvious to be a default on Apache
+just always do a self signed certificate if that&#8217;s not a real certificate.</p>
+<p>So we have spent a lot of time on this room.
+And some of the talking points you&#8217;ve no doubt hurt these is like
+&#8220;Oh but secrecy without authentication is pointless,
+you might be talking to the NSA and you wouldn&#8217;t know it&#8221; right.</p>
+<p>We like that one, we&#8217;re proud of that one.
+&#8220;It gives a false sense of security.&#8221; right
+The point is these kind of things if you tailor them carefully,
+they speak to people&#8217;s political leanings.
+If people are slightly paranoid to begin with,
+which is what a lot of security people are.
+This is like:
+&#8220;Yeah no that wouldn&#8217;t do it, if I don&#8217;t have a 2048-bit ironclad guaranteed
+that I know who&#8217;s on the other end, then it&#8217;s no good.&#8221;</p>
+<p>So today if you try to go into a web server that has itself signed certificate,
+you get these hideous warning like:
+&#8220;Oh you shouldn&#8217;t do that, this is dangerous are you really sure you know
+what you&#8217;re doing, do you have a PhD in this?&#8221;
+And the more buttons you press the more warnings should get, right.
+By now grandmother and terrorists are totally turned off, right.
+And that&#8217;s one thing in this, some of our predecessors
+we really loved them getting certificates to be x.509 that was so brilliant.
+Have you ever tried looking at all this stuff that&#8217;s in certificate,
+nobody understands a word of it.
+So it&#8217;s like: &#8220;No, I don&#8217;t understand this, get me out of here&#8221;</p>
+<p>This is a very good example of how the Queen program works.
+Simply getting people to not do things by miss directing their attention on it.</p>
+<h4>QUEEN achievements</h4>
+<p>So among the other thing we&#8217;ve done in the Queen is
+that there&#8217;s no multihome routing (multihoming) without having your own AS number.
+That means we can always find where all your traffic goes
+because it always goes through your ISP.
+We don&#8217;t need to track you around seven different sides and stuff like that.</p>
+<p>There&#8217;s also no flow routing in IP version 6.
+When IP version 6 were proposed there was a very intelligent proposal,
+that said we shouldnt slam these speak addresses into all the packets,
+we&#8217;ll just do it in the first packet.
+And then we&#8217;ll get a small float number,
+that says all the packets in this flow go that direction,
+but that would be very inconvenient for us,
+because we would have to track all these flow numbers all the time.
+When you have the IP numbers in package you can just grab all the packets
+and you have all the information you need for all time in those packets.
+You don&#8217;t need to have all the flow states
+and know what the flows means in all the end
+that was a very big success not that IP version 6 was it&#8217;s not really a big problem for us yet.
+Collection wise, but we prepared shoot IP version 6 off.
+We&#8217;ve also made it so that there&#8217;s practically no way compatibly to send
+encrypted email.
+Everybody does down where you have to have the same program in both ends,
+because otherwise it doesn&#8217;t work and the result is nobody ever uses it.</p>
+<p>And we&#8217;ve managed to delay voice over IP until Skype happened.
+The voice over IP is a big problem,
+because you cannot automatically search through voice data.
+It&#8217;s a lot easier when people send emails
+you can just look for patterns and stuff like that.</p>
+<p>So these are some of very big successes in the Queen program.</p>
+<h4>QUEEN recent work</h4>
+<p>Recently we&#8217;re working on the HTTP 2.0 standard.
+They want there&#8217;s a very big contingent they wants everything to be TLS,
+which would be inconvenient.
+We&#8217;re trying to misdirect that we&#8217;re trying to screw up that process.
+I mean look at the good side if would bring them into TLS,
+we have all the rooted CA&#8217;s (certificate authorities) doing a job for us.
+So we have all the keys if it comes to
+that we give man in the middle and all that stuff.
+We prefer to stay on encrypted if we can.
+As a fallback we&#8217;re trying to push them to some of the broken by design protocols.
+Unfortunately one of them seem to have been exposed now,
+but we&#8217;re working on getting new ones launched.
+That&#8217;s not our department we just try to push people into that sort of thing.</p>
+<p>#### QUEEN methods
+The methods we use is basic fear, uncertain and doubt,
+if you&#8217;re uncertainty and doubt.
+Playing with the GPL versus BSD card still works, it&#8217;s wonderful.
+It&#8217;s like: &#8220;Do they never get tired of that?&#8221;
+Yeah that&#8217;s some wonderful crypto code,
+but I know we can&#8217;t use it for licence reasons.</p>
+<p>Bikeshed discussions (means endless discussion, the terms was invented by phk
+<a href="http://phk.freebsd.dk/sagas/bikeshed/#the-bikshed-email">check his article</a>),
+it&#8217;s so wonderful.
+Sometimes just one single email from an anonymous person
+can derail an open-source project for months.</p>
+<p>And we can soak up immense amount of cryptographers bandwidth
+with bogus proposals for cryptography.
+You sent this proposal saying
+&#8220;oh I found this wonderful way to do&#8221;
+and they spent like a month tearing it apart, instead of doing real work.</p>
+<h4>QUEEN recent work</h4>
+<p>So that works for the world.
+One of the current focus areas is that there&#8217;s a push
+to go from the certificate PKI model to DANE
+which is getting your certificates approved through DNS.
+And this is a cost brought on by the fact that people
+realizing that everybody has compromised the CA&#47;PKI system.
+I mean, if you look in your browser there&#8217;s like 200 approved CA&#8217;s
+and half of them are owned by secret services throughout the world.
+It&#8217;s sort of pointless at this point, right.</p>
+<p>So people want to move that into what&#8217;s called the DANE protocol.
+And the idea here is you validate the certificate using the DNSSEC.
+So you have this signature on the root zone and that signs the next one
+and signs next one of the signs next one that says my server has this certificate.
+So you can trust that now, you only trust this one single key, right.
+So the advantage of PKI&#47;CA is of course we have access today,
+but the DANE project would really like that,
+because now we only trust one single certificate, right.
+&#8220;Nudge, nudge, wink wink he said knowingly &#8230;.&#8221;.</p>
+<p>And even the best part about this is I don&#8217;t understand how these supposedly
+professional people can overlooked.</p>
+<p>DNS is UDP.</p>
+<p>It&#8217;s much easier to do a packet-race with UDP than with TCP.
+They send a DNS request you aren&#8217;t to come first, done.</p>
+<p>### BOYS - A special gift
+This is another interesting program we&#8217;re working on.
+It&#8217;s actually inspired by a field accident.
+We had to evacuate a high risk and high-quality resource
+and we had no facilities nearby his location that could be used.
+So we set him up as a independent contractor.</p>
+<p>Story was you know tired of the Boss and yade bad company politics yade yade&#8230;
+I&#8217;m stuck for himself and so on.
+And I was lucky to find some customers and so on.
+And while sitting there he spent some time on some open source projects&#8230;
+he had to do something.
+He spotted some opportunities for groundwork.
+So most open-source projects are based on trust.</p>
+<p>There&#8217;s no formal vetting,</p>
+<p>there&#8217;s no checking people&#8217;s resumes,</p>
+<p>there&#8217;s no checking, if they&#8217;re really who they say they are.</p>
+<p>It&#8217;s like:</p>
+<p>&#8220;Oh I&#8217;m this dude who sits in Ulaanbaatar and here&#8217;s some patches&#8221;.</p>
+<p>And if you send good patches for some years people will start to trust you
+and not check your patches and that will give you a &#8220;commit bit&#8221;,
+so you can add them yourself, because that&#8217;s really much easier.
+It&#8217;s a fantastic environment that people can come in
+and announcly nobody knows that you&#8217;re a dog or NSA agent.
+So not only can you collect information about the project&#8217;s interiors by that way.
+Once the trust is in place, you can start to influence their code.</p>
+<p>So perception is an easy thing to get right here it&#8217;s like:
+&#8220;Yeah, you know I&#8217;m sysad of this nonprofit thing and as long
+as email works and the printers print.&#8221;
+It&#8217;s all humming I mean I&#8217;m sitting here seven hours a day doing not a shit.
+And &#8220;okay, cool.&#8221;
+Here&#8217;s a dude and his time and he&#8217;s delivering a good code we cool with that.
+And one of the things we found out here is would actually can do.
+In reality this is one of our people, right.
+And he&#8217;s sitting somewhere in a shop front that looks like
+it&#8217;s this nonprofit thing for you know stopping,
+I don&#8217;t know, oak trees falling over or whatever it is.
+Actually that&#8217;s our neighbors who has this kind of shop-front.
+And then need somebody to get the computers to work in this little
+stealth setup they have.
+And we need to have an Internet and a desk for our man,
+so it&#8217;s very convenient that. And the bosses can actually claim:
+&#8220;Oh we&#8217;re doing cooperative work and we&#8217;re saving money&#8221; and stuff like that.
+It&#8217;s really really really well.</p>
+<p>And of course, you cannot go in and add obvious vulnerabilities to source code.
+People would spot that. It has to be more subtle than that.</p>
+<p>Programming mistakes.
+you know the careless, semicolon yade, yade serial one based error is,
+all these classics.
+It&#8217;s kind of dangerous to do it yourself.
+It&#8217;s best to say:
+&#8220;Oh I got this patch and I look at it and it looks okay and you stick that in.&#8221;</p>
+<p>People will start to notice if your own code quality sucks,
+but if you accept patches which are not you know quite up to standard.
+Everybody can have a bad day.</p>
+<p>So, in general obfuscating the code making it harder to understand
+critical bits of the code makes it easier to make it,
+almost do what it was supposed to do.</p>
+<p>Misleading documentation is always a wonderful thing particular
+for crypto sensitive stuff.</p>
+<p>And deceptive defaults so that things don&#8217;t do what people think.</p>
+<p>It doesn&#8217;t have to be the core code.
+It doesn&#8217;t have to be the operating system kernel.
+In FreeBSD there&#8217;s 20,000 packages of software.
+There are built using, you know.
+There&#8217;re some patches needed for FreeBSD yade, yade,
+okay builds and you have a package.
+Nobody ever looks at those patches.
+Who ever ported this piece of software does these patches,
+it takes the packaging and that&#8217;s it, it&#8217;s never reviewed.
+It maybe, if it&#8217;s set &#8220;setuid&#8221; program somebody may look at it,
+but in general nobody has ever looked at all the patches
+in the FreeBSD ports collection.</p>
+<p>They should.</p>
+<p>So this is our poster boy.
+The Debian random number generator.
+This is really beautifully executed.
+There&#8217;s dude who sends in the Patch set you know.
+This gets Valgrind to complain
+and I can&#8217;t see does anything sensible you should just remove it.
+And they did.
+So for two years, all the debians had lousy random numbers,
+which made you know brute-forcing SSL keys and stuff like that, done.</p>
+<p>Here end up a pretty good bonus.
+OpenSSL is the crown jewel.
+OpenSSL is a standard library if you want crypto.
+Getting SSL to work against all browsers
+and all that stuff without using OpenSSL is very very tricky.
+Reading the OpenSSL manuals or source code is not tricky
+that&#8217;s close to impossible.
+And that&#8217;s three hundred thousand lines of code.
+So good luck with that.
+The documentation is deficient and misleading.
+And the defaults are deceptive, they don&#8217;t do what do you think they do.
+This saves so much money in collection you have no idea.</p>
+<p>### Operation ORCHESTRA current status
+So the overall status of operation orchestra is,
+it&#8217;s a resounding success we spend less than a third of the percent of the NSA budget.
+And it probably cost the collection cost by something like 50%.
+It&#8217;s kept most of the Internet in plaintext.
+And has never been exposed.
+That was snowden has no papers on Orchestra at all.
+You&#8217;re not going to read about this in the Guardian,
+because it&#8217;s all buried in boring departments.</p>
+<p>Operation overdrive that&#8217;s in purchasing.</p>
+<p>BOYS that&#8217;s facility management.</p>
+<p>ABBA and Pasadena that&#8217;s Personnel, he didn&#8217;t have access to any of that.</p>
+<p>Thank you!</p>
+<p>### Epilog
+So the standard reaction in the open source environment to
+it would Snowden&#8217;s disclosures, have been:</p>
+<p>&#8220;We need to strengthen the protocols. We need to have SSL everywhere.&#8221;</p>
+<p>And I think that misses the point by a large margin.
+The things that have been published of the Snowden documents by now is
+the thing the general public can understand reading their newspaper.
+The stuff we would be interested in have not been published and maybe never will.
+And adding more attempting to add more encryption is most likely
+just going to have more broken encryption on the internet.
+This is not a technical problem, this is a political problem.
+It must be solved by political means.
+That means find politicians in your country,
+who can understand this and make sure they understand it.
+If you cannot find politicians get you some politicians who can understand it.
+Political will is a renewable resource use your pencil,
+when you vote or run yourself.
+This is your children and grandchildren&#8217;s future society you&#8217;re looking at.
+And we&#8217;re the guys who sort of miss the boat.</p>
+<h2>Q&#38;A SECTION</h2>
+<p>There&#8217;s a time for questions, if anybody want.
+We are going to take questions and afterwards FOSDEM staff will perform the closing talk.
+So please don&#8217;t go away.</p>
+<p>Could ask anybody that&#8217;s leaving to trying to keep a quiet, Q&#38;A is going on.</p>
+<ol>
+<li><p><strong>Question</strong>: So one of the biggest security leaks for the OpenSSL for instance
+is actually their documentation and all the stuff,
+people generally say like: I&#8217;d rather be coding?</p>
+<p><strong>Answer:</strong></p>
+<p>Yes. Yeah I mean OpenSSL is a catastrophy in my eyes.
+And should be thrown out and started from scratch,
+written in a readable style and documented.</p></li>
+<li><p><strong>Question</strong>: Yeah, I found your last remark very interesting referring
+to politics and especially in FOSDEM. Well we had this a little
+encounter where it was about politics and FOSDEM and then the
+reaction was like &#8220;no no no politics it&#8217;s FOSDEM it&#8217;s only about
+open source but how would you feel about that the relationship
+between open source and politics apart from what you
+just said in the end.</p>
+<p><strong>Answer:</strong></p>
+<p>I have the same feeling about it I have about global warming.
+It may be that the open source community doesn&#8217;t believe in
+politics that doesn&#8217;t mean politics doesn&#8217;t apply to them.
+So you can ignore politics, but the politics will not ignore you.</p></li>
+<li><p><strong>Question</strong>: Thank you for your awesome presentation.
+I might have been experiencing with friends some of those situations.
+I just wonder about the OpenSSL bit, if it&#8217;s your guess because
+maybe there is a little bit of guessing or.
+And I wonder if we should really start having some
+investigations ourself as the open source community into these cases.
+Maybe in the OpenSSL case there is no malignity intended
+I&#8217;m not sure where you got your analysis.</p>
+<p><strong>Answer:</strong></p>
+<p>Show me.</p></li>
+<li><p><strong>Question</strong>: Yes, thank you very much for the presentation.
+Very interesting, very inspiring for the NSA wannabes.
+You mentioned that some of the Snowden documents may never be leaked
+those are your exact words.
+Why do you think that? Why do you think that the largest leak
+in basically human history at this point, could go quietly under
+wraps and people will forget about it? Why?</p>
+<p><strong>Answer:</strong></p>
+<p>Three reasons:</p>
+<p><em>One of them is</em> - that Glenn Greenwald is a very responsible person.
+So there&#8217;s undoubtedly stuff in there that he will not publish because
+there would be too damaging for whatever reason.</p>
+<p><em>Second</em> - some of them will be so technical that he will not be able
+to explain them to the readers of The Guardian, much
+less other newspapers and.</p>
+<p><em>Third</em> - because I think USA is getting ready to make a deal with
+Snowden to stop the flow. This has been Chinese water torture
+for them.
+Every time they&#8217;ve said something in public one week, two weeks later
+Snowden document come out showing they&#8217;re lying.
+And I think they&#8217;re kind of tired of that now.
+So I would be surprised if there is not already known
+negotiations going on for terms that will allow Snowden
+to return to the USA in return for the flow of documents to stop.
+And what the terms will be we&#8217;ll probably never known.</p>
+<p>I presume at some point the documents will just stop and we&#8217;ll never
+hear from Snowden again.
+So I don&#8217;t think they&#8217;ll have time to leak all of it,
+however much it is not that NSA might know.
+I mean that&#8217;s the aspect of this that,
+I think is most interesting is that NSA has absolutely
+no idea what&#8217;s going on.
+They know that 4,000 of their employees and contractors have used
+that data to check up on their love interests, but they know
+this because people have volunteered the information
+they don&#8217;t know it because they have like locked files or anything
+showing it.
+So it&#8217;s a totally leaky bucket with no idea what they&#8217;re doing.
+That should be the real scandal.
+They&#8217;re not competent.</p></li>
+<li><p><strong>Question</strong>: Well first of all, thanks for a great talk.
+I would like to ask, answer you, what is the level on the European
+level, not just politics in the the countries, but on the European level.
+We saw that was it CIA or NSA hacking into until Americans mobile phone.
+So I don&#8217;t know where veto stand there?</p>
+<p><strong>Answer:</strong></p>
+<p>I&#8217;m pretty sure that they do not have a public relations
+department that have any influence on that kind of decision,
+but if they had, I&#8217;m pretty sure that public relations
+department would said whatever you do, do not hack into Merkle.
+Merkle is the one person in Europe you do not want to spy on,
+because she&#8217;s from the eastern Germany.
+They would have been better off not knowing what she said in her
+phone than having what came out now.
+I would never have taken that risk if I&#8217;d been sitting there.</p>
+<p>The other thing is that I don&#8217;t think anybody who think they can
+trust the mobile phone, I deceived themselves.
+All mobile phones are controlled by everybody else,
+but the guy who has it in his pocket.
+Same thing goes for iPads, computers, pretty much anything
+I don&#8217;t think we have many devices where we can say this one
+is by guaranteed not rooted at this point in time.
+That&#8217;s one place where the European Union could step in.
+They could actually go in and mandate computing platforms
+that can be verified as free from all kind of crap.
+And Angela Merkel is actually a scientist.
+She may get the idea behind this.
+I could hope that she would do something like that and push it
+through the European Union.
+Unfortunately she&#8217;s kept busy with the economy in southern EU.
+I don&#8217;t know if she has a time, but a good place to go in
+would be to say the person, who pays for the device controls it,
+only that person.
+And Tell-Telcos and people like that to get the fuck out of
+people&#8217;s mobile phones.</p></li>
+<li><p><strong>Question</strong>: So discussing politics I have a very short remark to make.
+Techie people usually believe that we can overcome political
+issues by using technical tools like &#8220;oh they are spying
+on us, hmm!? Now we have encryption, we have Tor things like that.&#8221;</p>
+<p>But that is not actually the question, because of course
+we can avoid being tracked by doing technical stuff.
+But the question rather is: Do we really want to have a society like that?
+And I believe that us as people, who understand
+things more from the technical point of view should help
+the rest of the society the dozens.
+So I think that this really is a political issue so there
+are elections this May in the European Parliament as a matter
+of fact I run for a seat.</p>
+<p><strong>Answer:</strong></p>
+<p>I can only agree with that. This is very much a matter of what
+kind of society we leave to our kids.
+Some of the opportunities for goofing around that we had
+our kids will never have without having it pasted all over
+YouTube ten minutes later.
+And I realized this big.
+You start thinking differently once you have kids.
+I have to admit it myself, but I&#8217;m pretty sure those of
+you who have kids will see what I mean when I say this
+is about what your grandchildren will live in.</p></li>
+<li><p><strong>Question</strong>: Hi, very good presentation nerves and impressed.
+So you mentioned the strategy that it&#8217;s quite easy to disturb
+important open source projects by just creating some discord
+over issues that have been problematic issues for a very
+long time and then like 10 minutes later, you suggest
+ripping OpenSSL out of everything and replacing it with
+something that&#8217;s a new implementation.
+How is that any different?</p>
+<p><strong>Answer:</strong></p>
+<p>Do you think is it really a controversial opinion to think
+that OpenSSL is a pile of crap?</p>
+<p><strong>Q7 continue&#8230;</strong></p>
+<p>It actually a lot of components in the internet rely on that for encryption.
+So if you rip that out it&#8217;s not getting any more secure is it.
+It&#8217;s a controversial issue you just can accepted that.
+And your comment. how&#8217;s that making anything more secure
+I think this is the same kind of strategy that,
+you&#8217;re suggesting the NSA and other evil forces
+do with other open-source project.</p>
+<p><strong>Answer continue &#8230;:</strong></p>
+<p>So how do you know I don&#8217;t work for NSA?</p>
+<p><strong>Q7 continue &#8230;:</strong></p>
+<p>Exactly!</p>
+<p><strong>A continue &#8230;:</strong></p>
+<p>It&#8217;s a tricky question right?
+And there&#8217;s a lot of, if you want to take the technical path on it.
+The FreeBSD patch collection last time I looked had thirteen
+hundred and forty two copies of the md5 algorithm.
+That&#8217;s bogus from a software engineering perspective, right.
+OpenSSL is sort of the non solution to that in that
+we have this library that has any encryption algorithm
+anybody has ever thought up and the defaults will let you use them.
+All the downgrade attacks is no SSL is pill areas.
+So if we want to use technical means to reduce the ability
+of governmental players to spy on people, we&#8217;ll have to
+start acting like grown-up software developers, who do things
+by a sensible way, rather than saying:</p>
+<p>&#8220;Oh I have this fancy new algorithm I&#8217;ll stick
+it into a OpenSSL with the rest of them so now we have 50&#8221;.</p>
+<p>And that would probably require some kind of architectural
+oversight which means we&#8217;d probably have to find you
+know maximum of eight persons globally we could agree on probably trust.
+We can start out with Bruce Schneier and seven others.
+But I don&#8217;t think that the cut hurting is up to that
+level of ability, yet.
+So I don&#8217;t simply don&#8217;t believe we will have technical
+solutions to this problem.
+There&#8217;s always going to be some bungholes somewhere
+who does something stupid.</p>
+<p>And you pretty soon are up against some very big companies
+who has a very big interest in defending certain protocols
+and stuff like that.
+So I think the OpenSSL is making things worse because people think it works.
+And people trust it without understanding it.
+And I met two persons who claimed to understand OpenSSL
+one of them was absolutely lying.
+So yes I think OpenSSL is a big problem because people
+think it gives security and it doesn&#8217;t.</p></li>
+<li><p><strong>Question</strong>: Yes. I agree with you that this is more over a political
+issue but I wonder what should I or we ask or try to explain
+to a politician if I can get hold the one.
+What is what is a concrete thing I can suggest or,  yeah&#8230;</p>
+<p><strong>Answer:</strong></p>
+<p>I think a very good place to start is to demand ownership
+of our device&#8230;.. VIDEO CUT!</p></li>
+<li><p><strong>Question</strong>:&#8230;&#8230;&#8230;&#8230;&#8230;work technically speaking should we go and repair
+to OpenSSL everywhere or should we start a new SSL stack.
+Or what should what&#8217;s our homework we&#8217;ve just had a weekend
+of technical inundation what should we now go and do other
+than harassing our politicians.</p>
+<p><strong>Answer:</strong></p>
+<p>I don&#8217;t know.</p>
+<p><strong>Questioner:</strong></p>
+<p>Fair enough.</p>
+<p><strong>Answer continue&#8230;</strong></p>
+<p>And the reason why I don&#8217;t know is I don&#8217;t see a technical solution
+with 1 billion dollars of budget to collect information
+we are not going to be able to stand up to that with
+any kind of technical solution.
+I only see political solutions.
+But I mean obviously we can write better code we can stop copying
+and pasting code we don&#8217;t understand and use
+libraries instead of copy and pasting and so on.
+And that will help.
+But it&#8217;s not gonna solve the problem.
+It&#8217;s just gonna close some of the security holes.
+Which is a good idea, but that&#8217;s not a real problem right now.
+So know, I mean yes write better code!</p></li>
+</ol>
+<p><strong>Moderator:</strong></p>
+<p>Should we stop here? yes.</p>
+<p>Thank you, all!</p>
+
+    </main>
+
+    <footer>
+    </footer>
+
+  </body>
+
+</html>
+

@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="date" scheme="YYYY-MM-DD" content="2021-06-25">
+    <meta name="license" content="https://creativecommons.org/licenses/by/4.0/">
+    <meta name="referrer" content="origin">
+    <link rel="icon" type="image/png" size="16x16" href="/images/favicon-16x16.png">
+    <link rel="stylesheet" href="/css/style.css">
+    <title>Handle recursion</title>
+  </head>
+
+
+  <body>
+<!--    Navigation is made by Erik Terwan    -->
+<!--          24th of November 2015          -->
+<!--              MIT License                -->
+    <nav role="navigation">
+      <div id="menuToggle">
+        <!--
+        A fake / hidden checkbox is used as click reciever,
+        so you can use the :checked selector on it.
+        -->
+        <input type="checkbox" />
+
+        <!--
+        Some spans to act as a hamburger.
+        They are acting like a real hamburger,
+        not that McDonalds stuff.
+        -->
+        <span></span>
+        <span></span>
+        <span></span>
+
+        <!--
+        Too bad the menu has to be inside of the button
+        but hey, it's pure CSS magic.
+        -->
+        <ul id="menu">
+          <a href="/"><li>Home</li></a>
+          <a href="/posts/"><li>Posts</li></a>
+          <a href="/categories/"><li>Categories</li></a>
+          <a href="/resources/"><li>Resources</li></a>
+          <a href="/about/"><li>About</li></a>
+          <a href="/contact/"><li>Contact</li></a>
+        </ul>
+      </div>
+    </nav>
+
+
+    <header>
+    </header>
+
+    <main>
+
+<h1>Handle recursion</h1>
+      <p><span id=pubdate>Published on: 2021-06-25</span></p>
+<h1>Recursion of paths to file originally created as dict</h1>
+<p>The goal of this example is to join path parts
+save in dict to full path and saved to list.</p>
+<p>Let imagine that we parse paths to file to dict as following:</p>
+<pre><code class="language-python">paths_as_dict = {
+                {&#39;home&#39;:
+                    {&#39;web_app1&#39;: {
+                        &#39;index1.html&#39;: b&#39;Content of file&#39;,
+                        &#39;index2.html&#39;: b&#39;Content of file&#39;}
+                    },
+                    {&#39;web_app2&#39;: {
+                        &#39;index.html&#39;: b&#39;Content of file&#39;},
+                        &#39;static&#39;: {&#39;image.jpg&#39;: b&#39;Content of file&#39;}
+                    }
+                }
+                &#39;index.html&#39;,
+            }
+</code></pre>
+<p>result of example shoudld be:</p>
+<pre><code class="language-python">result = [
+            &#39;home&#47;web_app1&#47;index1.html&#39;,
+            &#39;home&#47;web_app1&#47;index2.html&#39;,
+            &#39;home&#47;web_app2&#47;index.html&#39;,
+            &#39;home&#47;web_app2&#47;static&#47;image.jpg&#39;,
+            &#39;index.html&#39;
+        ]
+</code></pre>
+<p>## Solution without recursion</p>
+<pre><code class="language-python">result = []
+for key1, value1 in paths_as_dict.items():
+    if isinstance(value1, bytes):
+        result.append(key1)
+    else:
+        for key2, value2 in value1.items():
+            if isinstance(value2, bytes):
+                result.append(key1 + &#39;&#47;&#39; + key2)
+            else:
+                for key3, value3 in value2.items():
+                    if isinstance(value3, bytes):
+                        result.append(key1 + &#39;&#47;&#39; + key2 + &#39;&#47;&#39; + key3)
+                    else:
+                        ...
+
+</code></pre>
+<p>This solution is fine. It is working and we get the result. But it is obvious
+the solution will work fine only for specific input.</p>
+<p>This solution have these problems:</p>
+<ul>
+<li><p>we get input with very long path. we have to make 10 <code>for cycle</code> if our the longest
+path will contain 10 parts. So imagine case when you will not know length of the
+longest path. We can solve this problem - we will create 30 <code>for cycle</code>.
+We have to believe, we never get longer path. We do not want to write code like that.
+So the solution won&#8217;t work for every input.</p></li>
+<li><p>DRY - Don&#8217;t Repeat Yourself. The code has several <code>for cycles</code> which contain
+same parts. Only two parts are updated:</p>
+<ul>
+<li>path, which is saved to result,</li>
+<li>and input dictionary.</li>
+</ul></li>
+</ul>
+<p>To resolve problems above we use recursion.</p>
+<h2>Recursion solution</h2>
+<p>Arguments will be variable which are updated in solution without recusrion:
+- path, which is saved to result <code>path_so_far</code>,
+- and input dictionary <code>input_dict</code>.</p>
+<pre><code class="language-python">result = []
+
+def recursion_solution(input_dict, path_so_far):
+    for key, value in input_dict.items():
+        if isinstance(value, bytes):
+            result.append(path_so_far + key)
+        else:
+            recursion_solution(value, path_so_far + key + &#39;&#47;&#39;)
+
+recursion_solution(paths_as_dict, &#39;&#39;)
+</code></pre>
+<p>Obviously, the recursion solution is much more elegant then previous solution.</p>
+<p>The most hardest part was to define variable <code>path_so_far</code> in combination
+with variable <code>key</code> and slash &#8216;&#47;&#8217;.</p>
+
+    </main>
+
+    <footer>
+    </footer>
+
+  </body>
+
+</html>
+

@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="date" scheme="YYYY-MM-DD" content="2023-10-25">
+    <meta name="license" content="https://creativecommons.org/licenses/by/4.0/">
+    <meta name="referrer" content="origin">
+    <link rel="icon" type="image/png" size="16x16" href="/images/favicon-16x16.png">
+    <link rel="stylesheet" href="/css/style.css">
+    <title>How to use sed command</title>
+  </head>
+
+
+  <body>
+<!--    Navigation is made by Erik Terwan    -->
+<!--          24th of November 2015          -->
+<!--              MIT License                -->
+    <nav role="navigation">
+      <div id="menuToggle">
+        <!--
+        A fake / hidden checkbox is used as click reciever,
+        so you can use the :checked selector on it.
+        -->
+        <input type="checkbox" />
+
+        <!--
+        Some spans to act as a hamburger.
+        They are acting like a real hamburger,
+        not that McDonalds stuff.
+        -->
+        <span></span>
+        <span></span>
+        <span></span>
+
+        <!--
+        Too bad the menu has to be inside of the button
+        but hey, it's pure CSS magic.
+        -->
+        <ul id="menu">
+          <a href="/"><li>Home</li></a>
+          <a href="/posts/"><li>Posts</li></a>
+          <a href="/categories/"><li>Categories</li></a>
+          <a href="/resources/"><li>Resources</li></a>
+          <a href="/about/"><li>About</li></a>
+          <a href="/contact/"><li>Contact</li></a>
+        </ul>
+      </div>
+    </nav>
+
+
+    <header>
+    </header>
+
+    <main>
+
+<h1>How to use sed command</h1>
+      <p><span id=pubdate>Published on: 2023-10-25</span></p>
+<h2>How write changes from sed to file</h2>
+<p class="warning">READ THIS CHAPTER FIRST</p>
+<p>If you want to apply deletion changes to file you have to use option <code>-i</code>
+or redirect output with shell syntax <code>&#62;</code>.</p>
+<p>If you do not add one of above options, then the result will be printed to <code>stdin</code> instead to a file resp. a new file.</p>
+<p>If you are not sure what the output will be, then do not use option <code>-i</code> it can removed yo u whole file. Instead use <code>&#62;</code> or without any option to print just to stdin to test your
+intentions.</p>
+<p>The option <code>-i</code> will overwrite existing file which has been used as a source.
+The option means <code>in place</code>. If you&#8217;re using BSD (macOS included) sed, then you have
+to use this syntax:</p>
+<pre><code class="language-sh">$ sed -i &#39;&#39;
+</code></pre>
+<p>or</p>
+<pre><code class="language-sh">$ sed -i ""
+</code></pre>
+<p>If you are using GNU sed then syntax below is enough</p>
+<pre><code class="language-sh">$ sed -i
+</code></pre>
+<p>Redirecting output with <code>&#62;</code> will create you wholly new file and the source file will be un touched.</p>
+<pre><code class="language-sh">$ sed [sed_pattern] [src_filepath] &#62; [new_filepath]
+</code></pre>
+<p>All examples below are write for macOS.</p>
+<h2>Delete all empty lines</h2>
+<pre><code class="language-sh">$ sed -i "" &#39;&#47;^$&#47;d&#39; file.txt
+</code></pre>
+<p><code>^</code> - start of line
+<code>$</code> - end of line</p>
+<p>Delete lines which contains only <code>START</code> and <code>END</code>.</p>
+<h2>Delete one line specified by line number</h2>
+<pre><code class="language-sh">$ sed -i "" &#39;[line_number]d&#39; [file_path]
+</code></pre>
+<pre><code class="language-sh">$ sed -i "" &#39;7d&#39; file.txt
+</code></pre>
+<p>Or you can delete several lines one by one</p>
+<pre><code class="language-sh">$ sed -i "" &#39;[line_number]d;[line_number]d&#39; [file_path]
+</code></pre>
+<pre><code class="language-sh">$ sed -i "" &#39;7d;12d;16d&#39; file.txt
+</code></pre>
+<h2>Delete last line</h2>
+<p><code>$</code> is symbol wich represent last line.</p>
+<pre><code class="language-sh">$ sed &#39;$d&#39; input.txt
+</code></pre>
+<h2>Delete range of lines specified by lines number</h2>
+<pre><code class="language-sh">$ sed -i "" &#39;[start_line_number],[end_line_number]d&#39; [file_path]
+</code></pre>
+<p>Delete lines from line number 3 to line number 9.</p>
+<pre><code class="language-sh">$ sed -i "" &#39;3,9d&#39; file.txt
+</code></pre>
+<h2>Delete several ranges of lines</h2>
+<pre><code class="language-sh">$ sed -i "" &#39;[first_range]; [nth_range]d&#39; [file_path]
+</code></pre>
+<p>Delete lines specified in two ranges. Delete lines 1 to 3(included) and lines from 7 to 9.</p>
+<pre><code class="language-sh">$ sed -i "" &#39;1,3d; 7,9d&#39; input.txt
+</code></pre>
+<p>Delete from 1 to 3 and from 7 to the end of file.</p>
+<pre><code class="language-sh">$ sed -i "" &#39;1,3d; 7,$d&#39; input.txt
+</code></pre>
+<h2>Delete all lines which match pattern</h2>
+<pre><code class="language-sh">$ sed -i "" &#39;&#47;[pattern]&#47;d&#39; [file_path]
+</code></pre>
+<p>Delete all lines which contains &#8220;hello"</p>
+<pre><code class="language-sh">$ sed -i "" &#39;&#47;hello&#47;d&#39; file.txt
+</code></pre>
+<p>If you want to ingorecase of pattern</p>
+<pre><code class="language-sh">$ sed -i "" &#39;&#47;hello&#47;I d&#39; file.txt
+</code></pre>
+<h2>Delete all lines which not matching pattern</h2>
+<pre><code class="language-sh">$ sed -i "" &#39;&#47;[pattern]&#47;!d&#39; [file_path]
+</code></pre>
+<p>Delete all lines which not contains &#8220;hello"</p>
+<pre><code class="language-sh">$ sed -i "" &#39;&#47;hello&#47;!d&#39; file.txt
+</code></pre>
+<h2>Delete range of lines specified by pattern</h2>
+<p>Delete all lines between lines which <code>START</code> line contains <code>start_pattern</code> and <code>END</code> line
+contains <code>end_pattern</code>. Lines with <code>patterns</code> are included in deletion.</p>
+<pre><code class="language-sh">$ sed -i "" &#39;&#47;[start_pattern]&#47;,&#47;[end_pattern]&#47;d&#39; [file_path]
+</code></pre>
+<p>Delete all lines between lines where start line contains &#8216;Hello&#8217; and end line
+contains &#8216;Thanks&#8217;, including start and end lines.</p>
+<pre><code class="language-sh">$ sed -i "" &#39;&#47;Hello&#47;, &#47;Thanks&#47;d&#39; file.txt
+</code></pre>
+
+    </main>
+
+    <footer>
+    </footer>
+
+  </body>
+
+</html>
+

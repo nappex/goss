@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="date" scheme="YYYY-MM-DD" content="2023-01-28">
+    <meta name="license" content="https://creativecommons.org/licenses/by/4.0/">
+    <meta name="referrer" content="origin">
+    <link rel="icon" type="image/png" size="16x16" href="/images/favicon-16x16.png">
+    <link rel="stylesheet" href="/css/style.css">
+    <title>Acer V5 431 problems with BIOS(Legacy, UEFI), preparation to UNIX</title>
+  </head>
+
+
+  <body>
+<!--    Navigation is made by Erik Terwan    -->
+<!--          24th of November 2015          -->
+<!--              MIT License                -->
+    <nav role="navigation">
+      <div id="menuToggle">
+        <!--
+        A fake / hidden checkbox is used as click reciever,
+        so you can use the :checked selector on it.
+        -->
+        <input type="checkbox" />
+
+        <!--
+        Some spans to act as a hamburger.
+        They are acting like a real hamburger,
+        not that McDonalds stuff.
+        -->
+        <span></span>
+        <span></span>
+        <span></span>
+
+        <!--
+        Too bad the menu has to be inside of the button
+        but hey, it's pure CSS magic.
+        -->
+        <ul id="menu">
+          <a href="/"><li>Home</li></a>
+          <a href="/posts/"><li>Posts</li></a>
+          <a href="/categories/"><li>Categories</li></a>
+          <a href="/resources/"><li>Resources</li></a>
+          <a href="/about/"><li>About</li></a>
+          <a href="/contact/"><li>Contact</li></a>
+        </ul>
+      </div>
+    </nav>
+
+
+    <header>
+    </header>
+
+    <main>
+
+<h1>Acer V5 431 problems with BIOS(Legacy, UEFI), preparation to UNIX</h1>
+      <p><span id=pubdate>Published on: 2023-01-28</span></p>
+<h1>Introduction</h1>
+<p>One day when I&#8217;ve been scrolling my mastodon wall to find some interesting people
+or articles about BSD, I&#8217;ve found account <a href="https://bsd.network/@prahou">@prahou</a> and his <a href="https://triapul.cz/">blog</a>.
+There was a very nice article <a href="https://triapul.cz/automa/vyvjnb/">Old Computer Rescue - E4300</a>, that
+article inspired me to dust off 10 years old <strong>Acer Aspire V5 431</strong>. I&#8217;ve wanted to buy some old hardware
+as DELL or Lenovo to install FreeBSD or OpenBSD, but I could not decide to right one. When I&#8217; ve read
+the article and discovered <a href="https://occ.deadnet.se/">OCC</a>, I supposed it would be realy a pity to not
+try old computer which lay down at home. Buying another old laptop would be pointless in my case.
+Acer is no silver bullet for sure, I definitely prefer DELL, Lenovo or HP, but Acer should be
+ suitable for my purposes at least for a while.</p>
+<p>Firstly I&#8217;ve analyzed the laptop. I found out the laptop is running and there is installed very laggy windows 10.</p>
+<h1>Problem to boot BSD or Linux with Acer V5 431</h1>
+<p>I&#8217;ve inserted USB with OpenBSD to find out if I am able to install it. So I&#8217;ve turned on the
+laptop and pressing the button <strong>F12</strong> as much as possible to invoke boot menu, but nothing happened.
+Just Windows booted without any signs of boot menu or USB boot.</p>
+<p># I can not enter to BIOS on Acer V5 431</p>
+<p>OK, if I can&#8217;t invoke a boot menu to choose option booting from USB I have to check BIOS settings.
+So I&#8217;ve turned on the laptop again and pressing the button <strong>F2</strong> as much as possible to invoke BIOS settings
+but nothing happened again, just windows boot&#8230;</p>
+<p>Let&#8217;s google it. I found out that there is a option to get to BIOS through the Windows settings.</p>
+<p>When I logged to windows I had to go to settings:</p>
+<p><code>Windows settings -&#62; Recovery –&#62; Advanced start-up -&#62; Restart now...</code></p>
+<p>After restart, in the blue screen pick up:</p>
+<p><code>Troubleshoot -&#62; Advanced options -&#62; UEFI Firmware Settings</code></p>
+<p>Finally I am in BIOS, AAALELUA. I found option to enable boot menu with <strong>F12</strong>, OK let switch to enable!
+Changes saved and exit the bios. Turn off, turn on &#8230; pressing <strong>F12</strong>&#8230;.blablabla&#8230; nothing happend.</p>
+<p>I replicated the whole process to get into BIOS. I analyzed BIOS options again to find out
+which option could help me to activate function of button F2 and F12 during start-up time of laptop.
+There was not any other option, unfortunately. My first idea was that Acer and Windows are entangled
+together to lock user in windows space and don&#8217;t let anybody boot any other OS.</p>
+<p>I don&#8217;t know why but I supposed that if I change UEFI BIOS mode to Legacy BIOS, everything will repair itself.
+I could not be far from the truth. After that change I could not boot windows any more and I could not enter to
+BIOS any more. Laptop sent me a message, you don&#8217;t catch me bastard! There will be only Windows man, deal with it.
+On the other hand I was able to boot BSD or Linux with Legacy mode.</p>
+<p>Thanks to my inconvenience I made laptop where I can install or boot the BSD or the Linux,
+but I can not get data from windows and I can not get to BIOS or boot menu. Even though
+ I was able to boot USB, it was only because there wasn&#8217;t other OS on HDD with first priority of boot.
+So even if I installed a new OS I would not be able to boot another USB anymore after installation, because of absence boot menu. I would have to remove OS to boot USB. The reason of USB boot is there is no other OS to boot in boot order.
+BIOS did not find windows to boot because efi boot is not able to boot in legacy mode.</p>
+<p>At this moment I realized I have to find solution to repair invoking boot menu and boot settings
+ regardless if I can boot Linux or BSD in Legacy BIOS.</p>
+<p>There are several ways what someone wants to do at this point:</p>
+<ol>
+<li><strong>Repair invoking boot settings and boot menu at start-up</strong></li>
+</ol>
+<p><code>a. Update BIOS firmware</code></p>
+<p><em>or</em></p>
+<p><code>b. Reset BIOS - I am not sure if this option can repair it...</code></p>
+<ol start="2">
+<li><strong>Save data from installed Windows 10</strong></li>
+</ol>
+<p><code>a. Switch BIOS from Legacy mode back to UEFI (Acer Aspire V5 431)</code></p>
+<p><em>or</em></p>
+<p><code>b. Mount Harddisk with windows in Linux or BSD and copy the data</code></p>
+<p><em>or</em></p>
+<p><code>c. Connect HDD with windows to another PC with any OS</code></p>
+<h2>Repair invoking boot settings and boot menu at start-up</h2>
+<p>### Update BIOS firmware</p>
+<p>I was not sure if updating will repair pressing F2 or F12 at start-up, but I guessed it could.</p>
+<p>The update of BIOS can caused brick of your computer, if you decide for update, then
+backup your data definitely.</p>
+<p>Especially Acer is known with bad reputation about quality of their updates or drivers.
+Experienced friend of mine was updating BIOS of Acer in past and he made a brick.</p>
+<p>When I <a href="#mount-harddisk-with-windows-in-linux-or-bsd-and-copy-the-data">backuped data</a> on laptop
+I downloaded latest official BIOS&#47;Firmware ver. 2.18 from
+Acer <a href="https://www.acer.com/gb-en/support">support site</a>. Problem was how to install downloaded
+firmware when I can not boot a windows.</p>
+<p>There are several ways how could be done.</p>
+<ol>
+<li><p><strong>Update from regular installation of windowsi</strong> after I <a href="#switch-bios-from-legacy-mode-back-to-uefi-acer-aspire-v5-431">switch Legacy to UEFI</a> succesfully.
+This way was for me succesfull. When I updated the BIOS to the latest available version, the
+buttons <strong>F2</strong> and <strong>F12</strong> started work by expected way.</p></li>
+<li><p><strong>Windows recovery USB</strong>
+I was trying to install with command line which is accesible from windows recovery USB.
+Recovery USB was able to boot even if legacy mode was set.
+When you are in command line you have to find where your USB is connected. I mean if
+it is connected on D:, F: or other letter&#8230;
+You can try command <code>wmic logicaldisk get name</code> to list all connected disk.
+When you find the right letter of disk (your USB) just run file (.exe or .bat) to update
+by write full path of file.
+Unfortunately, I&#8217;ve got always errors even if I&#8217;ve tried different versions of available BIOS firmwares.</p></li>
+<li><p><strong>Boot installation files od update during startup</strong>
+Unfortunately, same problem as command line desribed above.
+There is only different, that if you&#8217;d like to make recovery USB of Win10 you need pc with Win10 and so on.
+It can be a challenge and time consuming to find PC with Win8 for example.
+But you can download any windows version as installation media from microsoft web site.
+There are Win 7, 8, 10 &#8230;</p></li>
+</ol>
+<p>I tried recovery USB created from Win10 and installation USB was created from Win8 iso file.
+Neither version above helped to update BIOS from command line.</p>
+<p>I&#8217;ve read advice on the internet that updating BIOS will reset its configuration to default
+ for sure and after that Legacy mode will switch back to UEFI, but I was not able to update
+ BIOS other way then from regular installation, so I had to switch back to UEFI by another way.</p>
+<p>## Save data from installed Windows 10</p>
+<h3>Switch BIOS from Legacy mode back to UEFI (Acer Aspire V5 431)</h3>
+<ol>
+<li><p><strong>Use recovery windows USB or windows installation USB</strong>
+Unfortunately, neither of these helped me, because I did not find in advanced setting the
+option UEFI Firmware Settings for going to BIOS as from regular installation of Windows.</p></li>
+<li><p><strong>Reset BIOS (clear CMOS)</strong>
+This task can make a brick from your laptop before you will do that I strongly advice you
+to <a href="#mount-harddisk-with-windows-in-linux-or-bsd-and-copy-the-data">backup your data</a>.</p></li>
+</ol>
+<p>I was searching how to reset BIOS by remove an internal battery of BIOS. Instead of removing
+battery I found an <a href="https://www.ifixit.com/Answers/View/227350/No+Access+to+ACER+ASPIRE+V5+471+Bios+(Operating+System+Not+found)">advice</a> to short two copper pins with shape of triangle under note G2101
+located on MotherBoard, see pictures below.</p>
+<p>First remove this cover on the back of the laptop.</p>
+<p><img src="/images/remove_cover.jpg" alt="Plastic cover" /></p>
+<p>If you have a RAM above the pins you have to remove the RAM.</p>
+<p>Then just short two pin below the G2101 for 20 - 30 second with for example steel tweezer.
+Finally disconnect cable leading under the case of laptop of left side.</p>
+<p><img src="/images/motherboard.jpg" alt="Cooper pins G2101" /></p>
+<p>Disconnected cable under the plastic case of laptop.</p>
+<p><img src="/images/remove_cable.jpg" alt="Disconnected cable" /></p>
+<p>Firstly I was little scaried about to short some contacts on motherboard and
+it sounds crazy and really dangerous to me. But this approach really work for me
+and it restart the BIOS back to default configuration. After this reset I was able to
+ boot installed windows 10 again.</p>
+<p>### Mount Harddisk with windows in Linux or BSD and copy the data</p>
+<p>Before I started do quite dangerous task as short circuit on motherboard or install BIOS firmware
+I copied all important data from disk without a need to take out the whole hard disk from laptop.</p>
+<p>I boot Artix with GUI and mount hard disk with windows.</p>
+<pre><code>$ mkdir &#47;run&#47;media&#47;windows_data
+$ mount -t ntfs &#47;dev&#47;sda4 &#47;run&#47;media&#47;windows_data
+</code></pre>
+<p>Instead of <code>&#47;dev&#47;sda4</code> put your device.
+Your data will find under <code>&#47;run&#47;media&#47;windows_data</code>.</p>
+<h1>Conclusion</h1>
+<p>After all if you have a problem that buttons F2 and F12 are not working at the start-up
+of laptop just update your BIOS.</p>
+<p>If you switch BIOS to Legacy by accident and you need to switch back to UEFI to boot windows
+just short two cooper pins for 20 - 30 second to reset your BIOS.</p>
+<h1>Next step</h1>
+<p>Next step will be installation of OpenBSD.</p>
+
+    </main>
+
+    <footer>
+    </footer>
+
+  </body>
+
+</html>
+

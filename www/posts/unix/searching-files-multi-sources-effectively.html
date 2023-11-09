@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="date" scheme="YYYY-MM-DD" content="2023-02-24">
+    <meta name="license" content="https://creativecommons.org/licenses/by/4.0/">
+    <meta name="referrer" content="origin">
+    <link rel="icon" type="image/png" size="16x16" href="/images/favicon-16x16.png">
+    <link rel="stylesheet" href="/css/style.css">
+    <title>Search files from multiply sources with unix</title>
+  </head>
+
+
+  <body>
+<!--    Navigation is made by Erik Terwan    -->
+<!--          24th of November 2015          -->
+<!--              MIT License                -->
+    <nav role="navigation">
+      <div id="menuToggle">
+        <!--
+        A fake / hidden checkbox is used as click reciever,
+        so you can use the :checked selector on it.
+        -->
+        <input type="checkbox" />
+
+        <!--
+        Some spans to act as a hamburger.
+        They are acting like a real hamburger,
+        not that McDonalds stuff.
+        -->
+        <span></span>
+        <span></span>
+        <span></span>
+
+        <!--
+        Too bad the menu has to be inside of the button
+        but hey, it's pure CSS magic.
+        -->
+        <ul id="menu">
+          <a href="/"><li>Home</li></a>
+          <a href="/posts/"><li>Posts</li></a>
+          <a href="/categories/"><li>Categories</li></a>
+          <a href="/resources/"><li>Resources</li></a>
+          <a href="/about/"><li>About</li></a>
+          <a href="/contact/"><li>Contact</li></a>
+        </ul>
+      </div>
+    </nav>
+
+
+    <header>
+    </header>
+
+    <main>
+
+<h1>Search files from multiply sources with unix</h1>
+      <p><span id=pubdate>Published on: 2023-02-24</span></p>
+<h1>Introduction</h1>
+<p>I have a problem find files with my mac on windows server, especially if I am
+searching through several directories. The search engine in finder is unusable for me.</p>
+<h1>find command</h1>
+<p>I&#8217;ve began solve this problem with <code>find</code> command.</p>
+<pre><code class="language-sh">$ find dir1 dir2 -d 1 -type d -name \*hello\*
+</code></pre>
+<p>Command above do: find in directories with paths .&#47;dir1 .&#47;dir2, files and directries whose name contains string <code>hello</code>. Option -d means depth and we want to find only files and directories whose are one level below of search parent. So we are searching dir1&#47;* not dir1&#47;<em>&#47;</em>&#8230;</p>
+<p>Unfortunately this approach is slow also.</p>
+<h1>ls command</h1>
+<p>I was searching how can I use command <code>ls</code> in similar way as command <code>find</code>.
+I luckily found the solution. There was problem that <code>ls</code> printing only names of found files. But when you are searching through several directories you need to know absolute path or at least part of path by you can distinguish source dir of the found it file. That can be done with option <code>-d</code> and env variable <code>$PWD</code></p>
+<pre><code class="language-sh">$ ls -d "$PWD"&#47;dir1&#47;* "$PWD"&#47;dir2&#47;* | grep -F hello
+</code></pre>
+<p>Command above do: list all files in dir1 and dir2 with full path which is ensured by option <code>-d</code> and <code>$PWD</code>. This approach need to contain asterisk at the end of path. Result is piped to grep which filter name that contains string hello.</p>
+
+    </main>
+
+    <footer>
+    </footer>
+
+  </body>
+
+</html>
+

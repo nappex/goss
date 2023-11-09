@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="date" scheme="YYYY-MM-DD" content="2022-04-11">
+    <meta name="license" content="https://creativecommons.org/licenses/by/4.0/">
+    <meta name="referrer" content="origin">
+    <link rel="icon" type="image/png" size="16x16" href="/images/favicon-16x16.png">
+    <link rel="stylesheet" href="/css/style.css">
+    <title>Differences between zsh and bash</title>
+  </head>
+
+
+  <body>
+<!--    Navigation is made by Erik Terwan    -->
+<!--          24th of November 2015          -->
+<!--              MIT License                -->
+    <nav role="navigation">
+      <div id="menuToggle">
+        <!--
+        A fake / hidden checkbox is used as click reciever,
+        so you can use the :checked selector on it.
+        -->
+        <input type="checkbox" />
+
+        <!--
+        Some spans to act as a hamburger.
+        They are acting like a real hamburger,
+        not that McDonalds stuff.
+        -->
+        <span></span>
+        <span></span>
+        <span></span>
+
+        <!--
+        Too bad the menu has to be inside of the button
+        but hey, it's pure CSS magic.
+        -->
+        <ul id="menu">
+          <a href="/"><li>Home</li></a>
+          <a href="/posts/"><li>Posts</li></a>
+          <a href="/categories/"><li>Categories</li></a>
+          <a href="/resources/"><li>Resources</li></a>
+          <a href="/about/"><li>About</li></a>
+          <a href="/contact/"><li>Contact</li></a>
+        </ul>
+      </div>
+    </nav>
+
+
+    <header>
+    </header>
+
+    <main>
+
+<h1>Differences between zsh and bash</h1>
+      <p><span id=pubdate>Published on: 2022-04-11</span></p>
+<h1>Introduction</h1>
+<p>This article aims only to differences between zsh and bash. Author has no
+experiences with others. Both of them are categorized as unix shells.</p>
+<p>## Sh (Bourne Shell)
+This unix shell is not a subject of this article, but I&#8217;d like to mention it
+because its name <strong>Bourne shell</strong> could be confused as <code>bash</code> by beginners.
+This shell was created in 1977 by Stephen R. Bourne, who worked in AT&#38;T Bell Laboratories.
+This shell can be found in most of today&#8217;s unix computers under the path <code>&#47;bin&#47;sh</code>.
+Bourne shell was a replacement for the Thompson shell, whose executable
+file had the same path <code>&#47;bin&#47;sh</code>.</p>
+<h2>Bash (Bourne again shell)</h2>
+<p>Bash is unix POSIX shell which was created by Free Software Foundation (FSF).
+Development started in 1988 by Brian Fox as replacement for <code>sh</code>. Syntax
+of <code>bash</code> is a <em>superset</em> of the Bourne shell. It can call it as extension of
+the bourne shell or advanced bourne shell, because <code>bash</code> has a lot extra features
+against to bourne shell, but syntax is preserved as the bourne shell.
+Bash is used in most of nowadays linux distributions as default shell under the
+path <code>&#47;bin&#47;bash</code>.
+MacOS used <code>bash</code> as default shell until 2019, when they&#8217;ve switched
+to <code>zsh</code>. One of reason why Apple chnaged was a new license <strong>GPL-3.0</strong> for <code>bash</code> 4.0.</p>
+<p>## Zsh (Z shell)
+Zsh is also unix shell under license MIT. Zsh is extended bourne shell with
+much improvements. Zsh also added some really favorite functions from <code>ksh</code>, <code>bash</code>
+and <code>tcsh</code>. Original author of <code>zsh</code> was Paul Falstad who created the <code>zsh</code>
+during his study on Princeton University and the name of <code>zsh</code> was created
+by his professor Zhong Shao. Zsh can be call as <em>command and programming language</em>.
+<code>zsh</code> is used in MacOS or Kali Linux nowadays. Path to execute this shell is <code>&#47;bin&#47;zsh</code>.</p>
+<h1>Differences between ZSH and BASH</h1>
+<p>## Word splitting upon parameter expansion</p>
+<p><strong>Word Splitting</strong>
+Space is taken as special <code>char</code> which separate each arguments and commands.
+So if we save some text with spaces to shell variable, we have to remember,
+when we&#8217;d like to expansion this variable.</p>
+<p><strong>Parameter Expansion (Substitution)</strong>
+If we want to use <em>expansion</em> we have to use dollar-sign as <code>syntax</code>. When we
+use dollar-sign before to var name, content of variable will expand to command line
+and we can use the content with some command.</p>
+<p><em>bash</em></p>
+<pre><code class="language-bash">$ &#47;bin&#47;bash
+$ a="a b c d"
+$ printf &#39;&#60;%s&#62;\n&#39; $a
+&#60;a&#62;
+&#60;b&#62;
+&#60;c&#62;
+&#60;d&#62;
+</code></pre>
+<p>As you can see in example above, parameter expansion evaluate each word separate
+by space as one argument for command <code>printf</code>. If we dont want to allow word
+splitting after parameter expansion we have to put the expansion to double-quotes
+<em>&#8220;</em> in bash.</p>
+<pre><code class="language-bash">$ &#47;bin&#47;bash
+$ a="a b c d"
+$ printf &#39;&#60;%s&#62;\n&#39; "$a"
+&#60;a b c d&#62;
+</code></pre>
+<p>But this approach will not work in <code>zsh</code>, because word splitting is disable
+by default. So there is opposite situation how enable word splitting upon
+parameter expansion?</p>
+<p><em>zsh</em></p>
+<p>Word splitting is disable by default</p>
+<pre><code class="language-zsh">$ &#47;bin&#47;zsh
+$ a="a b c d"
+$ printf &#39;&#60;%s&#62;\n&#39; $a
+&#60;a b c d&#62;
+</code></pre>
+<p>It does not matter in <code>zsh</code> if we used double-quotes to disable word splitting
+upon parameter expansion (or substition) because of default disabled value.</p>
+<pre><code class="language-zsh">$ &#47;bin&#47;zsh
+$ a="a b c d"
+$ printf &#39;&#60;%s&#62;\n&#39; "$a"
+&#60;a b c d&#62;
+</code></pre>
+<p>So if we want to use word splitting we have to use special syntax <code>=</code> for perform
+word splitting.</p>
+<pre><code class="language-zsh">$ &#47;bin&#47;zsh
+$ a="a b c d"
+$ printf &#39;&#60;%s&#62;\n&#39; $=a
+&#60;a&#62;
+&#60;b&#62;
+&#60;c&#62;
+&#60;d&#62;
+</code></pre>
+<p>Word splitting upon parametr expansion could be set globally with option <code>shwordsplit</code>.</p>
+<h2>Globbing pattern upon parameter expansion</h2>
+<p>Glob is command which is able to match filenames by pattern which we created.
+Paterrns consists of basic wildcards as:</p>
+<ul>
+<li><code>*</code> - match any number and any character in filename including also none</li>
+<li><code>?</code> - match exactly one any character</li>
+<li><code>[abc]</code> - match exactly one character which is <code>a</code>, <code>b</code> or <code>c</code></li>
+<li><code>[b-g]</code> - match exactly one character which is in range <code>b-g</code></li>
+</ul>
+<p>, where each wildcard has own special meaning. Dont confuse <code>globbing</code> with
+<code>regex</code>. Although it is similar concept, there is absolutely different usage.
+By default <code>glob</code> does not match hidden files start with dot <code>.</code>.</p>
+<p>Glob pattern can be saved in shell variable. There occurs problem with
+parameter (variable) expansion again.</p>
+<p><em>bash</em></p>
+<pre><code class="language-bash">$ &#47;bin&#47;bash
+$ a=*
+$ ls $a
+a.txt   b.txt   c.txt   d.txt
+</code></pre>
+<p>As you can see in example above, expansion is proceeded that asterisk is taken
+as glob wildcard.</p>
+<pre><code class="language-bash">$ &#47;bin&#47;bash
+$ a=*
+$ ls "$a"
+ls: *: No such file or directory
+</code></pre>
+<p>When we used double-quoutes, asterisk is used as text (string) after expansion
+and command takes asterisk as filename not as wildcard. If we&#8217;ve really created
+file with name * then <code>ls</code> will not invoke exception.</p>
+<p><em>zsh</em></p>
+<p>Globbing upon parameter expansion is disabled by default, so asterisk is not used
+as pattern for globbing but like filename.</p>
+<pre><code class="language-zsh">$ &#47;bin&#47;zsh
+$ a=*
+$ ls $a
+ls: *: No such file or directory
+</code></pre>
+<p>If we want to enable pattern globbing after expansion we have to use special
+syntax <code>~</code>.</p>
+<pre><code class="language-zsh">$ &#47;bin&#47;zsh
+$ a=*
+$ ls $~a
+a.txt b.txt c.txt d.txt
+</code></pre>
+<p>We can use different approach and save to parameter at the beginning
+by running glob pattern in subshell. Subshell start by run the command
+in <strong>simple parentheses</strong>.
+So during expansion there will not be the asterisk char but filenames
+matched by glob in subshell.</p>
+<pre><code class="language-zsh">$ &#47;bin&#47;zsh
+$ a=( * )
+$ ls $a
+a.txt b.txt c.txt d.txt
+</code></pre>
+<p>Globbing upon parametr expansion could be set in <code>zsh</code> globally with option <code>globsubst</code>.</p>
+<p>## ZSH word split and glob expansion together
+There is also option to combine special syntax for
+* word splitting upon expansion <code>=</code>
+* and globbing upon expansion <code>~</code>.</p>
+<pre><code class="language-zsh">$ &#47;bin&#47;zsh
+$ $=~a
+</code></pre>
+<h1>Useful links</h1>
+<ul>
+<li><a href="https://unix.stackexchange.com/questions/461360/glob-character-within-variable-expands-in-bash-but-not-zsh">unix-stackexchange-expands-in-bash-but-no-zsh</a></li>
+<li><a href="https://www.youtube.com/playlist?list=PLHS-Uhp7t2Ys5lwy-5jops3t_DCfpXu_j">bash-course-ytb</a></li>
+</ul>
+
+    </main>
+
+    <footer>
+    </footer>
+
+  </body>
+
+</html>
+

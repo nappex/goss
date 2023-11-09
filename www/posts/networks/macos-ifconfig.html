@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="date" scheme="YYYY-MM-DD" content="2020-12-30">
+    <meta name="license" content="https://creativecommons.org/licenses/by/4.0/">
+    <meta name="referrer" content="origin">
+    <link rel="icon" type="image/png" size="16x16" href="/images/favicon-16x16.png">
+    <link rel="stylesheet" href="/css/style.css">
+    <title>How get info about my IP address on macOS</title>
+  </head>
+
+
+  <body>
+<!--    Navigation is made by Erik Terwan    -->
+<!--          24th of November 2015          -->
+<!--              MIT License                -->
+    <nav role="navigation">
+      <div id="menuToggle">
+        <!--
+        A fake / hidden checkbox is used as click reciever,
+        so you can use the :checked selector on it.
+        -->
+        <input type="checkbox" />
+
+        <!--
+        Some spans to act as a hamburger.
+        They are acting like a real hamburger,
+        not that McDonalds stuff.
+        -->
+        <span></span>
+        <span></span>
+        <span></span>
+
+        <!--
+        Too bad the menu has to be inside of the button
+        but hey, it's pure CSS magic.
+        -->
+        <ul id="menu">
+          <a href="/"><li>Home</li></a>
+          <a href="/posts/"><li>Posts</li></a>
+          <a href="/categories/"><li>Categories</li></a>
+          <a href="/resources/"><li>Resources</li></a>
+          <a href="/about/"><li>About</li></a>
+          <a href="/contact/"><li>Contact</li></a>
+        </ul>
+      </div>
+    </nav>
+
+
+    <header>
+    </header>
+
+    <main>
+
+<h1>How get info about my IP address on macOS</h1>
+      <p><span id=pubdate>Published on: 2020-12-30</span></p>
+<h1>IP addresses</h1>
+<p>Your home computer always contains two IP addresses. How local network works is described in picture below.</p>
+<p><img src="/images/ip_scheme.png" alt="git logo" /></p>
+<p>Icons used in image was created by <a href="https://freeicons.io/profile/752">Mithun Raj</a> on <a href="https://freeicons.io">freeicons.io</a>. Thank you :)</p>
+<p>Picture was created with <a href="https://firealpaca.com/">Firealpaca</a></p>
+<p>What two addresses I mean ?</p>
+<p>There are:</p>
+<ul>
+<li><strong>Internal (private)</strong> IP address - router interface when connects to local network</li>
+<li><strong>External (public)</strong> IP address - router interface when connects to internet</li>
+</ul>
+<p>For example (see picture above) - your laptop has internal IP address 192.168.0.106 but external address is 89.35.8.107</p>
+<p>Our home Nat router allows connections in direction from internal to external network (internet) and not vice-versa unless is used technique called <strong>port forwarding</strong>. There is no direct connection between the Internet and a computer (except port forwarding).</p>
+<p>So no one can not to connect to your internal IP address from internet. Only <strong>port forwarding</strong> allows device to get external IP address and reach this device from internet.</p>
+<h2>Internal (private) IP address</h2>
+<p>About Internal IP address is RFC 1918</p>
+<p>we can set three types of private IPv4 address:</p>
+<ul>
+<li>Class A 10.0.0.0      -   10.255.255.255  (10&#47;8 prefix)</li>
+<li>Class B 172.16.0.0    -   172.31.255.255  (172.16&#47;12 prefix)</li>
+<li>Class C 192.168.0.0   -   192.168.255.255 (192.168&#47;16 prefix)</li>
+</ul>
+<p>Another type of private address is 169.254.X.X - it is IPv4 Link Local Address, it is used when we connect two computer with cable. There can occure a problem when we want this pc add local IP address with DHCP. This can not allocate IP addres with DHCP because this PC will dynamicaly allocate IP address by itself. So this function can be used if we do not have a DHCP server to automatically allocate IP addres for our PC. This address is not routable so we can not route this address by internet or another subnet. This address is automatically allocate to host whene there is no DHCP server.</p>
+<p>Internal IP addresses use a special address range from a reserved non route-able address range. This range is same for every local network. Range is restricted for local usage. So the internal IP address ranges  are blocked by Internet routers, you can not see them from internet.</p>
+<p>Internal IP addresses have these schemes in most cases:</p>
+<ul>
+<li>192.168.0.x</li>
+<li>192.168.x.0</li>
+</ul>
+<p>other schemes of private IP can be:</p>
+<ul>
+<li>10.x.x.x is a 24 bit address block</li>
+<li>172.16.x.x to 172.31.x.x is a 20 bit address block.</li>
+</ul>
+<p>Your router has Internal IP probably as <strong>192.168.0.1 or 192.168.1.0</strong></p>
+<p>Devices in your local network have these Internal IP addresses:</p>
+<ul>
+<li>PC 192.168.0.103</li>
+<li>TV 192.168.0.104</li>
+<li>Raspberry 192.168.0.105</li>
+<li>laptop 192.168.0.106</li>
+</ul>
+<p>You can locally connect many devices to your router. But all of these devices will have only one <strong>External IP address</strong> of your router.</p>
+<h3>How to find out your internal IP addresses on macOS</h3>
+<p>There are two commands to check your IP:</p>
+<ul>
+<li>ifconfig</li>
+<li>ipconfig</li>
+</ul>
+<p>When you prompt:</p>
+<pre><code class="language-shell">$ ifconfig
+</code></pre>
+<p>you should get output of all connections:</p>
+<pre><code class="language-shell">lo0: flags=8049&#60;UP,LOOPBACK,RUNNING,MULTICAST&#62; mtu 16384
+    options=1203&#60;RXCSUM,TXCSUM,TXSTATUS,SW_TIMESTAMP&#62;
+    inet 127.0.0.1 netmask 0xff000000
+    inet6 ::1 prefixlen 128
+    inet6 fe80::1%lo0 prefixlen 64 scopeid 0x1
+    nd6 options=201&#60;PERFORMNUD,DAD&#62;
+gif0: flags=8010&#60;POINTOPOINT,MULTICAST&#62; mtu 1280
+stf0: flags=0&#60;&#62; mtu 1280
+en0: flags=8863&#60;UP,BROADCAST,SMART,RUNNING,SIMPLEX,MULTICAST&#62; mtu 1500
+    options=400&#60;CHANNEL_IO&#62;
+    ether 78:bf:9b:c3:6b:02
+    inet6 fd60::18:1a2f:dabe:c1dc%en0 prefixlen 64 secured scopeid 0x4
+    inet 192.168.0.89 netmask 0xffffff00 broadcast 192.168.0.255
+    nd6 options=201&#60;PERFORMNUD,DAD&#62;
+    media: autoselect
+    status: active
+en1: flags=8963&#60;UP,BROADCAST,SMART,RUNNING,PROMISC,SIMPLEX,MULTICAST&#62; mtu 1500
+    options=460&#60;TSO4,TSO6,CHANNEL_IO&#62;
+    ether 82:19:32:d2:ec:80
+    media: autoselect &#60;full-duplex&#62;
+    status: inactive
+.
+.
+.
+
+
+</code></pre>
+<p>Your output will be different in view of your OS.</p>
+<p>For Linux distributions you get these main variables:</p>
+<ul>
+<li><code>eth[0-x]</code>:   ethernet interface, to connect with cable</li>
+<li><code>lo</code>:         loopback or local, when you use localhost</li>
+<li><code>wlan[0-x]</code>:  wireless interface, to connect with wifi</li>
+</ul>
+<p>Output above is from macOS, there is some differents. See most of them below with explanation:</p>
+<ul>
+<li><code>lo0</code>:    loopback (localhost)</li>
+<li><code>gif0</code>:   Software Network Interface</li>
+<li><code>stf0</code>:   6to4 tunnel interface</li>
+<li><code>en0</code>:    Ethernet 0 (ethernet), physical network connection</li>
+<li><code>en1</code>:    Ethernet 1 (wireless), physical network connection</li>
+<li><code>fw0</code>:    Firewire, IP over Firewire interface</li>
+<li><code>vmnet0</code>: Virtual Interface, interfaces are installed by VMware for               network communication with virtual machines</li>
+<li><code>utun0</code>:  Tunneling interface. Used for VPN connections to tunnel                 traffic or for software like Back To My Mack. creates VPN               clients</li>
+<li><code>llw0</code>:   Low-latency WLAN Interface. Used by the Skywalk system.</li>
+<li><code>ap1</code>:    Access Point. This is used if you are using your MacBook as             a wireless host where you are sharing its connection.</li>
+<li><code>awdl0</code>:  Apple Wireless Direct Link. WIFI p2p connection for things              like AirDrop, Airplay, etc. Also used for Bluetooth.</li>
+<li><code>llw0</code>:   Low-latency WLAN Interface. Used by the Skywalk system</li>
+<li><code>bridge0</code>: Thunderbolt Bridge</li>
+</ul>
+<p>If you want to get shorter output, where you will find your IP addresses easier, prompt:</p>
+<pre><code class="language-shell">$ ifconfig -a inet
+</code></pre>
+<p>It means show me all active and inactive connections and their inet. Inet means IPv4 and inet6 means IPv6. When you prompt ifconfig withou <code>-a</code> it shows only active connetctions see documentations or <a href="https://www.computerhope.com/unix/uifconfi.htm">there is nice explanation</a> to other usage for example how configure addresses to an interface etc.</p>
+<ul>
+<li><code>inet</code>: IPv4</li>
+<li><code>ether</code>: MAC address</li>
+</ul>
+<p>Other approach can be use command <code>grep</code> with <code>ifconfig</code></p>
+<pre><code class="language-shell">$ ifconfig | grep inet
+</code></pre>
+<p>or</p>
+<pre><code class="language-shell">$ ifconfig en0 inet
+</code></pre>
+<p>If you want output only as your IPv4, then prompt:</p>
+<pre><code class="language-shell">$ ipconfig getifaddr en0
+</code></pre>
+<h4>ifconfig VS ipconfig</h4>
+<p><code>ifconfig</code> is used in UNIX OS and it means Interface Configuration. This command is the same as ipconfig, and is used to view all the current TCP&#47;IP network configurations values of the computer</p>
+<p><code>ipconfig</code> is used in Microsoft Windows but ReactOS or macOS support this command. It means Internet Protocol Configuration. This command is used to view all the current TCP&#47;IP network configurations values of the computer</p>
+<p>When you dont want to use terminal for this quest you can read your internal IP address in you setting in macOS.</p>
+<p><code>system preferences –&#62; network –&#62; Wifi –&#62; advanced –&#62; TCP&#47;IP –&#62; address IPv4</code></p>
+<h3>How to find all devices on your local network</h3>
+<p>For this purpose is the best choice to use tool called <code>nmap</code></p>
+<p><a href="https://nmap.org/book/man.html">Docs</a></p>
+<p>Tool nmap is not installed on macOS, so I recommend to instal via brew</p>
+<pre><code class="language-shell">$ brew install nmap
+</code></pre>
+<p>After installation you have to link the tool</p>
+<pre><code class="language-shell">$ brew link nmap
+</code></pre>
+<p>In my case I got a error</p>
+<pre><code class="language-shell">Error: The `brew link` step did not complete successfully
+The formula built, but is not symlinked into &#47;usr&#47;local
+Could not symlink nmap
+&#47;usr&#47;local&#47;share&#47;...&#47;...&#47;man is not writable
+
+brew link nmap
+</code></pre>
+<p>to fix this error use this command:</p>
+<pre><code class="language-shell">$ sudo chown -R `whoami`:admin &#47;usr&#47;local&#47;share
+</code></pre>
+<p><code>whoami</code>:   is name your current user
+<code>chown</code>:    tool for change file owner and group, see <code>man chown</code>
+<code>-R</code>:       Change the user ID and&#47;or the group ID for the file                     hierarchies rooted in the files instead of just the files               themselves.</p>
+<p>When link is complete then you can scan your local network with <code>nmap</code></p>
+<p>Command to scan your all active devices in your local network is:</p>
+<pre><code class="language-shell">$  sudo nmap -sn 192.168.0.0&#47;24
+</code></pre>
+<p>It search all active connections with IP pattern 192.168.0.x.
+It is recommended to use as sudo because if you don&#8217;t use as sudo you received very basic informations.</p>
+<ul>
+<li><p><code>-sn</code>: Ping Scan - disable port scan, also called as quick scan in older version was <code>-sP</code>. This option tells Nmap not to do a port scan after host discovery. If you don&#8217;t use this option, the you get result with open ports.</p></li>
+<li><p><code>&#47;24</code>: is referring to the subnet mask. It is CIDR format. &#47;24 means that the first 24 bits of the IP address are part of the Network number (192.168.0) the last part is part of the host address (1-254).</p></li>
+</ul>
+<p>Subnet-mask should be: 255.255.255.0</p>
+<p>Network Address should be: 192.168.0.0</p>
+<p>Broadcast Address should be: 192.168.0.255</p>
+<p>Valid Hosts (Host range) should be: 192.168.0.1 - 192.168.0.254</p>
+<p>Working for Host range:</p>
+<p>2<sup>8</sup> - 2 –&#62; 256 - 2 = 254</p>
+<p><code>&#47;24</code>: is called as “slash notation”. It&#8217;s the number of bits that are specified. An IPv4 adress is 32 bits, divided up into 4 groups of 8 bits (n umbers from 0 to 255). 192.168.1.0&#47;24 means any IP address in the range of 192.168.1.0 to 192.168.1.255. An IP address of 192.168.2.0&#47;23 would be any IP address in the range 192.168.2.0 to 192.168.3.255 (notice the third number changes too) because it can have any value in the last 9 bits.</p>
+<p><a href="https://answers.yahoo.com/question/index?qid=20110323232434AAaQVPk&amp;guccounter=1&amp;guce_referrer=aHR0cHM6Ly9kdWNrZHVja2dvLmNvbS8_dD1mZmFiJnE9d2hhdCttZWFucytwYXR0ZXIrMCUyRjI0KytpbitJUCthZGRyZXNzJmlhPXdlYg&amp;guce_referrer_sig=AQAAAFh9QZDnWStZSqrEe8uTKCu7MsTb2C1EDJhGxeq5piTuel8GSAG0uf15O9hd9ihRR7L-rkFtukh2RcSKwPuNoXcja0XP_jmvw3F8bhI_9PnnZc9PUYC3SOxivVD5CH8W7OxuxKS2iDZL4h3iO1OGC_pByOwCll-AJWmQOsRA5CWv">Yahoo answers</a></p>
+<p>Also see the subnet <a href="https://www.skullbox.net/subnetcalculator.php">calculation</a></p>
+<h2>External (public) IP address</h2>
+<p>External IP address is routable IP address. This address is assigned to you by your ISP. ISP has to assigned IP address to you from public addresses range which was assigned to your ISP by IANA (Internet Assigned Numbers Authority).</p>
+<p>IANA –&#62; public addresses range –&#62; ISP –&#62; your external IP address</p>
+<p>External IP address is used when you communicate with Internet.</p>
+<p>You can notice that your External IP address change during the time. It is normal process because most of ISP gives you <strong>dynamic IP address</strong>. It means your ISP can change your External IP address how they need it. When you communicate with your devices from outside as a remote is good habit to have only one IP address without any change. For this purpose you need to get <strong>static IP address</strong> which is in most cases something extra and you have to pay for this service to your ISP.</p>
+<p>Make from private IP address the public is done via NAT (Network Address Translation)</p>
+<h3>How to find out your external IP address</h3>
+<h4>From internet</h4>
+<p>Check some service on the internet which will show you your external IP address. For example https:&#47;&#47;whatismyipaddress.com&#47; or just type to google my IP address and google will write to you&#8230;</p>
+<h4>Terminal</h4>
+<p>There is also web services which allow to use terminal. One of this service is <code>https:&#47;&#47;ifconfig.me&#47;</code>, so when you prompt:</p>
+<pre><code class="language-shell">curl ifconfig.me
+</code></pre>
+<p>or</p>
+<pre><code class="language-shell">curl ifconfig.me&#47;all
+</code></pre>
+<p>or</p>
+<pre><code class="language-shell">curl ipecho.net&#47;plain ; echo
+</code></pre>
+
+    </main>
+
+    <footer>
+    </footer>
+
+  </body>
+
+</html>
+

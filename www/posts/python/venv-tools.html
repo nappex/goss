@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="date" scheme="YYYY-MM-DD" content="2020-09-02">
+    <meta name="license" content="https://creativecommons.org/licenses/by/4.0/">
+    <meta name="referrer" content="origin">
+    <link rel="icon" type="image/png" size="16x16" href="/images/favicon-16x16.png">
+    <link rel="stylesheet" href="/css/style.css">
+    <title>Confused about tools for virtual environment?</title>
+  </head>
+
+
+  <body>
+<!--    Navigation is made by Erik Terwan    -->
+<!--          24th of November 2015          -->
+<!--              MIT License                -->
+    <nav role="navigation">
+      <div id="menuToggle">
+        <!--
+        A fake / hidden checkbox is used as click reciever,
+        so you can use the :checked selector on it.
+        -->
+        <input type="checkbox" />
+
+        <!--
+        Some spans to act as a hamburger.
+        They are acting like a real hamburger,
+        not that McDonalds stuff.
+        -->
+        <span></span>
+        <span></span>
+        <span></span>
+
+        <!--
+        Too bad the menu has to be inside of the button
+        but hey, it's pure CSS magic.
+        -->
+        <ul id="menu">
+          <a href="/"><li>Home</li></a>
+          <a href="/posts/"><li>Posts</li></a>
+          <a href="/categories/"><li>Categories</li></a>
+          <a href="/resources/"><li>Resources</li></a>
+          <a href="/about/"><li>About</li></a>
+          <a href="/contact/"><li>Contact</li></a>
+        </ul>
+      </div>
+    </nav>
+
+
+    <header>
+    </header>
+
+    <main>
+
+<h1>Confused about tools for virtual environment?</h1>
+      <p><span id=pubdate>Published on: 2020-09-02</span></p>
+<p>Don&#8217;t feel obligated to use pipenv. It is generally recommended to help people who are intimidated by virtualenvs, and is not appropriate for all use cases. It actually relies on pip and virtualenv, so virtualenv is not going away. There are also some common criticisms of pipenv. See this blog post for some (examples)[https:&#47;&#47;chriswarrick.com&#47;blog&#47;2018&#47;07&#47;17&#47;pipenv-promises-a-lot-delivers-very-little&#47;].</p>
+<p>virtualenv (venv), on the other hand, is bundled with python itself, so is certainly more stable, widespread and canonically correct. So you won&#8217;t run into problems like (this)[https:&#47;&#47;github.com&#47;pypa&#47;pip&#47;issues&#47;5854].</p>
+<p>The Python Packaging Authority recommends using virtualenv &#8220;to isolate application specific dependencies from a shared Python installation&#8221;. If anything, there are more bugs and drawbacks to worry about using pipenv.</p>
+<p>FYI right now your using venv not virtualenv. Venv is available in the standard Python library in Python 3.3 and later, virtualenv is a third party package. Both accomplish the same thing so just keep using whatever your using.</p>
+<p>venv&#47;virtualenv is packaged with Python and will basically be around forever, since things that are shipped with Python are very hard to change or remove.</p>
+<p>pipenv is just a wrapper that combines pip and virtualenv.</p>
+<h1>venv vs. virtualenv</h1>
+<p>https:&#47;&#47;virtualenv.pypa.io&#47;en&#47;stable&#47;</p>
+<p>https:&#47;&#47;stackoverflow.com&#47;questions&#47;41573587&#47;what-is-the-difference-between-venv-pyvenv-pyenv-virtualenv-virtualenvwrappe</p>
+<p>venv is a package shipped directly with python 3. So you don&#8217;t need to pip install anything.</p>
+<p>virtualenv instead is an independent library available at https:&#47;&#47;virtualenv.pypa.io&#47;en&#47;stable&#47; and can be install with pip.</p>
+<p>They solve the same problem and work in a very similar manner.</p>
+<p>If you use python3 I suggest to avoid an &#8220;extra&#8221; dependancy and just stick with venv</p>
+<p>Your error is probably because you use Python2&#47;pip2</p>
+<p>312</p>
+<p>I would just avoid the use of virtualenv after Python3.3+ and instead use the standard shipped library venv. To create a new virtual environment you would type:</p>
+<p>$ python3 -m venv <MYVENV></p>
+<p>virtualenv tries to copy the Python binary into the virtual environment&#8217;s bin directory. However it does not update library file links embedded into that binary, so if you build Python from source into a non-system directory with relative path names, the Python binary breaks. Since this is how you make a copy distributable Python, it is a big flaw. BTW to inspect embedded library file links on OS X, use otool. For example from within your virtual environment, type:</p>
+<p>$ otool -L bin&#47;python
+python:
+    @executable_path&#47;..&#47;Python (compatibility version 3.4.0, current version 3.4.0)
+    &#47;usr&#47;lib&#47;libSystem.B.dylib (compatibility version 1.0.0, current version 1238.0.0)</p>
+<p>Consequently I would avoid virtualenvwrapper and pipenv. pyvenv is deprecated. pyenv seems to be used often where virtualenv is used but I would stay away from it also since I think venv also does what pyenv is built for.</p>
+<p>venv creates virtual environments in the shell that are fresh and sandboxed, with user-installable libraries, and it&#8217;s multi-python safe. Fresh because virtual environments only start with the standard libraries that ship with python, you have to install any other libraries all over again with pip install while the virtual environment is active. Sandboxed because none of these new library installs are visible outside the virtual environment, so you can delete the whole environment and start again without worrying about impacting your base python install. User-installable libraries because the virtual environment&#8217;s target folder is created without sudo in some directory you already own, so you won&#8217;t need sudo permissions to install libraries into it. Finally it is multi-python safe, since when virtual environments activate, the shell only sees the python version (3.4, 3.5 etc.) that was used to build that virtual environment.</p>
+<p>pyenv is similar to venv in that it lets you manage multiple python environments. However with pyenv you can&#8217;t conveniently rollback library installs to some start state and you will likely need admin privileges at some point to update libraries. So I think it is also best to use venv.</p>
+<p>In the last couple of years I have found many problems in build systems (emacs packages, python standalone application builders, installers&#8230;) that ultimately come down to issues with virtualenv. I think python will be a better platform when we eliminate this additional option and only use venv.</p>
+<p>1494
+PyPI packages not in the standard library:</p>
+<pre><code>virtualenv is a very popular tool that creates isolated Python environments for Python libraries. If you&#39;re not familiar with this tool, I highly recommend learning it, as it is a very useful tool, and I&#39;ll be making comparisons to it for the rest of this answer.
+
+It works by installing a bunch of files in a directory (eg: env&#47;), and then modifying the PATH environment variable to prefix it with a custom bin directory (eg: env&#47;bin&#47;). An exact copy of the python or python3 binary is placed in this directory, but Python is programmed to look for libraries relative to its path first, in the environment directory. It&#39;s not part of Python&#39;s standard library, but is officially blessed by the PyPA (Python Packaging Authority). Once activated, you can install packages in the virtual environment using pip.
+
+pyenv is used to isolate Python versions. For example, you may want to test your code against Python 2.7, 3.6, 3.7 and 3.8, so you&#39;ll need a way to switch between them. Once activated, it prefixes the PATH environment variable with ~&#47;.pyenv&#47;shims, where there are special files matching the Python commands (python, pip). These are not copies of the Python-shipped commands; they are special scripts that decide on the fly which version of Python to run based on the PYENV_VERSION environment variable, or the .python-version file, or the ~&#47;.pyenv&#47;version file. pyenv also makes the process of downloading and installing multiple Python versions easier, using the command pyenv install.
+
+pyenv-virtualenv is a plugin for pyenv by the same author as pyenv, to allow you to use pyenv and virtualenv at the same time conveniently. However, if you&#39;re using Python 3.3 or later, pyenv-virtualenv will try to run python -m venv if it is available, instead of virtualenv. You can use virtualenv and pyenv together without pyenv-virtualenv, if you don&#39;t want the convenience features.
+
+virtualenvwrapper is a set of extensions to virtualenv (see docs). It gives you commands like mkvirtualenv, lssitepackages, and especially workon for switching between different virtualenv directories. This tool is especially useful if you want multiple virtualenv directories.
+
+pyenv-virtualenvwrapper is a plugin for pyenv by the same author as pyenv, to conveniently integrate virtualenvwrapper into pyenv.
+
+pipenv aims to combine Pipfile, pip and virtualenv into one command on the command-line. The virtualenv directory typically gets placed in ~&#47;.local&#47;share&#47;virtualenvs&#47;XXX, with XXX being a hash of the path of the project directory. This is different from virtualenv, where the directory is typically in the current working directory. pipenv is meant to be used when developing Python applications (as opposed to libraries). There are alternatives to pipenv, such as poetry, which I won&#39;t list here since this question is only about the packages that are similarly named.
+</code></pre>
+<p>Standard library:</p>
+<pre><code>pyvenv is a script shipped with Python 3 but deprecated in Python 3.6 as it had problems (not to mention the confusing name). In Python 3.6+, the exact equivalent is python3 -m venv.
+
+venv is a package shipped with Python 3, which you can run using python3 -m venv (although for some reason some distros separate it out into a separate distro package, such as python3-venv on Ubuntu&#47;Debian). It serves the same purpose as virtualenv, but only has a subset of its features (see a comparison here). virtualenv continues to be more popular than venv, especially since the former supports both Python 2 and 3.
+</code></pre>
+<p>Recommendation for beginners:</p>
+<p>This is my personal recommendation for beginners: start by learning virtualenv and pip, tools which work with both Python 2 and 3 and in a variety of situations, and pick up other tools once you start needing them.</p>
+<p>https:&#47;&#47;realpython.com&#47;pipenv-guide&#47;</p>
+
+    </main>
+
+    <footer>
+    </footer>
+
+  </body>
+
+</html>
+

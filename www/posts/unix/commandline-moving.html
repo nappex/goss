@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="date" scheme="YYYY-MM-DD" content="2022-03-10">
+    <meta name="license" content="https://creativecommons.org/licenses/by/4.0/">
+    <meta name="referrer" content="origin">
+    <link rel="icon" type="image/png" size="16x16" href="/images/favicon-16x16.png">
+    <link rel="stylesheet" href="/css/style.css">
+    <title>Use your command line more effectively</title>
+  </head>
+
+
+  <body>
+<!--    Navigation is made by Erik Terwan    -->
+<!--          24th of November 2015          -->
+<!--              MIT License                -->
+    <nav role="navigation">
+      <div id="menuToggle">
+        <!--
+        A fake / hidden checkbox is used as click reciever,
+        so you can use the :checked selector on it.
+        -->
+        <input type="checkbox" />
+
+        <!--
+        Some spans to act as a hamburger.
+        They are acting like a real hamburger,
+        not that McDonalds stuff.
+        -->
+        <span></span>
+        <span></span>
+        <span></span>
+
+        <!--
+        Too bad the menu has to be inside of the button
+        but hey, it's pure CSS magic.
+        -->
+        <ul id="menu">
+          <a href="/"><li>Home</li></a>
+          <a href="/posts/"><li>Posts</li></a>
+          <a href="/categories/"><li>Categories</li></a>
+          <a href="/resources/"><li>Resources</li></a>
+          <a href="/about/"><li>About</li></a>
+          <a href="/contact/"><li>Contact</li></a>
+        </ul>
+      </div>
+    </nav>
+
+
+    <header>
+    </header>
+
+    <main>
+
+<h1>Use your command line more effectively</h1>
+      <p><span id=pubdate>Published on: 2022-03-10</span></p>
+<h1>Introduction</h1>
+<p>If you want to operate your computer as master, then necessary skill is to control your <code>command line</code>. Each of beginners have a strange feelings about <code>command line</code>. I undestand it. <code>Graphical</code> environment is for basic work more intuitive without any extra knowledge. At first view of somebody who has no experience with terminal it could seem as something more difficult for same result as we can do with <code>graphical</code> env. The half of that opinion is true, you need to learn some extra knowledge to use terminal and the learning path will be more difficult and longer than to learn how to use <code>graphical</code> env. But when you learn the terminal you will be faster, preciser, and more powerful user of your computer because you get option to setup whatever you want. The <code>graphical</code> environment is just layer around commands in terminal with buttons and fancy windows. If you setup something in <code>graphical</code> env and click to button <code>apply</code> or <code>OK</code>, then some command is sent to computer and the command will be somthing in shell on background. And there you can see limitation of <code>graphical</code> environment. You can not have buttons to all setup, all commands, or the all combinations of commands. Then the <code>graphical</code> environment will lost their simplicity and intuitive. So if you don&#8217;t want to use your computer more deep and you wanna just browsing the internet than <code>graphical</code> environment is absolutely ok without touch the terminal tool.</p>
+<p>Also it is not necessary to use just only graphical env or command line. The best usage is combination of both. Each of approach has some advantages and disadvantages. Some guys who are really master in command line using just command line but it is really hard way for people who really know what they are doing. Or lots of admins of servers are using just command line, because it is simple and fast way how to operate servers remote by ssh for example. Some other guys really enjoy combination fo command line and <code>tilling window managers</code> for example
+<a href="https://dwm.suckless.org/">dwm</a> or <a href="https://i3wm.org/">i3wm</a>.</p>
+<h1>Useful shortcuts to control you command line</h1>
+<h2>Explanation</h2>
+<p><strong>CTRL</strong> means CONTROL button. Button is located near to <code>alt</code> buttons in keyboard layout.
+<strong>ALT</strong> means OPTION button.
+<strong>CMD</strong> means COMMAND or ACTION button. Windows: button with window. MacOS: cmd.</p>
+<p>Uppercases letters don&#8217;t mean to use with <code>SHIFT</code> button. Uppercase is used because letters are in keyboard are print as uppercase. If <code>SHIFT</code> should be used, then its name will be mentioned in combination.</p>
+<p>Shorcuts are mentioned for operation system <code>Linux</code>. Some of these shortcuts will not work on diff OS.</p>
+<h2>Shortcuts</h2>
+<h3>Special cases</h3>
+<p>#### CTRL + V</p>
+<p><strong>Keypressing:</strong> gradually (one after another)</p>
+<p><strong>Action:</strong> enable mode where special button as arrows, control, alt lost its function and we will see chars which are sending to terminal when we pressed these special buttons in normal mode.</p>
+<h3>Autocompletion</h3>
+<p>#### TAB</p>
+<p><strong>Keypressing:</strong> single press or twice press</p>
+<p><strong>Action:</strong>
+* single press: autocomplete command from chars we&#8217;ve already written
+* twice press: if autocomplete cannot autocomplete command because there are to many options of suitable command, then we can press <code>TAB</code> twice and shell list all available options.</p>
+<p>It is a helpful habit to use <code>TAB</code> button, it helps to avoid typos.</p>
+<p>#### ESC + .</p>
+<p><strong>Keypressing:</strong> gradually (one after another)</p>
+<p><strong>Action:</strong> autocomplete last used argument</p>
+<p><strong>examples:</strong>
+<code>shell
+$ mkdir "Hello world"
+$ ls &#39;(press ESC + .)&#39;
+</code></p>
+<p>you should get:</p>
+<pre><code class="language-shell">$ ls "Hello world"
+</code></pre>
+<h3>Interruptions</h3>
+<p>#### CTRL + C</p>
+<p><strong>Keypressing:</strong> gradually (one after another)</p>
+<p><strong>Action:</strong> interrupt running command, process in your terminal. This shorcut will invoked <code>exception</code>, in python it is called as <code>KeyboardInterrupt</code>. It is really helpful way how to interrupt for example infinite cycle.</p>
+<h3>Control STDIN to terminal</h3>
+<p>#### CTRL + S</p>
+<p><strong>Keypressing:</strong> gradually (one after another)</p>
+<p><strong>Action:</strong> stop <code>stdin</code> of running command. All outputs from file descriptor to terminal are stopped.</p>
+<p>#### CTRL + Q</p>
+<p><strong>Keypressing:</strong> gradually (one after another)</p>
+<p><strong>Action:</strong> start <code>stdin</code> of running command. All outputs from file descriptor to terminal are started again.</p>
+<h3>Browsing command history</h3>
+<p>#### ⇧ UP-ARROW or (CTRL + P)</p>
+<p><strong>Keypressing:</strong> gradually (one after another)</p>
+<p><strong>Action:</strong> autocomplete with previous command. To your relative position in commands history.</p>
+<p>#### ⇩ DOWN-ARROW or (CTRL + N)</p>
+<p><strong>Keypressing:</strong> gradually (one after another)</p>
+<p><strong>Action:</strong> autocomplete with next command. To your relative position in commands history.</p>
+<p>#### CTRL + R (CTRL + R &#8220;pattern&#8221;)</p>
+<p><strong>Keypressing:</strong> gradually (one after another)</p>
+<p><strong>Action:</strong> search in commands history. When you pressed these buttons combinations, then search mode is activated. You have to write some pattern which you want to looking for. Search mode find the youngest command as first result which contains your pattern. If you want find older command you have to pressed <code>CTRL+R</code> again and you will move to older and older commands which sit to your pattern. If you want to quit the search mode with run the command hit <code>Enter</code>. If you want to leave search mode with any action double press <code>ESC</code>.</p>
+<h3>Moving cursor on line</h3>
+<p>#### CTRL + A or (HOME)</p>
+<p><strong>Keypressing:</strong> gradually (one after another)</p>
+<p><strong>Action:</strong> move cursor at the start of line</p>
+<p>#### CTRL + E or (END)</p>
+<p><strong>Keypressing:</strong> gradually (one after another)</p>
+<p><strong>Action:</strong> move cursor at the <strong>e</strong>nd of line</p>
+<p>#### CTRL + ⇦ or (ALT + B)</p>
+<p><strong>Keypressing:</strong> gradually (one after another)</p>
+<p><strong>Action:</strong> move cursor to left. Cursor move is done word by word.</p>
+<p><strong>macOS:</strong> CMD + ⇦</p>
+<p>#### CTRL + ⇨ or (ALT + F)</p>
+<p><strong>Keypressing:</strong> gradually (one after another)</p>
+<p><strong>Action:</strong> move cursor to right. Cursor move is done word by word.</p>
+<p><strong>macOS:</strong> CMD + ⇨</p>
+<p>### Remove</p>
+<h4>CTRL + K</h4>
+<p><strong>Keypressing:</strong> gradually (one after another)</p>
+<p><strong>Action:</strong> remove all chars from cursor to the end of line.</p>
+<h4>ESC + D</h4>
+<p><strong>Keypressing:</strong> gradually (one after another)</p>
+<p><strong>Action:</strong> remove all chars from cursor to the end of word.</p>
+<h4>CTRL + W</h4>
+<p><strong>Keypressing:</strong> gradually (one after another)</p>
+<p><strong>Action:</strong> remove all chars from cursor to the beginning of word.</p>
+<h4>CTRL + L</h4>
+<p><strong>Keypressing:</strong> gradually (one after another)</p>
+<p><strong>Action:</strong> remove all lines in terminal except the active one. Clear the terminal window from old commands.</p>
+<h4>CTRL + U</h4>
+<p><strong>Keypressing:</strong> gradually (one after another)</p>
+<p><strong>Action:</strong> remove whole line</p>
+<h2>Where to find all shortcuts</h2>
+<p>If some of shortcuts does not work, there is settings in shell config file. Name of config file is <code>.inputrc</code> and it is located in your home directory.</p>
+<p>You can set your <code>.inputrc</code> on your own:</p>
+<p><code>.inputrc</code>
+```
+set blink-matching-paren on # blink to parenthes which is paired with
+set expand-tilde on # expand tilda to absolute path when you press TAB</p>
+<p>&#8220;\C-t&#8221;: forward-search-history # keyboard shortcut CTRL+T
+```</p>
+<p>You can list all shortcuts to your shell by command:
+<code>shell
+$ bind -p | less
+</code>
+* <code>\C</code> means <code>CONTROL</code> button. So <code>"\C-r"</code> means <code>CTRL + R</code> in our convention.
+* <code>\e</code> means <code>escape</code></p>
+<h1>Useful links</h1>
+<ul>
+<li>Whole article was written thanks to online lecture of Lukas Barinka.
+Thanks Lukas for great <a href="https://www.youtube.com/watch?v=SWJj1hGgA8g&amp;list=PLHS-Uhp7t2Ys5lwy-5jops3t_DCfpXu_j&amp;index=8">youtube-video</a> and your whole course about command line. Video is in czech language.</li>
+</ul>
+
+    </main>
+
+    <footer>
+    </footer>
+
+  </body>
+
+</html>
+

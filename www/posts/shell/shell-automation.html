@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="date" scheme="YYYY-MM-DD" content="2021-11-22">
+    <meta name="license" content="https://creativecommons.org/licenses/by/4.0/">
+    <meta name="referrer" content="origin">
+    <link rel="icon" type="image/png" size="16x16" href="/images/favicon-16x16.png">
+    <link rel="stylesheet" href="/css/style.css">
+    <title>Automate your workflow with shell script</title>
+  </head>
+
+
+  <body>
+<!--    Navigation is made by Erik Terwan    -->
+<!--          24th of November 2015          -->
+<!--              MIT License                -->
+    <nav role="navigation">
+      <div id="menuToggle">
+        <!--
+        A fake / hidden checkbox is used as click reciever,
+        so you can use the :checked selector on it.
+        -->
+        <input type="checkbox" />
+
+        <!--
+        Some spans to act as a hamburger.
+        They are acting like a real hamburger,
+        not that McDonalds stuff.
+        -->
+        <span></span>
+        <span></span>
+        <span></span>
+
+        <!--
+        Too bad the menu has to be inside of the button
+        but hey, it's pure CSS magic.
+        -->
+        <ul id="menu">
+          <a href="/"><li>Home</li></a>
+          <a href="/posts/"><li>Posts</li></a>
+          <a href="/categories/"><li>Categories</li></a>
+          <a href="/resources/"><li>Resources</li></a>
+          <a href="/about/"><li>About</li></a>
+          <a href="/contact/"><li>Contact</li></a>
+        </ul>
+      </div>
+    </nav>
+
+
+    <header>
+    </header>
+
+    <main>
+
+<h1>Automate your workflow with shell script</h1>
+      <p><span id=pubdate>Published on: 2021-11-22</span></p>
+<h1>Executable files</h1>
+<p>To make your script executable is necessary to set shebangs and add permissions to file.</p>
+<p>Files can be used for three main mode:</p>
+<ul>
+<li><code>r</code> - read mode</li>
+<li><code>w</code> - write mode</li>
+<li><code>x</code> - executable mode</li>
+</ul>
+<p>If we want to run our script by clicking on it or by command <code>.&#47;script_name</code> we need
+to set up executable mode to this file. Otherwise we are not able to run this script.</p>
+<p>Check what modes are set up on your files run command <code>ls</code> with option <code>-l</code>. It
+shows you file in your folder includes information about modes something like
+<code>drwxr-xr-x</code>.</p>
+<pre><code class="language-shell">ls -l
+</code></pre>
+<p>the schmema <code>drwxr-xr-x</code> means from left to right:</p>
+<ul>
+<li><p>first char which is equal to <code>d</code> means this file is <code>directory</code>, when you just
+slash <code>-</code> on this position then means the file is normal file.</p></li>
+<li><p>next three chars <code>rwx</code> means setup permissions for <code>user</code> or <code>u</code>. Permissions
+are always setup in same order it means firs is always <code>r</code>, second is <code>w</code> and last one is <code>x</code>.
+When permission is not setup there is slash <code>-</code> instead of one of permission <code>rwx</code>.</p></li>
+<li><p>next three char <code>r-x</code> is absolutely same as for <code>user</code> above but this set of chars
+is meant to <code>group</code> or <code>g</code> adn we can see that for <code>group</code> kind of users theres is no any
+write permissions allowed.</p></li>
+<li><p>last three chars are permissions for <code>other</code> or <code>o</code></p></li>
+<li><p><code>user</code> or <code>u</code> what can do the user</p></li>
+<li><p><code>group</code> or <code>g</code> what can do the users of same group</p></li>
+<li><p><code>other</code> or <code>o</code> what can do the anybody else</p></li>
+</ul>
+<p>If we want to change permission we have to use command <code>chmod</code>.</p>
+<p>Example we want to add <code>read</code> and <code>executable</code> permission to file with name <code>hello.sh</code> and just
+for <code>user</code></p>
+<pre><code class="language-shell">chmod u+rx hello.sh
+</code></pre>
+<p>We can also delete permissions if we want for example for <code>other</code>. We remove
+<code>read</code> and <code>write</code> permission.</p>
+<pre><code class="language-shell">chmod o-rw hello.sh
+</code></pre>
+<p>As you can mention when we want to add permission we use mark <code>+</code>, otherwise
+when we want to remove we use mark <code>-</code>.</p>
+<p>schema is:</p>
+<p><code>chmod who(u, g, o) add&#47;remove(+, -) permissions(r, w, x) filename</code></p>
+<h1>Shebangs</h1>
+<p>Shebang is used when we want to make some script executable.
+Shebang has to be write at the beginning of the file.</p>
+<p>Shebangs are described nicely on wiki <a href="https://en.wikipedia.org/wiki/Shebang_(Unix)">wiki shebangs</a>.</p>
+<p>Generally shebang schema looks like:</p>
+<pre><code class="language-shell">#!interpreter [optional-arg]
+</code></pre>
+<p>you have to specified path to intepreter which will run the script. So you dont have to
+write to CLI because you will tell to cli at the beginnig of the file.</p>
+<p>Sometimes shell will evaluate automatically for example for bash, zsh, etc. scripts.</p>
+<p>At the end of day you wont be write <code>python3 filename.py</code> but only <code>.&#47;filename</code>
+for shebang <code>#!&#47;usr&#47;bin&#47;env python3</code></p>
+<h1>Arguments from CLI</h1>
+<p>If you want to take some arguments from CLI, these arguments are saved in
+variables $0, $1, $2</p>
+<ul>
+<li>$0 - scriptname</li>
+<li>$1 - first argument</li>
+<li>$2 - second argument</li>
+<li>$n - n-argument</li>
+</ul>
+<p>you can specify that first argument is required as:</p>
+<pre><code class="language-bash">if [ ! "$1" ]
+then
+    echo "Missing first argument\n"
+    echo "Usage: .&#47;script.sh &#39;first argument&#39;\n"
+    exit 1
+fi
+
+echo "Your argument is: $1"
+</code></pre>
+<h1>Make your script for automation</h1>
+<p>If you use very often some same commands in CLI you can write these commands
+to file as shell script for example some script.sh.</p>
+<p>So you will save time to write all commands repetitive again and again. and you just
+run script shell for one time.</p>
+<p>To correctly run your script you have to set up <code>shebang</code> and give <code>execute</code> permissions
+to that file.</p>
+<p>the script should be somethin like this</p>
+<p><code>script.sh</code></p>
+<pre><code class="language-bash">#!&#47;bin&#47;sh
+
+if [ ! "$1" ]
+then
+    echo "Missing commit message\n"
+    echo "Usage: .&#47;generate_content.sh &#39;commit message to github&#39;\n"
+    exit 1
+fi
+
+sudo apt update &#38;&#38; sudo apt upgrade
+git add .
+git commit $1
+git push origin master
+
+echo "scrript completed"
+</code></pre>
+
+    </main>
+
+    <footer>
+    </footer>
+
+  </body>
+
+</html>
+

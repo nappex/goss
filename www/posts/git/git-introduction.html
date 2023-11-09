@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="date" scheme="YYYY-MM-DD" content="2020-08-26">
+    <meta name="license" content="https://creativecommons.org/licenses/by/4.0/">
+    <meta name="referrer" content="origin">
+    <link rel="icon" type="image/png" size="16x16" href="/images/favicon-16x16.png">
+    <link rel="stylesheet" href="/css/style.css">
+    <title>Git - introduction to basic commands</title>
+  </head>
+
+
+  <body>
+<!--    Navigation is made by Erik Terwan    -->
+<!--          24th of November 2015          -->
+<!--              MIT License                -->
+    <nav role="navigation">
+      <div id="menuToggle">
+        <!--
+        A fake / hidden checkbox is used as click reciever,
+        so you can use the :checked selector on it.
+        -->
+        <input type="checkbox" />
+
+        <!--
+        Some spans to act as a hamburger.
+        They are acting like a real hamburger,
+        not that McDonalds stuff.
+        -->
+        <span></span>
+        <span></span>
+        <span></span>
+
+        <!--
+        Too bad the menu has to be inside of the button
+        but hey, it's pure CSS magic.
+        -->
+        <ul id="menu">
+          <a href="/"><li>Home</li></a>
+          <a href="/posts/"><li>Posts</li></a>
+          <a href="/categories/"><li>Categories</li></a>
+          <a href="/resources/"><li>Resources</li></a>
+          <a href="/about/"><li>About</li></a>
+          <a href="/contact/"><li>Contact</li></a>
+        </ul>
+      </div>
+    </nav>
+
+
+    <header>
+    </header>
+
+    <main>
+
+<h1>Git - introduction to basic commands</h1>
+      <p><span id=pubdate>Published on: 2020-08-26</span></p>
+<p><img src="/images/git_logo.jpg" alt="git logo" /></p>
+<h1>Co je Git ?</h1>
+<p>Git je nástroj na správu revizí vašich souborů, které určíte, že mají být sledovány Gitem. To znamená, že Git zaznamenává veškeré změny, které byly v souboru provedeny od jeho založení až po jeho dokončení. Můžeme se v historii díky gitu i vracet k úpravě, kterou jsme udělali třeba před půlrokem a tuto revizi si vytáhnout a pokračovat jiným směrem. Jinými slovy měli jsme-li nějaký soubor, který jsme nějak upravovali, ale usoudili jsme, že úpravy v posledním měsíci nebylo to pravé a zjistli jsme, že jsme se vydali slepou uličkou, můžeme se vrátit k verzi, kterou jsme udělali před měsícem a pokračovat jiným způsobem. Git nedělá nic automaticky je třeba mu vše říct a manuálně popsat co má udělat. Třeba Word, google zaznamenává změny automaticky oproti Gitu. U Gitu je nutné více přemýšlet co verzovat co commitovat apod. Ale pokud postupujete správně velmi pěkně se dá v historii verzí číst.</p>
+<p>S tím souvisí i online služby jako GitHub nebo GitLab. Tyto služby pouze poskytují na webu naše git repozitáře s jejich historií. Nestarají se o udělání revize apod. Nahráváme tam revize na které se ostatní z týmu mohou podívat.</p>
+<h1>Instalace Git</h1>
+<p>Instalace se liší dle vašeho OS.</p>
+<p>Instalace Git je velmi pěkně popsána na těchto stránkách:</p>
+<p><a href="naucse.python.cz/2020/brno-jaro-pondeli/git/install/">naucse.python.cz</a></p>
+<hr/>
+<p>Celý Git workshop vč. instalace naleznete také na youtube:</p>
+<p><a href="www.youtube.com/watch?v=zOWcQezeyIU">www.youtube.com&#47;watch?v=zOWcQezeyIU</a></p>
+<h1>Stavy souborů v Git</h1>
+<p><img src="https://www.commercialprogression.com/sites/default/files/git-operations.png" alt="git stages" /></p>
+<p><img src="https://i.stack.imgur.com/zLTpo.png" alt="git stages" /></p>
+<p><strong>1. Změněn či nesledován (Working directory)</strong></p>
+<p>V této fázi můžeme naleznout dva typy souboru. Oba dva typy souboru jsou označovány po příkazu git status červenou barvou.  První typ je soubor, který je uložen v pracovní složce ale git jej nesleduje a neví o změnách, ke kterým v tomto souboru dochází.  Po příkazu git status jsou označovány jako untracked files. Druhým typem je soubor, který sice již byl přidán, následně změněn, commitnutý, ale znova změněn. Tento soubor je nyní registrován jako modified a to červeně. Pokud se nám změny v modified souboru líbí tak soubor znovu pomocí git add přidáme do stage faze odkud jej mužeme commitnout.</p>
+<p><strong>2. Připraveno k zapsání (Staged - staging area)</strong></p>
+<p>To je fáze, takového pre-commitu je to soubor, který si připravuju ke commitu, dělám na něm ještě změny. Až své změny dokončím přejdu ke commit fázi. V této fázi můžeme vzít soubor zpět ze sledování gitem nebo ho dle libosti upravovat, jak se mi zlíbí. Můžeme to také nazvat jako přípravna - prostor, kde připravujeme soubor ke konečné revizi. Soubory, které máme uloženy v fázi staged poznáme také tak, že pokud zavoláme command git status, tak soubory které jsou ve fázi staged jsou zelené a pokud nemáte povoleno color.ui a nemáte tak povoleno barevné výstupy z gitu tak jsou soubory označeny větičkou &#8220;changes to be commited:&#8221; a před každým souborem připravným ke commitu je buď new file nebo modified. V této fázi lze také soubor ze sledování odebrat a to pomocí příkazu <code>git rm --cached &#60;file&#62;</code>, ono i git vám po git status vypíše nápovědu, která vypadá takto use<code>git rm --cached &#60;file&#62;...</code> to unstage.</p>
+<p><strong>3. Zapsáno (Committed - git directory, repository)</strong></p>
+<p>Konečné nevratné zapsání změn do master nebo do vedlejší větve. Tímto potvrzením se zapíší na dobro do historie změn daného souboru. Změny provedené v commit lze zase zpět postup je následující:</p>
+<pre><code class="language-sh">$ git commit -m "Something terribly misguided"
+$ git reset HEAD~
+&#60;&#60; edit files as necessary &#62;&#62;
+$ git add ...
+$ git commit -c ORIG_HEAD
+</code></pre>
+<h1>Základní příkazy</h1>
+<p><strong><code>git clone &#60;URL&#62;</code></strong></p>
+<p>Je něco podobného jako git init s tím, že vytváří repozitář tak, že ho celý stahuje přímo z nějaké internetové služby jako je například. GitHub nebo GitLab. Po zadání takového příkazu se nám z online lužby stáhne celý repozitář i s historií gitu.<code>&#60;URL&#62;</code> bude většinou vypadat jako https:&#47;&#47;github.com&#47;username<em>1&#47;nazev</em>clonovaneho_repozitare</p>
+<hr/>
+<p><strong><code>git init</code></strong></p>
+<p>Vytvoří z prázdné složky ve vašem počítači nebo složky projektu repozitář. Jinými slovy můžeme říct také, že pomocí tohoto příkazu řekneme gitu, že v tomto adresáři chcem spravovat verze souborů.</p>
+<p><strong><em>Repozitář</em></strong> - je složka, v které sledujeme provedené změny v souborech.</p>
+<hr/>
+<p><strong><code>git add</code></strong></p>
+<p>Pokud chceme aby git sledoval změny provedené v daném souboru musíme tento soubor pomocí tohoto příkazu zaregistrovat&#47;přidat, čímž říkáme gite chceme ať tento soubor sleduješ, změny v něm provedené. Tedy z <code>untracked files</code> vytvoříme <code>staged files</code></p>
+<p>Příklady použití:</p>
+<pre><code>1. přidání konkrétních souborů
+</code></pre>
+<p><code>git add  &#60;jmeno souboru1&#62; &#60;jmeno souboru2&#62;</code></p>
+<pre><code>2. přidání všech dostupných souborů
+</code></pre>
+<p><code>git add --all</code> zkráceně <code>git add -A</code> nebo <code>git add .</code></p>
+<hr/>
+<p><strong><code>git commit</code></strong></p>
+<p>Tento příkaz udělá novou revizi, nový bod v historii. Zapíše do historie nově provedené změny v souboru. Součástí každého commitu by mělo být stručně popsáno jaké změny jsme provedli. Po tomto příkazu se nám otevře textový editor pro příkazovou řádku (nano, vim, notepad). V tomto editoru napíšeme změny, které jsme udělali a proč jsme takové změny udělali a text uložíme. Příkaz můžeme napsat pouze jako git commit, v tomto případě se nám zapíší veškeré změny ve všech souborech.</p>
+<p>Je také možné napsat:</p>
+<p><code>git commit &#60;jmeno souboru1&#62; &#60;jmeno souboru2&#62;</code></p>
+<p>v tomto případě se provede commit pouze na vypsané soubory.</p>
+<p><strong>Jak správně napsat zprávu do commit:</strong></p>
+<p>Nejdříve napíšu na <strong>první řádek</strong> jasně stručně co jsem udělal.</p>
+<p>Potom vynechám řádek a rozepíšu se podrobněji o změnách a proč jsem je udělal. To proto že při ukázání více comittů se zobrazuje vždy první řádek. První řádek půjde vždy všude vidět.</p>
+<p><strong>Ukázka zprávy v commitu:</strong></p>
+<p>Přidal jsem funkci sečti a také funkci validátor která funkci sečti doplňuje.</p>
+<p>Tyto dvě funkce jsem přidal proto a proto a také díky nim je kód kratší a program je rychlejší.</p>
+<p>Níže jsou další zdroje <em>&#8220;jak správně napsat commit&#8221;</em>:</p>
+<ul>
+<li><a href="https://github.com/erlang/otp/wiki/Writing-good-commit-messages">GitHub - Writing good commit messages</a></li>
+</ul>
+<hr/>
+<p><strong><code>git status</code></strong></p>
+<p>Zeptáme se gitu co si myslí o aktutálním stavu v současném repozitáři. Dává informaci, které soubory jsou sledovány, které naopak nikoliv. Nebo které soubory byly modifikovány a čekají na commit.</p>
+<p>Pokud nám git status vypíše:</p>
+<pre><code class="language-sh">*On branch master*
+
+*nothing to commit, working tree clean*
+</code></pre>
+<p>První řádek znamená, že jsme na větvi (branch) hlavní linie (master)</p>
+<p>Druhý řádek znamená, že od posledního commitu nedošlo k žádným změnám ve sledovaných souborech. Nejsou dostupné žádné změny ke commitu.</p>
+<hr/>
+<p><strong><code>git diff</code></strong></p>
+<p>Ukazuje změnu v souboru modified, oproti souboru, který byl už commitnutý. To znamená, že se jedná o soubor, který byl změněn, ale nebyl ještě přidán pomocí git add do fáze stage.</p>
+<hr/>
+<p><strong><code>git show</code></strong></p>
+<p>Nám ukáže poslední revizi, kterou jsme provedli pomocí <code>git commit</code>. Pokud na konci revize vidíte dvojtečku <code>:</code> tak je revize delší než je příkazová řádka schopna vypsat. Pomocí <code>šipek</code> nebo <code>PageDown, PageUp</code> můžeme v celé revizi scrollovat. Pokud chceme z vypsání revize odejít, musíme zmáčknout klávesu s písmenem <code>q</code>.</p>
+<p>Below you can see on picture result from command <code>git show</code>. Every commit has its own unique code - it is second line on picture. There are also information abou Author which you set with <code>git config</code>. Information about date when commit was done.</p>
+<p>After Date is text which you write when you were commiting file.</p>
+<p>Zbytek je sekce diff v které je popsána samotná změna celé revize zaregostrované pod jejím kódem. Řádky které byly přidány do daného souboru tak začínají symbolem &#8220;+&#8221;, naopak řádky které byly odebrány mají na začátku znaménko &#8220;-&#8221;.</p>
+<p>Filosofie gitu je kontrolovat změny vždy v jednom řádku. stačí tedy, že v řádku změníte jedno písmeno a git to vyhodnotí, že celý řádek byl změněn. Konrétní revizi lze ukázat také pomocí <code>git show &#60;kód revize&#62;</code></p>
+<p><img src="https://zlargon.gitbooks.io/git-tutorial/startup/commit_a_patch/git_show.png" alt="git show terminal" /></p>
+<hr/>
+<p><strong><code>git log</code></strong></p>
+<p>Mi ukáže seznam všech revizí, které byly v daném repozitáři provedeny. Na začátku je vždy nejposlednější revize.</p>
+<hr/>
+<p><strong><code>git stash</code></strong></p>
+<p>Odložení dělání věci, kterou chceme na chvíli pozastavit. Musíme opravit jinou chybu msuíme jít dělat něco jiného. Není ješte ready na commit.</p>
+<p>Vrácení se k odložené práci se vrátíme pomocit <code>git stash apply</code>.</p>
+<p>Když jsme si odložili více práce tak pomocí <code>git stash list</code>  si je všechny vypíšeme. A zjistíme pod kterým číslem se nachází práce na které chceme zrovna pokračovat.</p>
+<hr/>
+<p><strong><code>gitk --all</code></strong></p>
+<p>Rozjede grafické okno gitu. Není moc hezké, ale je velmi funčkní.</p>
+<hr/>
+<p><strong><code>git reset</code></strong> (např. <code>git reset README.md</code>)</p>
+<p>Změnu, kterou jsme v souboru provedli se smaže.</p>
+<h1>Jak uložit změny bez &#8220;commitu&#8221;</h1>
+<p>Čas od času se vyskytne následující situace: Pracujete na nějaké feature pro daný projekt. Pro tuto featuru jste si vytvořili novou větev a udělali jste první nástřel změn, o kteých máte pocit, že by mohli být těmi správnými k dosažení cíle.</p>
+<p>Teď nastane okamžik, kdy práci musíte ale přerušit a dodělat nějaký detail na jiné branchi. Ovšem Vaše změny na současné branchi nejsou vůbec dodělané ve fázi, že byste je chtěli commitnout. Jedná se o nějaký nástřel Vašich myšlenek, ale vůbec nevíte jestli je to správná cesta. Nechcete změny commitnout, ale zároveň o změny ani nechcete přijít. Chcete na ně po dokončení prioritnějšího úkolu navázat. Potřebujete je jen dočasně někam uložit. První vás napadne změny by se mohli uložit automaticky&#8230; Takhle ale Git nefunguje ve chvíli, kdy se budete chtít přepnout z větve, kde jsou provedené změny, ale nejsou commitnuté, měli byste dostat nějakou takovouhle hlášku:</p>
+<pre><code class="language-sh">$ git switch &#60;different_branch&#62;
+
+error: Your local changes to the following files would be overwritten by checkout:
+    &#60;some_file_1.py&#62;
+    &#60;some_file_2.py&#62;
+Please commit your changes or stash them before you switch branches.
+Aborting
+</code></pre>
+<p>Když si hlášku pozorně celou přečtete, tak uvidíte, že Git Vám na konci radí, že pokud chcete přepnout ze současné větve na jinou tak udělejte <code>commit</code> nebo <code>stash</code>.</p>
+<p>Commit už známe a <code>git stash</code> je přesně to co hledáme. Tento příkaz nám umožní své změny uložit do gitu a později se k nim vrátit.</p>
+<h2>Použití git stash</h2>
+<p>Tento příkaz vám umožní uložit si změny, které jsou v danou chvíli ve <code>staged</code> nebo v <code>unstaged</code>. Po příkazu <code>git stash</code> můžete přepínat větve commitovat další změny apod. Je nutné si dát, ale pozor, že toto uložení je pouze ve vašem lokální repozitáři. Pokud provedete <code>git push</code> stashed files se na server neposílají.</p>
+<p>V praxi použití příkazu <code>git stash</code> může vypadata nějak takto:</p>
+<pre><code class="language-sh">$ git status
+
+On branch master Changes to be committed:
+    new file: hello.py
+Changes not staged for commit:
+    modified: index.html
+
+$ git stash
+
+Saved working directory and index state WIP on master:
+3022f53 our new homepage HEAD is now at 3022f53 our new homepage
+
+$ git status
+
+On branch master nothing to commit, working tree clean
+</code></pre>
+<p>Pokud budete chtít změny uložené v gitu zase aplikovat do svého projektu použijete <code>git stash pop</code> nebo <code>git stash apply</code></p>
+<p><strong><code>git stash pop</code></strong></p>
+<p>Tento příkaz aplikuje změny ve stash do vašeho projektu a zároveň tyto změny ze stash vymaže.</p>
+<pre><code class="language-sh">$ git status
+On branch master nothing to commit, working tree clean
+
+$ git stash pop
+On branch master Changes to be committed:
+    new file: hello.py
+Changes not staged for commit:
+    modified: index.html
+Dropped refs&#47;stash@{0} (32b3aa1d123dfe6d57b3c3cc2c45cbf3f456cc6a)
+</code></pre>
+<p><strong><code>git stash apply</code></strong></p>
+<p>Tento příkaz aplikuje změny ve stash do vašeho projektu (větve), ale změny uložené ve stash zachová. To se může hodit například pokud chcete stash aplikovat do více větví.</p>
+<pre><code class="language-sh">$ git stash apply
+On branch master Changes to be committed:
+    new file: hello.py
+Changes not staged for commit:
+    modified: index.html
+</code></pre>
+<p><strong>POZOR:</strong> Git defaultně neukládá do stash untracked nebo ignore soubory.</p>
+<h1>Větvení v Gitu</h1>
+<p><strong><code>git branch</code></strong></p>
+<p>Vypíše seznam všech větví, které jsou v projektu vytvořené</p>
+<hr/>
+<p><strong><code>git branch &#60;nazev_nove_vetve&#62;</code></strong></p>
+<p>Vytvoření nové větve s názvem &#8220;nazev<em>nove</em>vetve&#8221;. Nazev nové větve se píše bez mezer.</p>
+<hr/>
+<p><strong><code>git branch --delete &#60;nazev_vetve&#62;</code></strong></p>
+<p>zkráceně <code>git branch -d &#60;nazev_vetve&#62;</code></p>
+<p>Vymazání konkrétní větve se jménem <nazev_vetve> v projektu</p>
+<hr/>
+<p><strong><code>git branch -D &#60;nazev_vetve&#62;</code></strong></p>
+<p>Vymazání konkrétní větve se jménem <nazev_vetve>, která nebyla mergnutá nebo pushnutá a musíme ji vymazat tzv. force delete</p>
+<p>Výše uvedené příklady vymažou větev pouze na lokálním gitu. Pokud současně kód nahrávate např. na GitHub tak větev na Githubu zůstane i když jste po smazání větve na local gitu udělali <code>git push origin master</code>. Pro smazání větve také na remote musíte zadat další kód:</p>
+<p><code>git push &#60;remote&#62; --delete &#60;nazev_remote_vetve&#62;</code></p>
+<p>zkráceně <code>git push &#60;remote&#62; -d &#60;nazev_remote_vetve&#62;</code></p>
+<p>Vymaže větev také na remote.</p>
+<hr/>
+<p><strong>Původní příkazy:</strong></p>
+<p><strong>1. <code>git checkout &#60;nazev_vetve&#62;</code></strong></p>
+<p>Přepnutí se ze současné větve na novou větev s názvem &#8220;nazev_vetve&#8221;</p>
+<p><strong>2. <code>git checkout &#60;jmeno_souboru&#62;</code></strong></p>
+<p>Zahození změn v souboru se jmenem &#8220;jmeno_souboru&#8221;</p>
+<hr/>
+<p><strong>Nové příkazy:</strong></p>
+<p><strong>1. <code>git switch &#60;nazev_vetve&#62;</code></strong></p>
+<p>Přepnutí se ze současné větve na novou větev s názvem &#8220;nazev_vetve&#8221;</p>
+<p><strong>2. <code>git restore &#60;jmeno_souboru&#62;</code></strong></p>
+<p>Zahození změn v souboru se jmenem &#8220;jmeno_souboru&#8221;</p>
+<p>Příkaz <code>git checkout</code> může být trochu matoucí. Jelikož od verze gitu tuším 2.24 v gitu přibyly další dva příkazy a to <code>git switch</code> a <code>git restore</code>. Původně před touto implementací dvou nových příkazů se příkaz <code>git checkout</code> používal pro dvě naprosto rozdílné činnosti a to na za <strong>1. změnu větve</strong> - a to v případě, kdy jste <code>git checkout</code> dali jméno větve nebo <strong>2. zahazovaly se změny v souboru</strong> - to v případě, kdy jste příkazu <code>git checkout</code> dali jméno souboru. Tyto dvě operace spolu vůbec nesouvisí a tak bylo dlouhá léta příkaz <code>git checkout</code> trochu matoucí na co se vlastně používá. Z tohoto důvodu se nově zavedli dva rozdílné příkazy pro tyto dvě operace ať je situace zcela jasnější.</p>
+<p>Tedy, nově se pro změnu větve používá <code>git switch &#60;jmeno_vetve&#62;</code> a pro zahození změn v souboru se používá <code>git restore &#60;jmeno_souboru&#62;</code>. Tyto nové příkazy mají také i novou implementaci a proto úkonům jako je změna větve dochází u <code>git switch</code> trochu jinak než u <code>git checkout</code>. Tak samo u <code>git checkout</code> a <code>git restore</code>. Toho si můžete všimnout když pomocí nových příkazů budete chtítí udělat to co jste v minulosti dělali pomocí <code>git checkout</code>, tak že výsledek může být malinko odlišný.</p>
+<p><strong><code>git merge &#60;nazev_vetve&#62;</code></strong></p>
+<p>Sloučí větev na které jsme zrovna přihlášeni (nejčastěji to bude větev master) s větví, kterou zadáme v příkazu jako &#8220;nazev_vetve&#8221;.</p>
+<h1>Remote příkazy</h1>
+<p>Remote znamená vzdálené repozitáře na Githubu např. Jak už jste viděli někde <code>origin</code>, tak to je jméno jednoho z remote, konkrétně <code>origin</code> je jméno repozitáře odkud jsme prováděli <code>git clone</code>. Když si založíme na svém počítači repozitář pomocí <code>git init</code>, tak nebudeme mít nastavené žádné remote.
+<code>origin</code> znamená také základní remote, v kterém jsou všechna data, která jsme si stáhli pomocí <code>git clone</code>. Je to zdroj našeho stáhnutého repozitáře z online služeb jako je GitHub.</p>
+<p><strong><code>git remote</code></strong></p>
+<p>Vypíše všechny remote uložené v projektu</p>
+<p><code>git remote --verbose</code> nebo <code>git remote -v</code></p>
+<p>Vypsání seznamu všech remote v tz. <strong>modu verbose</strong>, tedy ukecanější podrobnější výpis všech remote</p>
+<hr/>
+<p><strong><code>git remote add &#60;jmeno_remote&#62; &#60;url_repo_na_github&#62;</code></strong></p>
+<p>Způsob ja přidat další remote do vašeho seznamu remote.</p>
+<p><code>&#60;jmeno–remote&#62;</code> bude nejčastěji váš nick nebo nick člověka na githubu, který má stejný repo. Jedná se o jednoduchý název pro remote, aby ste jej mohli snadno v seznamu a při použití příkázů identifikovat. Přece jen je sadnější psát jméno remote než celé url od remote.</p>
+<hr/>
+<p><strong><code>git remote remove &#60;jmeno_remote&#62;</code></strong></p>
+<p>Smaže ze seznamu uložených remote deifonovaný <jmeno_remote></p>
+<p>Můžeme použít také zkrácený příkaz, který se používal ve starších verzích gitu <code>git remote rm &#60;jmeno_remote&#62;</code></p>
+<hr/>
+<p><strong><code>git fetch &#60;remote&#62; &#60;branch&#62;</code></strong></p>
+<p>Fetch znamená, že mohu aktualizovat svůj repozitář např. z <code>remote origin</code>, tedy změny, které ve svém repozitáři nemám a došlo k nim od jiných uživatelů. Příklad udělal jsem si <code>git clone &#60;URL&#62;</code> a projektu jsem se půl roku nevěnoval. Teď bych na něm chtěl začít pracovat, ale můj stažený repozitář v mém počítači (local) je odlišný od repozitáře uložený na GitHubu, jelikož ostatní na tomto projektu pracovali. Musím si tedy svůj lokální repozitář updatovat s repozitářem na Githubu abych dělal na aktuální verzi. Ale pozor <code>fetch</code> stáhne pouze nová data, ale nezakomponuje je do Vaší větve pomocí <code>merge</code>. To je hlavní rozdíl od <code>git pull</code>. <code>Fetch</code> nezakomponuje změny do našeho <code>local branch</code>.</p>
+<hr/>
+<p><strong><code>git pull &#60;remote&#62; &#60;branch&#62;</code></strong></p>
+<p>Vyjadřuje jednoduchá rovnice &#8211;&#62; <code>git pull</code> = <code>git fetch</code> + <code>git merge</code></p>
+<hr/>
+<p><strong><code>git push &#60;remote&#62; &#60;branch&#62;</code></strong></p>
+<p>Je opakem <code>fetch</code>, uděláme novou změnu a chceme ji zakomponovat do <code>origin</code>. Pošleme tuto změnu pomocí <code>git push origin master</code> naši vytvořenou změnu. Autor projektu usoudí jestli se mu naše změna líbí či ne a zda ji tedy zakomponuje do svého projektu.</p>
+<p>Abychom to mohli poslat do <code>originu</code> který není náš, musíme nejdříve na githubu forknout originální projekt. Poslat naši zmenu na náš forknutý repo pomocí <code>git push &#60;jmeno_remote&#62; &#60;jmeno_branch&#62;</code>. Následně si na GitHubu najdou tlačítko <code>New pull request</code>. Pokud tedy budu chtít pushnout své změny na origin musím to udělat přes GitHub přes svůj forknutý repo. Postup by byl tedy <code>git clone &#60;origin-url&#62;</code>, potom na github <code>fork</code> origin projektu, poté udělám změny u sebe na localu pošlu je na svůj github a poté zmáčknu <code>New pull request</code>.</p>
+<p><strong>pull request:</strong> žádost o začlenění. pošlu autorovi prosbu o začlenění mých změn. Nastavuji na kterou větev to posílám na originu jakou větev svou chci začlenit.</p>
+<p><img src="https://naucse.python.cz/course/pyladies/git/collaboration/static/gh-workflow-diagram.svg" alt="Diagram workflow" /></p>
+<p><img src="/images/git_stages_flow.png" alt="scheme workflow" /></p>
+<h1>Ignorování souborů</h1>
+<p>Způsob ignorování souborů rozdělujeme do třech skupin, dle toho jaký typ souboru chceme ignorovat.</p>
+<p><strong>1. Ignorování souborů a složek, které automaticky vytváří pouze náš počítač dle OS</strong></p>
+<p>Jedná se o ignorování souborů či složek, které se vytváří pouze na našem počítači. Jedná se o soubory, které vytváří náš operační systém nebo náš editor textu (např. cache&#47;, .vscode&#47;). Tyto soubory se nám vytvoří automaticky při spuštění jekéhokoliv projektu a bylo by otravné je pokaždé znova nastavovat k ignoraci. Pro ignorování takových souborů je třeba si vytvořit svůj vlastní soubor do kterého napíšeme, které soubory či složky se mají ignorovat.</p>
+<p><code>git config --global core.excludesfile &#47;home&#47;user_1&#47;Documents&#47;&#60;název_vaseho_souboru&#62;</code></p>
+<p>Tímto příkazem nastavíte v gitu, který máte nainstalovaný na PC cestu k souboru, v kterém je zapsáno, které soubory a složky má git ignorovat a nevšímat si jich.</p>
+<p><strong>2. Soubory, které vytváří Váš pythonní program</strong></p>
+<p>Jedná se o soubory, které jsou vytvořeny při běhu skriptu. Například nějaké csv, nějaký obrázek či graf.</p>
+<p><strong>3. Soubory, v kterých jsou napsány citlivé údaje</strong></p>
+<p>Jedná se o soubory, v kterých jsou napsána hesla, API klíče nebo citlivé údaje ohledně soukromí. Tyto soubory se týkají většinou pouze jednoho specifického projektu a proto se nepíšou do souboru, který globálně ignoruje specifikované soubory a složky, jak bylo uvedeno výše. Mohou být totiž pro každý projekt jiné. Tyto soubory se specifikují v inicializované složce .git v daném projektu. Tedy v gitu, který sleduje pouze tento projekt.</p>
+<p>Cesta k tomuto souboru je:</p>
+<p><code>.git&#47;info&#47;exclude</code></p>
+<h1>Další nástroje, které se používají společně s gitem</h1>
+<p><strong><code>tig</code></strong></p>
+<p>Je to nástroj jehož název je git naopak. slouží ke seznamu všech commitů. Něco jako <code>git log</code>, ale daleko podrobnější.</p>
+<h1>Použité zdroje - další studium</h1>
+<p>Web z kterého čerpám nejvíce:</p>
+<p><a href="naucse.python.cz/course/pyladies/sessions/foss/">naucse.python.cz&#47;course&#47;pyladies&#47;sessions&#47;foss&#47;</a></p>
+<p>Velmi povedená stránka na základní Git příkazy</p>
+<p><a href="https://www.atlassian.com/git/tutorials/saving-changes/git-stash">atlassian.com - git</a></p>
+
+    </main>
+
+    <footer>
+    </footer>
+
+  </body>
+
+</html>
+
