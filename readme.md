@@ -1,6 +1,6 @@
 # Generator of Static sites
 
-Try to be simple shell static site generator. The inspiration is by project `ssg` (https://rgz.ee/bin/ssg) from Roman Zolotarev. Thanks for the inspiration.
+Try to be simple shell static site generator. The inspiration is by project [ssg](https://romanzolotarev.com/bin/ssg) from Roman Zolotarev. Thanks for the inspiration.
 
 # Dependecies
 
