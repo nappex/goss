@@ -175,8 +175,8 @@ render_md_to_html() {
     local meta_license='    <meta name="license" content="https://creativecommons.org/licenses/by/4.0/">'
     local link_icon='    <link rel="icon" type="image/png" size="16x16" href="/images/favicon-16x16.png">'
 
-    local html_suffix
     local lowercased
+    local replace_suffix
     local trimmed
     local html_file
     local title
@@ -185,8 +185,8 @@ render_md_to_html() {
     for file in $md_files; do
         # PREPARE html filepath
         lowercased=$(echo $file | tr '[A-Z]' '[a-z]')
-        html_suffix="${lowercased%.md}.html"
-        trimmed=$(echo $html_suffix | sed -n 's|^\(\.*/*\)[^/]\{1,\}/||p')
+        replace_suffix="${lowercased%.md}.html"
+        trimmed=$(echo $replace_suffix | sed -n 's|^\(\.*/*\)[^/]\{1,\}/||p')
         html_file="${POSTS_DIR}/${trimmed}"
         mkdir -p "${html_file%/*}"
 
