@@ -176,13 +176,16 @@ render_md_to_html() {
     local link_icon='    <link rel="icon" type="image/png" size="16x16" href="/images/favicon-16x16.png">'
 
     local html_suffix
+    local lowercased
     local trimmed
     local html_file
     local title
     local pub_date
 
     for file in $md_files; do
-        html_suffix="${file%.md}.html"
+        # PREPARE html filepath
+        lowercased=$(echo $file | tr '[A-Z]' '[a-z]')
+        html_suffix="${lowercased%.md}.html"
         trimmed=$(echo $html_suffix | sed -n 's|^\(\.*/*\)[^/]\{1,\}/||p')
         html_file="${POSTS_DIR}/${trimmed}"
         mkdir -p "${html_file%/*}"
