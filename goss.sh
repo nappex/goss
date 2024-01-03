@@ -186,7 +186,9 @@ render_md_to_html() {
         # PREPARE html filepath
         lowercased=$(echo $file | tr '[A-Z]' '[a-z]')
         replace_suffix="${lowercased%.md}.html"
-        trimmed=$(echo $replace_suffix | sed -n 's|^\(\.*/*\)[^/]\{1,\}/||p')
+        # remove leading src_dir with sed
+        trimmed=$(echo $replace_suffix \
+                    | sed -n 's|^\(\.*/*\)[^/]\{1,\}/||p')
         html_file="${POSTS_DIR}/${trimmed}"
         mkdir -p "${html_file%/*}"
 
