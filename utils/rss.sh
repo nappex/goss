@@ -45,7 +45,7 @@ cat <<eof
   <description>$desc</description>
   <language>en-US</language>
 
-$(cat $db/rss)
+$(cat $db/rss 2>/dev/null)
 
 </channel>
 </rss>
