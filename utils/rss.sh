@@ -1,17 +1,19 @@
 #!/bin/sh
 
 #usage:
-# sh naprss.sh URL_BEZ_NAPPEX.GITHUB.IO "titulek prispevku" Popisek popisek popisek
+# sh rss.sh URL_BEZ_NAPPEX.GITHUB.IO "titulek prispevku" Popisek popisek popisek
 # prvni argument je url, vsechno potom je popisek
 # ie:
 # sh naprss.sh /posts/unix/freebsd14-bhyve-debian12.html "freebsd14 bhyve"  my adventure with freebsd and bhyve
 # titulek musi byt na druhem miste a v uvozovkach, vsechno zatim je popisek prispevku
 
+# Nebo ./rss.sh rss vypise pouze aktualni seznam
+# TODO: usage ./rss.sh without positional arguments is not handled currently
 
-#path by melo byt tam, kde je zvenku nappex.github.io/index.rss 
-#takze tam, kde je v repositari index.html
+# path by melo byt tam, kde je zvenku nappex.github.io/feed/index.rss
+# takze tam, kde je v repositari index.html
 
-#db=/lokalni/adresar/kde/se/to/montuje
+# db=/lokalni/adresar/kde/se/to/montuje
 db=~/webstuff/rss
 
 url=https://nappex.github.io
