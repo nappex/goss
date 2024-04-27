@@ -281,3 +281,4 @@ create_posts_page
 
 categories_page
 
+./utils/rss.sh >$RSS
