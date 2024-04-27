@@ -35,6 +35,7 @@ readonly HOME_PAGE="www/index.html"
 readonly POSTS_PAGE="www/posts/index.html"
 readonly CATEGORY_PAGE="www/categories/index.html"
 readonly PYTHON="www/posts/python/index.html"
+readonly RSS="www/feed/index.rss"
 
 #VARIABLES FOR TEXT MODIFICATION
 readonly INDENT=6
