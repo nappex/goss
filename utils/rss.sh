@@ -28,7 +28,7 @@ function usage {
 }
 
 # db=/lokalni/adresar/kde/se/to/montuje
-db=~/webstuff/rss
+db="$( dirname $( dirname $0 ) )"/helpers/rss
 
 url=https://nappex.github.io
 title="Napierge blog"
@@ -116,3 +116,4 @@ cat $db/rss >> $db/tmprss
 cat $db/tmprss > $db/rss
 
 rss
+
