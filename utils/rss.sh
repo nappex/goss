@@ -16,14 +16,14 @@ db=~/webstuff/rss
 
 url=https://nappex.github.io
 title="Napierge blog"
-desc="this is my rss feed"
+desc="RSS feed to my blog"
 
 rss() {
 cat <<eof
 <?xml version="1.0" encoding="UTF-8" ?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
 <channel>
-<atom:link href="$url/index.rss" rel="self" type="application/rss+xml" />
+<atom:link href="$url/feed/index.rss" rel="self" type="application/rss+xml" />
   <title>$title</title>
   <link>$url</link>
   <description>$desc</description>
