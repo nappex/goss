@@ -27,6 +27,7 @@ cat $END_POST >>$POST_TPL
 
 # CONSTANTS
 readonly SORTED_POSTS="helpers/sorted_posts.txt"
+readonly POSTS_TMPFILE="helpers/tmp_posts"
 readonly POSTS_DIR="www/posts"
 readonly MARKDOWNS_SRC="src"
 

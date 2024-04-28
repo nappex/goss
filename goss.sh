@@ -118,21 +118,17 @@ create_homepage() {
     cat $IMG_HOMEPAGE >>$HOME_PAGE
     cat $INTRO_HOMEPAGE >>$HOME_PAGE
 
-    local tmp_dir="tmp"
-    mkdir "$tmp_dir" &>/dev/null
-    local tmp_file="tmp/tmp.txt"
-
+    truncate -s 0 $POSTS_TMPFILE
     local pub_date
     for file in $POSTS; do
         pub_date=$(sed -n 's|.*date".*content="\(.*\)">$|\1|p' $file)
-        printf "%s %s\n" $pub_date $file >>$tmp_file
+        printf "%s %s\n" $pub_date $file >>$POSTS_TMPFILE
     done
 
-    cat $tmp_file | sort -r >$SORTED_POSTS
+    cat $POSTS_TMPFILE | sort -r >$SORTED_POSTS
 
     printf "%${INDENT}s<h2>New posts</h2>\n" >>$HOME_PAGE
     write_html_links_to_file "$(cat $SORTED_POSTS | head | cut -d " " -f2)" "$HOME_PAGE"
-    rm -r $tmp_dir
 
     # random picture
     local random_pic="$(random_picture_html)"
