@@ -20,7 +20,8 @@ then
     set -o shwordsplit 2>/dev/null
 fi
 
-source ./config.sh
+SCRIPT_DIRPATH="$( dirname "$0" )"
+source "$SCRIPT_DIRPATH/config.sh"
 
 # Set formatting to get mod_date via stat
 # for Linux coreutils stat and BSD stat
@@ -33,7 +34,8 @@ fi
 
 # all posts sorted descending by modification time
 # (recent modified as first)
-POSTS="$(ls -t www/posts/*/** | grep -vi index.html)"
+POSTS="$(ls -t "$SCRIPT_DIRPATH"/www/posts/*/** |
+            grep -vi index.html)"
 
 capitalize_str() {
     if [ -z "$1" ]; then
@@ -47,6 +49,7 @@ capitalize_str() {
     # cut all after first char with 'cut'
     local rest="$( echo $word | cut -c2- )"
 
+    # join the first capitalized char and rest
     printf "%s%s\n" "$capitalized_char" "$rest"
 
     return 0
@@ -66,7 +69,6 @@ path_to_html_link() (
             echo ERROR Missing publish date: $filepath >&2
             return 1
         fi
-
     fi
 
     if [ -z "$title" ]; then
@@ -103,39 +105,42 @@ write_html_links_to_file() {
 }
 
 random_picture_html() {
-    local picture_html=$(\
-        find templates/images -type f ! -name "*_homepage*"\
+    local templates_path="$SCRIPT_DIRPATH/templates/images"
+    local img_html_path=$(\
+        find "$templates_path" -type f ! -name "*_homepage*"\
             | sort --random-sort \
             | head -n 1
     )
 
-    printf "%s\n" "$picture_html"
+    printf "%s\n" "$img_html_path"
+
     return 0
 }
 
 create_homepage() {
-    cat $BEGIN_POST >$HOME_PAGE
-    cat $IMG_HOMEPAGE >>$HOME_PAGE
-    cat $INTRO_HOMEPAGE >>$HOME_PAGE
+    cat "$SCRIPT_DIRPATH/$BEGIN_POST" >"$SCRIPT_DIRPATH/$HOME_PAGE"
+    cat "$SCRIPT_DIRPATH/$IMG_HOMEPAGE" >>"$SCRIPT_DIRPATH/$HOME_PAGE"
+    cat "$SCRIPT_DIRPATH/$INTRO_HOMEPAGE" >>"$SCRIPT_DIRPATH/$HOME_PAGE"
 
-    truncate -s 0 $POSTS_TMPFILE
+    truncate -s 0 "$SCRIPT_DIRPATH/$POSTS_TMPFILE"
     local pub_date
     for file in $POSTS; do
         pub_date=$(sed -n 's|.*date".*content="\(.*\)">$|\1|p' $file)
-        printf "%s %s\n" $pub_date $file >>$POSTS_TMPFILE
+        printf "%s %s\n" $pub_date $file >>"$SCRIPT_DIRPATH/$POSTS_TMPFILE"
     done
 
-    cat $POSTS_TMPFILE | sort -r >$SORTED_POSTS
+    cat "$SCRIPT_DIRPATH/$POSTS_TMPFILE" |
+        sort -r >"$SCRIPT_DIRPATH/$SORTED_POSTS"
 
-    printf "%${INDENT}s<h2>New posts</h2>\n" >>$HOME_PAGE
-    write_html_links_to_file "$(cat $SORTED_POSTS | head | cut -d " " -f2)" "$HOME_PAGE"
+    printf "%${INDENT}s<h2>New posts</h2>\n" >>"$SCRIPT_DIRPATH/$HOME_PAGE"
+    write_html_links_to_file "$(cat "$SCRIPT_DIRPATH/$SORTED_POSTS" | head | cut -d " " -f2)" "$SCRIPT_DIRPATH/$HOME_PAGE"
 
     # random picture
     local random_pic="$(random_picture_html)"
-    cat $random_pic >>$HOME_PAGE
+    cat $random_pic >>"$SCRIPT_DIRPATH/$HOME_PAGE"
 
     # LAST MODIFIES POSTS
-    printf "%${INDENT}s<h2>Last modified posts</h2>\n" >>$HOME_PAGE
+    printf "%${INDENT}s<h2>Last modified posts</h2>\n" >>"$SCRIPT_DIRPATH/$HOME_PAGE"
     # find www/posts/ -type f ! -name index.html printf "%"
     # -type f && we specify ! -name index.html && we can print
     # by printf dates of creation and modification and delimit by
@@ -143,30 +148,31 @@ create_homepage() {
     # option -printf
     #
     # list of last modified 10 posts, sorted by option -t
-    write_html_links_to_file "$(printf "%s\n" $POSTS | head)" "$HOME_PAGE"
+    write_html_links_to_file "$(printf "%s\n" $POSTS | head)" "$SCRIPT_DIRPATH/$HOME_PAGE"
 
     random_pic="$(random_picture_html)"
-    cat $random_pic >>$HOME_PAGE
+    cat $random_pic >>"$SCRIPT_DIRPATH/$HOME_PAGE"
 
-    cat $END_POST >>$HOME_PAGE
+    cat "$SCRIPT_DIRPATH/$END_POST" >>"$SCRIPT_DIRPATH/$HOME_PAGE"
 
     return 0
 }
 
 create_posts_page() {
-    cat $BEGIN_POST >$POSTS_PAGE
+    cat "$SCRIPT_DIRPATH/$BEGIN_POST" >"$SCRIPT_DIRPATH/$POSTS_PAGE"
 
-    local files=$(cat $SORTED_POSTS | cut -d " " -f2)
+    local files=$(cat "$SCRIPT_DIRPATH/$SORTED_POSTS" |
+                    cut -d " " -f2)
 
-    printf "%${INDENT}s<h2>All posts</h2>\n" >>$POSTS_PAGE
-    write_html_links_to_file "$files" "$POSTS_PAGE"
+    printf "%${INDENT}s<h2>All posts</h2>\n" >>"$SCRIPT_DIRPATH/$POSTS_PAGE"
+    write_html_links_to_file "$files" "$SCRIPT_DIRPATH/$POSTS_PAGE"
 
-    cat $END_POST >>$POSTS_PAGE
+    cat "$SCRIPT_DIRPATH/$END_POST" >>"$SCRIPT_DIRPATH/$POSTS_PAGE"
 }
 
 render_md_to_html() {
 # $1 - directory with md files
-    local src="${1:-$MARKDOWNS_SRC}"
+    local src="${1:-$SCRIPT_DIRPATH/$MARKDOWNS_SRC}"
     local md_files=$(find ${src%/} -type f -name "*.md")
 
     local meta_license='    <meta name="license" content="https://creativecommons.org/licenses/by/4.0/">'
@@ -188,12 +194,12 @@ render_md_to_html() {
         trimmed=$(echo $replace_suffix \
                     | sed -n 's|^\(\.*/*\)[^/]\{1,\}/||p')
         # add leading part www/posts before prepared html file path
-        html_file="${POSTS_DIR}/${trimmed}"
+        html_file="$SCRIPT_DIRPATH/$POSTS_DIR/${trimmed}"
         mkdir -p "${html_file%/*}"
 
         if [ ! -f $html_file ]
         then
-            cat $BEGIN_POST >$html_file
+            cat "$SCRIPT_DIRPATH/$BEGIN_POST" >$html_file
 
             title=$(lowdown -X title $file)
             sed -i "" "s|<title>.*|<title>$title</title>|" $html_file
@@ -219,7 +225,7 @@ render_md_to_html() {
             meta_date_pattern="\(content=\)\"[0-9]\{4\}-[0-9]\{2\}-[0-9]\{2\}\""
             sed -i "" "s|$meta_date_pattern|\1\"$pub_date\"|" $html_file
             printf "/<h1>/a\n$pub_date_fmtted\n.\nw\nq\n" | ed $html_file >/dev/null
-            cat $END_POST >>$html_file
+            cat "$SCRIPT_DIRPATH/$END_POST" >>$html_file
         else
             printf "[SKIP - markdown rendering] %s already exists\n" "$html_file"
         fi
@@ -233,7 +239,7 @@ generate_index_files() (
     local title=$(echo "$dir_name" | awk '{print toupper($0)}')
     local output_file="${dir_path}/index.html"
 
-    cat $BEGIN_POST >$output_file
+    cat "$SCRIPT_DIRPATH/$BEGIN_POST" >$output_file
     echo "<h1>$title</h1>" >>$output_file
 
     printf "%${INDENT}s<ol>\n" >>$output_file
@@ -248,26 +254,27 @@ generate_index_files() (
     done
 
     printf "%${INDENT}s</ol>\n" >>$output_file
-    cat $END_POST >>$output_file
+    cat "$SCRIPT_DIRPATH/$END_POST" >>$output_file
 )
 
 categories_page() {
-    local category_dirpath="$( dirname "$CATEGORY_PAGE" )"
+    local category_page="$SCRIPT_DIRPATH/$CATEGORY_PAGE"
+    local category_dirpath="$( dirname "$category_page" )"
     if [ ! -d "$category_dirpath" ]; then
         mkdir -p "$category_dirpath" 2>/dev/null
     fi
 
     cat $BEGIN_POST >$CATEGORY_PAGE
-    echo "<h1>CATEGORIES</h1>" >>$CATEGORY_PAGE
+    echo "<h1>CATEGORIES</h1>" >>$category_page
 
-    printf "%${INDENT}s<ol>\n" >>$CATEGORY_PAGE
+    printf "%${INDENT}s<ol>\n" >>$category_page
 
-    for category in $( find www/posts -d 1 -type d ! -name ".*" ); do
-        path_to_html_link $category >>$CATEGORY_PAGE
+    for category in $( find "$SCRIPT_DIRPATH"/www/posts -d 1 -type d ! -name ".*" ); do
+        path_to_html_link $category >>$category_page
     done
 
-    printf "%${INDENT}s</ol>\n" >>$CATEGORY_PAGE
-    cat $END_POST >>$CATEGORY_PAGE
+    printf "%${INDENT}s</ol>\n" >>$category_page
+    cat "$SCRIPT_DIRPATH/$END_POST" >>$category_page
 }
 
 
@@ -277,7 +284,7 @@ render_md_to_html
 # CREATE HOME PAGE
 create_homepage
 
-generate_index_files "www/posts"
+generate_index_files "$SCRIPT_DIRPATH/$POSTS_DIR"
 
 create_posts_page
 
