@@ -252,6 +252,11 @@ generate_index_files() (
 )
 
 categories_page() {
+    local category_dirpath="$( dirname "$CATEGORY_PAGE" )"
+    if [ ! -d "$category_dirpath" ]; then
+        mkdir -p "$category_dirpath" 2>/dev/null
+    fi
+
     cat $BEGIN_POST >$CATEGORY_PAGE
     echo "<h1>CATEGORIES</h1>" >>$CATEGORY_PAGE
 
