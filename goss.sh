@@ -54,7 +54,8 @@ capitalize_str() {
 
 path_to_html_link() (
     local filepath="$1"
-    local indent=$(( INDENT + ${3:-2} ))
+    # ${var:-value} if var is undefined or null use the value
+    local indent=$(( INDENT + ${2:-2} ))
 
     if [ -f $filepath ]; then
         local title=$(sed -n 's|.*<title>\(.*\)</title>.*|\1|p' $filepath)
