@@ -13,7 +13,6 @@
 #
 #
 
-
 capitalize_str() {
     if [ -z "$1" ]; then
         echo "ERROR: capitalize_str missing argument" >&2
@@ -236,6 +235,7 @@ generate_index_files() {
     done
 
     printf "%${INDENT}s</ol>\n" >>$output_file
+
     cat "$SCRIPT_DIRPATH/$END_POST" >>$output_file
 }
 
