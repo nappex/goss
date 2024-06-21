@@ -55,6 +55,11 @@ capitalize_str() {
     return 0
 }
 
+prepare_help_files() {
+    echo ""
+
+}
+
 path_to_html_link() (
     local filepath="$1"
     # ${var:-value} if var is undefined or null use the value
