@@ -14,29 +14,6 @@
 #
 
 
-# Enable word splitting by $IFS chars for ZSH
-if [ ${SHELL##*/} = "zsh" ]
-then
-    set -o shwordsplit 2>/dev/null
-fi
-
-SCRIPT_DIRPATH="$( dirname "$0" )"
-source "$SCRIPT_DIRPATH/config.sh"
-
-# Set formatting to get mod_date via stat
-# for Linux coreutils stat and BSD stat
-if [ $(uname -s) = "Linux" ]
-then
-    MTIME_FMT="-c %y"
-else
-    MTIME_FMT="-f %Sm -t %Y-%m-%d"
-fi
-
-# all posts sorted descending by modification time
-# (recent modified as first)
-POSTS="$(ls -t "$SCRIPT_DIRPATH"/www/posts/*/** |
-            grep -vi index.html)"
-
 capitalize_str() {
     if [ -z "$1" ]; then
         echo "ERROR: capitalize_str missing argument" >&2
@@ -281,6 +258,28 @@ categories_page() {
     printf "%${INDENT}s</ol>\n" >>$category_page
     cat "$SCRIPT_DIRPATH/$END_POST" >>$category_page
 }
+
+# Enable word splitting by $IFS chars for ZSH
+if [ ${SHELL##*/} = "zsh" ]
+then
+    set -o shwordsplit 2>/dev/null
+fi
+
+SCRIPT_DIRPATH="$( dirname "$0" )"
+source "$SCRIPT_DIRPATH/config.sh"
+
+# Set formatting to get mod_date via stat
+# for Linux coreutils stat and BSD stat
+if [ $(uname -s) = "Linux" ]
+then
+    MTIME_FMT="-c %y"
+else
+    MTIME_FMT="-f %Sm -t %Y-%m-%d"
+fi
+# all posts sorted descending by modification time
+# (recent modified as first)
+POSTS="$(ls -t "$SCRIPT_DIRPATH"/www/posts/*/** |
+            grep -vi index.html)"
 
 
 # CREATE PAGES FROM MARKDOWNS FILES
