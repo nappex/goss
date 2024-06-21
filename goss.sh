@@ -60,7 +60,7 @@ prepare_help_files() {
 
 }
 
-path_to_html_link() (
+path_to_html_link() {
     local filepath="$1"
     # ${var:-value} if var is undefined or null use the value
     local indent=$(( INDENT + ${2:-2} ))
@@ -92,7 +92,7 @@ path_to_html_link() (
     fi
 
     return 0
-)
+}
 
 write_html_links_to_file() {
     local files_list="$1"
@@ -237,7 +237,7 @@ render_md_to_html() {
     done
 }
 
-generate_index_files() (
+generate_index_files() {
     local dir_path="${1%/}"
     local dir_name="${dir_path##*/}"
     # make uppercase from dir name
@@ -260,7 +260,7 @@ generate_index_files() (
 
     printf "%${INDENT}s</ol>\n" >>$output_file
     cat "$SCRIPT_DIRPATH/$END_POST" >>$output_file
-)
+}
 
 categories_page() {
     local category_page="$SCRIPT_DIRPATH/$CATEGORY_PAGE"
