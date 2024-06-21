@@ -216,7 +216,7 @@ render_md_to_html() {
 
 generate_index_files() {
     local dir_path="${1%/}"
-    local dir_name="${dir_path##*/}"
+    local dir_name="$(basename $dir_path)"
     # make uppercase from dir name
     local title=$(echo "$dir_name" | awk '{print toupper($0)}')
     local output_file="${dir_path}/index.html"
