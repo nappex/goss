@@ -262,7 +262,7 @@ categories_page() {
     printf "%${INDENT}s<ol>\n" >>$category_page
 
     for category in $( find "$SCRIPT_DIRPATH"/www/posts -d 1 -type d ! -name ".*" ); do
-        path_to_html_link $category >>$category_page
+        path_to_html_link "${category}/" >>$category_page
     done
 
     printf "%${INDENT}s</ol>\n" >>$category_page
