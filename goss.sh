@@ -40,9 +40,10 @@ path_to_html_link() {
     local filepath="$1"
     # ${var:-value} if var is undefined or null use the value
     local indent=$(( INDENT + ${2:-2} ))
+    local title
 
     if [ -f $filepath ]; then
-        local title=$(sed -n 's|.*<title>\(.*\)</title>.*|\1|p' $filepath)
+        title=$(sed -n 's|.*<title>\(.*\)</title>.*|\1|p' $filepath)
         local pub_date=$(sed -n 's|.*date".*content="\(.*\)">$|\1|p' $filepath)
         local mod_date=$(stat $MTIME_FMT $filepath | cut -d " " -f 1)
 
