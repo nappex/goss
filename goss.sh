@@ -58,7 +58,11 @@ path_to_html_link() {
         title="${title%.*}"
     fi
 
-    printf "%${indent}s<li><a href=%s>%s</a></br>\n" " " "${filepath#www}" "$title"
+    # html link has to be created from path which is not leading
+    # with $SCRIPT_DIRPATH/www/, www is root path for link
+    # and will not exist in production server path
+    local html_link="${filepath#"${SCRIPT_DIRPATH%/}"/www}"
+    printf "%${indent}s<li><a href=%s>%s</a></br>\n" " " "$html_link" "$title"
 
     if [ -f $filepath ]; then
         if [ "$pub_date" != "$mod_date" ]; then
