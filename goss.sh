@@ -62,14 +62,19 @@ path_to_html_link() {
     # with $SCRIPT_DIRPATH/www/, www is root path for link
     # and will not exist in production server path
     local html_link="${filepath#"${SCRIPT_DIRPATH%/}"/www}"
-    printf "%${indent}s<li><a href=%s>%s</a></br>\n" " " "$html_link" "$title"
+    printf "%${indent}s<li><a href=%s>%s</a>" " " "$html_link" "$title"
 
     if [ -f $filepath ]; then
+        printf "\n%${indent}s</br>\n" " "
+
         if [ "$pub_date" != "$mod_date" ]; then
             printf "%${indent}s<span id=\"pubdate\">Published on: %s</span> | <span id=\"moddate\">Modified on: %s</span></li>\n" " " "$pub_date" "$mod_date"
         else
             printf "%${indent}s<span class=\"home-pubdate\">Published on: %s</span></li>\n" " " "$pub_date"
         fi
+
+    else
+        printf "</li>\n"
     fi
 
     return 0
