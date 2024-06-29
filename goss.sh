@@ -227,7 +227,7 @@ generate_index_files() {
     local dir_path="${1%/}"
     local dir_name="$(basename $dir_path)"
     # make uppercase from dir name
-    local title=$(echo -n "$dir_name" | awk '{print toupper($0)}')
+    local title=$(echo "$dir_name" | awk '{print toupper($0)}')
     local output_file="${dir_path}/index.html"
 
     cat "$SCRIPT_DIRPATH/$BEGIN_POST" >$output_file
