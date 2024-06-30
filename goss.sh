@@ -54,8 +54,9 @@ path_to_html_link() {
     fi
 
     if [ -z "$title" ]; then
-        title="$( capitalize_str "${filepath##*/}" )"
-        title="${title%.*}"
+        local filename=$( basename "$filepath" )
+        local capitalized="$( capitalize_str "$filename" )"
+        title="${capitalized%.*}"
     fi
 
     # html link has to be created from path which is not leading
