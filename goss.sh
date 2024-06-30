@@ -173,7 +173,7 @@ render_md_to_html() {
     local lowercased
     local replace_suffix
     local trimmed
-    local html_file
+    local html_filepath
     local title
     local pub_date
 
@@ -186,28 +186,28 @@ render_md_to_html() {
         trimmed=$(echo $replace_suffix \
                     | sed -n 's|^\(\.*/*\)[^/]\{1,\}/||p')
         # add leading part www/posts before prepared html file path
-        html_file="$SCRIPT_DIRPATH/$POSTS_DIR/${trimmed}"
-        mkdir -p "${html_file%/*}"
+        html_filepath="$SCRIPT_DIRPATH/$POSTS_DIR/${trimmed}"
+        mkdir -p "${html_filepath%/*}"
 
-        if [ ! -f $html_file ]
+        if [ ! -f $html_filepath ]
         then
-            cat "$SCRIPT_DIRPATH/$BEGIN_POST" >$html_file
+            cat "$SCRIPT_DIRPATH/$BEGIN_POST" >$html_filepath
 
             title=$(lowdown -X title $file)
-            sed -i "" "s|<title>.*|<title>$title</title>|" $html_file
-            echo "<h1>$title</h1>" >>$html_file
+            sed -i "" "s|<title>.*|<title>$title</title>|" $html_filepath
+            echo "<h1>$title</h1>" >>$html_filepath
 
             lowdown \
                 --html-no-escapehtml \
                 --html-no-skiphtml \
                 --parse-no-autolink \
                 --html-no-head-ids \
-                $file >>$html_file
+                $file >>$html_filepath
 
             # pub_date
-            # sed -i "" '/<h1>/ a\'$'\n'"$pub_date"$'\n' $html_file
+            # sed -i "" '/<h1>/ a\'$'\n'"$pub_date"$'\n' $html_filepath
             # \a append new line after all match
-            # sed -i "" '/<meta name/ a\'$'\n'"$meta_license"$'\n' $html_file
+            # sed -i "" '/<meta name/ a\'$'\n'"$meta_license"$'\n' $html_filepath
             # sed append is challenging to do it posix, by posix it insert
             # to all match I can not resolve to insert after first match
             # with posix
@@ -215,11 +215,11 @@ render_md_to_html() {
             pub_date=$(lowdown -X date $file)
             pub_date_fmtted=$(printf "%${INDENT}s<p><span id=pubdate>Published on: %s</span></p>\n" " " "$pub_date")
             meta_date_pattern="\(content=\)\"[0-9]\{4\}-[0-9]\{2\}-[0-9]\{2\}\""
-            sed -i "" "s|$meta_date_pattern|\1\"$pub_date\"|" $html_file
-            printf "/<h1>/a\n$pub_date_fmtted\n.\nw\nq\n" | ed $html_file >/dev/null
-            cat "$SCRIPT_DIRPATH/$END_POST" >>$html_file
+            sed -i "" "s|$meta_date_pattern|\1\"$pub_date\"|" $html_filepath
+            printf "/<h1>/a\n$pub_date_fmtted\n.\nw\nq\n" | ed $html_filepath >/dev/null
+            cat "$SCRIPT_DIRPATH/$END_POST" >>$html_filepath
         else
-            printf "[SKIP - markdown rendering] %s already exists\n" "$html_file"
+            printf "[SKIP - markdown rendering] %s already exists\n" "$html_filepath"
         fi
     done
 }
