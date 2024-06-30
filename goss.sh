@@ -170,23 +170,21 @@ render_md_to_html() {
     local meta_license='    <meta name="license" content="https://creativecommons.org/licenses/by/4.0/">'
     local link_icon='    <link rel="icon" type="image/png" size="16x16" href="/images/favicon-16x16.png">'
 
-    local lowercased
-    local replace_suffix
-    local trimmed
+    local rel_html_filepath
     local html_filepath
     local title
     local pub_date
 
     for file in $md_files; do
-        # PREPARE html filepath
-        lowercased=$(echo $file | tr '[A-Z]' '[a-z]')
-        # replace .md to .html
-        replace_suffix="${lowercased%.md}.html"
-        # remove leading src_dir with sed
-        trimmed=$(echo $replace_suffix \
-                    | sed -n 's|^\(\.*/*\)[^/]\{1,\}/||p')
+        # PREPARE relative html filepath
+            # 1. all chars to lowercase
+            # 2. remove leading src_dir with sed
+            # 3. replace md suffix to html
+        rel_html_filepath=$( echo $file |
+                tr '[A-Z]' '[a-z]' |
+                sed -e 's!^\(\.*/*\)[^/]\{1,\}/!!' -e 's!md!html!' )
         # add leading part www/posts before prepared html file path
-        html_filepath="$SCRIPT_DIRPATH/$POSTS_DIR/${trimmed}"
+        html_filepath="$SCRIPT_DIRPATH/$POSTS_DIR/${rel_html_filepath}"
         mkdir -p "${html_filepath%/*}"
 
         if [ ! -f $html_filepath ]
