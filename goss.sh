@@ -203,6 +203,13 @@ render_md_to_html() {
                 $file >>$html_filepath
 
             # pub_date
+            pub_date=$(lowdown -X date $file)
+            pub_date_fmtted=$(printf "%${INDENT}s<p><span id=pubdate>Published on: %s</span></p>\n" " " "$pub_date")
+            meta_date_pattern="\(content=\)\"[0-9]\{4\}-[0-9]\{2\}-[0-9]\{2\}\""
+            # match content="dddd-dd-dd" where content is saved to group 1
+            # then replace it with the value saved in group 1 and add a new
+            # pub_date extract from markdown metadata
+            sed -i "" "s|$meta_date_pattern|\1\"$pub_date\"|" $html_filepath
             # sed -i "" '/<h1>/ a\'$'\n'"$pub_date"$'\n' $html_filepath
             # \a append new line after all match
             # sed -i "" '/<meta name/ a\'$'\n'"$meta_license"$'\n' $html_filepath
@@ -210,10 +217,6 @@ render_md_to_html() {
             # to all match I can not resolve to insert after first match
             # with posix
             # Only POSIX solution I've found was with ed
-            pub_date=$(lowdown -X date $file)
-            pub_date_fmtted=$(printf "%${INDENT}s<p><span id=pubdate>Published on: %s</span></p>\n" " " "$pub_date")
-            meta_date_pattern="\(content=\)\"[0-9]\{4\}-[0-9]\{2\}-[0-9]\{2\}\""
-            sed -i "" "s|$meta_date_pattern|\1\"$pub_date\"|" $html_filepath
             printf "/<h1>/a\n$pub_date_fmtted\n.\nw\nq\n" | ed $html_filepath >/dev/null
             cat "$SCRIPT_DIRPATH/$END_POST" >>$html_filepath
         else
