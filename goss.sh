@@ -43,8 +43,8 @@ path_to_html_link() {
     local title
 
     if [ -f $filepath ]; then
-        title=$(sed -n 's|.*<title>\(.*\)</title>.*|\1|p' $filepath)
-        local pub_date=$(sed -n 's|.*date".*content="\(.*\)">$|\1|p' $filepath)
+        title=$(sed -n 's!.*<title>\(.*\)</title>.*!\1!p' $filepath)
+        local pub_date=$(sed -n 's!.*date".*content="\(.*\)">$!\1!p' $filepath)
         local mod_date=$(stat $MTIME_FMT $filepath | cut -d " " -f 1)
 
         if [ -z "$pub_date" ]; then
@@ -117,7 +117,7 @@ create_homepage() {
     truncate -s 0 "$SCRIPT_DIRPATH/$POSTS_TMPFILE"
     local pub_date
     for file in $POSTS; do
-        pub_date=$(sed -n 's|.*date".*content="\(.*\)">$|\1|p' $file)
+        pub_date=$(sed -n 's!.*date".*content="\(.*\)">$!\1!p' $file)
         printf "%s %s\n" $pub_date $file >>"$SCRIPT_DIRPATH/$POSTS_TMPFILE"
     done
 
@@ -192,7 +192,7 @@ render_md_to_html() {
             cat "$SCRIPT_DIRPATH/$BEGIN_POST" >$html_filepath
 
             title=$(lowdown -X title $file)
-            sed -i "" "s|<title>.*|<title>$title</title>|" $html_filepath
+            sed -i "" "s!<title>.*!<title>$title</title>!" $html_filepath
             echo "<h1>$title</h1>" >>$html_filepath
 
             lowdown \
@@ -209,7 +209,7 @@ render_md_to_html() {
             # match content="dddd-dd-dd" where content is saved to group 1
             # then replace it with the value saved in group 1 and add a new
             # pub_date extract from markdown metadata
-            sed -i "" "s|$meta_date_pattern|\1\"$pub_date\"|" $html_filepath
+            sed -i "" "s!$meta_date_pattern!\1\"$pub_date\"!" $html_filepath
             # sed -i "" '/<h1>/ a\'$'\n'"$pub_date"$'\n' $html_filepath
             # \a append new line after all match
             # sed -i "" '/<meta name/ a\'$'\n'"$meta_license"$'\n' $html_filepath
