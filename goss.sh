@@ -40,6 +40,12 @@ html_tag_content() {
     sed -n -e '1 s!.*<'"${tag}"'>\(.*\)</'"${tag}"'>.*!\1!p; t' -e '1,// s//\1/p' "$filepath"
 }
 
+meta_tag_date_content() {
+    local filepath="$1"
+
+    sed -n -e '1 s!.*date".*content="\(.*\)">$!\1!p; t' -e '1,// s//\1/p' "$filepath"
+}
+
 prepare_help_files() {
     echo ""
 
@@ -53,7 +59,7 @@ path_to_html_link() {
 
     if [ -f $filepath ]; then
         title=$( html_tag_content "title" $filepath )
-        local pub_date=$(sed -n -e '1 s!.*date".*content="\(.*\)">$!\1!p; t' -e '1,// s//\1/p' $filepath)
+        local pub_date=$(meta_tag_date_content $filepath)
         local mod_date=$(stat $MTIME_FMT $filepath | cut -d " " -f 1)
 
         if [ -z "$pub_date" ]; then
@@ -126,7 +132,7 @@ create_homepage() {
     truncate -s 0 "$SCRIPT_DIRPATH/$POSTS_TMPFILE"
     local pub_date
     for file in $POSTS; do
-        pub_date=$(sed -n -e '1 s!.*date".*content="\(.*\)">$!\1!p; t' -e '1,// s//\1/p' $file)
+        pub_date=$(meta_tag_date_content $file)
         printf "%s %s\n" $pub_date $file >>"$SCRIPT_DIRPATH/$POSTS_TMPFILE"
     done
 
