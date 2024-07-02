@@ -43,7 +43,10 @@ html_tag_content() {
 meta_tag_date_content() {
     local filepath="$1"
 
-    sed -n -e '1 s!.*date".*content="\(.*\)">$!\1!p; t' -e '1,// s//\1/p' "$filepath"
+    # .*>$ - means >$ is end of line and .* is before because content has not to be locate
+    # at the end of tag in bad html
+    sed -n -e '1 s!.*<meta.*date.*content=\(.*\).*>$!\1!p; t' -e '1,// s//\1/p' "$filepath" |
+        sed 's!"!!g'
 }
 
 prepare_help_files() {
