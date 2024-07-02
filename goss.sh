@@ -34,7 +34,9 @@ capitalize_str() {
 title_tag_content() {
     local filepath="$1"
 
-    sed -n 's!.*<title>\(.*\)</title>.*!\1!p' "$filepath"
+    # sed command below print only first occurence of match
+    # and print the value of group 1 in match
+    sed -n -e '1 s!.*<title>\(.*\)</title>.*!\1!p; t' -e '1,// s//\1/p' "$filepath"
 }
 
 prepare_help_files() {
