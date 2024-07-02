@@ -31,6 +31,12 @@ capitalize_str() {
     return 0
 }
 
+title_tag_content() {
+    local filepath="$1"
+
+    sed -n 's!.*<title>\(.*\)</title>.*!\1!p' "$filepath"
+}
+
 prepare_help_files() {
     echo ""
 
@@ -43,7 +49,7 @@ path_to_html_link() {
     local title
 
     if [ -f $filepath ]; then
-        title=$(sed -n 's!.*<title>\(.*\)</title>.*!\1!p' $filepath)
+        title=$( title_tag_content $filepath )
         local pub_date=$(sed -n 's!.*date".*content="\(.*\)">$!\1!p' $filepath)
         local mod_date=$(stat $MTIME_FMT $filepath | cut -d " " -f 1)
 
