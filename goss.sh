@@ -18,15 +18,10 @@ capitalize_str() {
         echo "ERROR: capitalize_str missing argument" >&2
         return 1
     fi
-    word="$1"
 
-    # take substring and with 'tr' change cas to upper
-    local capitalized_char="$(expr "$word" : '\(^.\).*' | tr '[a-z]' '[A-Z]')"
-    # cut all after first char with 'cut'
-    local rest="$( echo $word | cut -c2- )"
-
-    # join the first capitalized char and rest
-    printf "%s%s\n" "$capitalized_char" "$rest"
+    # take first char and upper it
+    # then take rest of string from second character
+    printf "%s%s\n" "$(printf $1 | cut -c1 | tr '[a-z]' '[A-Z]')" "$(printf $1 | cut -c2-)"
 
     return 0
 }
