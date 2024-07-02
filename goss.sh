@@ -40,12 +40,13 @@ html_tag_content() {
     sed -n -e '1 s!.*<'"${tag}"'>\(.*\)</'"${tag}"'>.*!\1!p; t' -e '1,// s//\1/p' "$filepath"
 }
 
-meta_tag_date_content() {
-    local filepath="$1"
+meta_tag_content_by_name() {
+    local name="$1"
+    local filepath="$2"
 
     # .*>$ - means >$ is end of line and .* is before because content has not to be locate
     # at the end of tag in bad html
-    sed -n -e '1 s!.*<meta.*date.*content=\(.*\).*>$!\1!p; t' -e '1,// s//\1/p' "$filepath" |
+    sed -n -e '1 s!.*<meta.*'"${name}"'.*content=\(.*\).*>$!\1!p; t' -e '1,// s//\1/p' "$filepath" |
         sed 's!"!!g'
 }
 
@@ -62,7 +63,7 @@ path_to_html_link() {
 
     if [ -f $filepath ]; then
         title=$( html_tag_content "title" $filepath )
-        local pub_date=$(meta_tag_date_content $filepath)
+        local pub_date=$( meta_tag_content_by_name "date" $filepath )
         local mod_date=$(stat $MTIME_FMT $filepath | cut -d " " -f 1)
 
         if [ -z "$pub_date" ]; then
@@ -135,7 +136,7 @@ create_homepage() {
     truncate -s 0 "$SCRIPT_DIRPATH/$POSTS_TMPFILE"
     local pub_date
     for file in $POSTS; do
-        pub_date=$(meta_tag_date_content $file)
+        pub_date=$( meta_tag_content_by_name "date" $file )
         printf "%s %s\n" $pub_date $file >>"$SCRIPT_DIRPATH/$POSTS_TMPFILE"
     done
 
