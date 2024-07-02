@@ -31,12 +31,13 @@ capitalize_str() {
     return 0
 }
 
-title_tag_content() {
-    local filepath="$1"
+html_tag_content() {
+    local tag="$1"
+    local filepath="$2"
 
     # sed command below print only first occurence of match
     # and print the value of group 1 in match
-    sed -n -e '1 s!.*<title>\(.*\)</title>.*!\1!p; t' -e '1,// s//\1/p' "$filepath"
+    sed -n -e '1 s!.*<'"${tag}"'>\(.*\)</'"${tag}"'>.*!\1!p; t' -e '1,// s//\1/p' "$filepath"
 }
 
 prepare_help_files() {
@@ -51,7 +52,7 @@ path_to_html_link() {
     local title
 
     if [ -f $filepath ]; then
-        title=$( title_tag_content $filepath )
+        title=$( html_tag_content "title" $filepath )
         local pub_date=$(sed -n 's!.*date".*content="\(.*\)">$!\1!p' $filepath)
         local mod_date=$(stat $MTIME_FMT $filepath | cut -d " " -f 1)
 
