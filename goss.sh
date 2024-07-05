@@ -13,9 +13,9 @@
 #
 #
 
-capitalize_str() {
+capitalize() {
     if [ -z "$1" ]; then
-        echo "ERROR: capitalize_str missing argument" >&2
+        echo "ERROR: capitalize - missing argument" >&2
         return 1
     fi
 
@@ -74,7 +74,7 @@ path_to_html_link() {
 
     if [ -z "$title" ]; then
         local filename=$( basename "$filepath" )
-        local capitalized="$( capitalize_str "$filename" )"
+        local capitalized="$( capitalize "$filename" )"
         title="${capitalized%.*}"
     fi
 
