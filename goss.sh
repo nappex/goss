@@ -32,7 +32,7 @@ html_tag_content() {
 
     # sed command below print only first occurence of match
     # and print the value of group 1 in match
-    sed -n -e '1 s!.*<'"${tag}"'>\(.*\)</'"${tag}"'>.*!\1!p; t' -e '1,// s//\1/p' "$filepath"
+    sed -n -e '1 s!.*<'"${tag}"'>\(.*\)</'"${tag}"'>.*!\1!ip; t' -e '1,// s//\1/ip' "$filepath"
 }
 
 meta_tag_content_by_name() {
@@ -44,7 +44,7 @@ meta_tag_content_by_name() {
     # it is a non greedy regex because of [^" >] thats match all char except chars in square brackets
     # but at the end we have to match set of chars which is not contain in group 1
     # we except that the content string will end with ", [[:space:]] or >
-    sed -n -e '1 s!.*<meta.*=["]*'"${name}"'["]*.*content=["]*\([^" >]*\)[" >].*$!\1!p; t' -e '1,// s//\1/p' "$filepath"
+    sed -n -e '1 s!.*<meta.*=["]*'"${name}"'["]*.*content=["]*\([^" >]*\)[" >].*$!\1!ip; t' -e '1,// s//\1/ip' "$filepath"
 }
 
 prepare_help_files() {
