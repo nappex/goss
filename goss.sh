@@ -133,6 +133,7 @@ create_homepage() {
     cat "$SCRIPT_DIRPATH/$IMG_HOMEPAGE" >>"$SCRIPT_DIRPATH/$HOME_PAGE"
     cat "$SCRIPT_DIRPATH/$INTRO_HOMEPAGE" >>"$SCRIPT_DIRPATH/$HOME_PAGE"
 
+    # create a new file or remove content of existing one
     truncate -s 0 "$SCRIPT_DIRPATH/$POSTS_TMPFILE"
     local pub_date
     for file in $POSTS; do
