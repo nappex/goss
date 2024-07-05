@@ -198,7 +198,7 @@ render_md_to_html() {
             # 3. replace md suffix to html
         rel_html_filepath=$( echo $file |
                 tr '[A-Z]' '[a-z]' |
-                sed -e 's!^\(\.*/*\)[^/]\{1,\}/!!' -e 's!md!html!' )
+                sed -e 's!^\(\.*/*\)[^/]\{1,\}/!!' -e 's!.md$!.html!' )
         # add leading part www/posts before prepared html file path
         html_filepath="$SCRIPT_DIRPATH/$POSTS_DIR/${rel_html_filepath}"
         mkdir -p "${html_filepath%/*}"
