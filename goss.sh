@@ -310,9 +310,7 @@ else
 fi
 # all posts sorted descending by modification time
 # (recent modified as first)
-POSTS="$(ls -t "$SCRIPT_DIRPATH"/www/posts/*/** |
-            grep -vi index.html)"
-
+POSTS="$(ls "$SCRIPT_DIRPATH"/www/posts/*/** | grep -vi index.html)"
 
 # CREATE PAGES FROM MARKDOWNS FILES
 render_md_to_html
