@@ -20,8 +20,11 @@ capitalize_str() {
     fi
 
     # take first char and upper it
+    local capitalized_char="$(printf $1 | cut -c1 | tr '[a-z]' '[A-Z]')"
     # then take rest of string from second character
-    printf "%s%s\n" "$(printf $1 | cut -c1 | tr '[a-z]' '[A-Z]')" "$(printf $1 | cut -c2-)"
+    local rest_chars="$(printf $1 | cut -c2-)"
+
+    printf "%s%s\n" "$capitalized_char" "$rest_chars"
 
     return 0
 }
