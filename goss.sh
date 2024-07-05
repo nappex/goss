@@ -13,22 +13,41 @@
 #
 #
 
-capitalize_str() {
+capitalize() {
     if [ -z "$1" ]; then
-        echo "ERROR: capitalize_str missing argument" >&2
+        echo "ERROR: capitalize - missing argument" >&2
         return 1
     fi
-    word="$1"
 
-    # take substring and with 'tr' change cas to upper
-    local capitalized_char="$(expr "$word" : '\(^.\).*' | tr '[a-z]' '[A-Z]')"
-    # cut all after first char with 'cut'
-    local rest="$( echo $word | cut -c2- )"
+    # take first char and upper it
+    local capitalized_char="$(printf $1 | cut -c1 | tr '[a-z]' '[A-Z]')"
+    # then take rest of string from second character
+    local rest_chars="$(printf $1 | cut -c2-)"
 
-    # join the first capitalized char and rest
-    printf "%s%s\n" "$capitalized_char" "$rest"
+    printf "%s%s\n" "$capitalized_char" "$rest_chars"
 
     return 0
+}
+
+html_tag_content() {
+    local tag="$1"
+    local filepath="$2"
+
+    # sed command below print only first occurence of match
+    # and print the value of group 1 in match
+    sed -n -e '1 s!.*<'"${tag}"'>\(.*\)</'"${tag}"'>.*!\1!ip; t' -e '1,// s//\1/ip' "$filepath"
+}
+
+meta_tag_content_by_name() {
+    local name="$1"
+    local filepath="$2"
+
+    # .*>$ - means >$ is end of line and .* is before because content has not to be locate
+    # at the end of tag in bad html
+    # it is a non greedy regex because of [^" >] thats match all char except chars in square brackets
+    # but at the end we have to match set of chars which is not contain in group 1
+    # we except that the content string will end with ", [[:space:]] or >
+    sed -n -e '1 s!.*<meta.*=["]*'"${name}"'["]*.*content=["]*\([^" >]*\)[" >].*$!\1!ip; t' -e '1,// s//\1/ip' "$filepath"
 }
 
 prepare_help_files() {
@@ -43,8 +62,8 @@ path_to_html_link() {
     local title
 
     if [ -f $filepath ]; then
-        title=$(sed -n 's!.*<title>\(.*\)</title>.*!\1!p' $filepath)
-        local pub_date=$(sed -n 's!.*date".*content="\(.*\)">$!\1!p' $filepath)
+        title=$( html_tag_content "title" $filepath )
+        local pub_date=$( meta_tag_content_by_name "date" $filepath )
         local mod_date=$(stat $MTIME_FMT $filepath | cut -d " " -f 1)
 
         if [ -z "$pub_date" ]; then
@@ -55,7 +74,7 @@ path_to_html_link() {
 
     if [ -z "$title" ]; then
         local filename=$( basename "$filepath" )
-        local capitalized="$( capitalize_str "$filename" )"
+        local capitalized="$( capitalize "$filename" )"
         title="${capitalized%.*}"
     fi
 
@@ -114,10 +133,11 @@ create_homepage() {
     cat "$SCRIPT_DIRPATH/$IMG_HOMEPAGE" >>"$SCRIPT_DIRPATH/$HOME_PAGE"
     cat "$SCRIPT_DIRPATH/$INTRO_HOMEPAGE" >>"$SCRIPT_DIRPATH/$HOME_PAGE"
 
+    # create a new file or remove content of existing one
     truncate -s 0 "$SCRIPT_DIRPATH/$POSTS_TMPFILE"
     local pub_date
     for file in $POSTS; do
-        pub_date=$(sed -n 's!.*date".*content="\(.*\)">$!\1!p' $file)
+        pub_date=$( meta_tag_content_by_name "date" $file )
         printf "%s %s\n" $pub_date $file >>"$SCRIPT_DIRPATH/$POSTS_TMPFILE"
     done
 
@@ -182,7 +202,7 @@ render_md_to_html() {
             # 3. replace md suffix to html
         rel_html_filepath=$( echo $file |
                 tr '[A-Z]' '[a-z]' |
-                sed -e 's!^\(\.*/*\)[^/]\{1,\}/!!' -e 's!md!html!' )
+                sed -e 's!^\(\.*/*\)[^/]\{1,\}/!!' -e 's!.md$!.html!' )
         # add leading part www/posts before prepared html file path
         html_filepath="$SCRIPT_DIRPATH/$POSTS_DIR/${rel_html_filepath}"
         mkdir -p "${html_filepath%/*}"
