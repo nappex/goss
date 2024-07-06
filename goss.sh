@@ -88,8 +88,10 @@ path_to_html_link() {
         printf "\n%${indent}s</br>\n" " "
 
         if [ "$pub_date" != "$mod_date" ]; then
+            # write data about publish date and updated
             printf "%${indent}s<span id=\"pubdate\">Published on: %s</span> | <span id=\"moddate\">Modified on: %s</span></li>\n" " " "$pub_date" "$mod_date"
         else
+            # write data just about publish date
             printf "%${indent}s<span class=\"home-pubdate\">Published on: %s</span></li>\n" " " "$pub_date"
         fi
 
