@@ -163,15 +163,31 @@ It is important if you are using `GNU` sed or the `POSIX` sed (BSD, macOS).
 For both is little bit different syntax.
 [See stackoverflow](https://stackoverflow.com/a/25306308)
 
-**`POSIX` sed solution**
+**`POSIX` sed solution, append (write after) all match**
 
 ```sh
-$ sed -i '' $'/pattern_to_match/a\\\nline_to_append_after_match\\\n' filepath
+$ sed -i '' $'/regex_to_match/a\\\nline_to_append_after_match\\\n' filepath
+
+# example
+$ sed -i "" '/<h1>/a\\\n<p>My new article about cats\\\n' www/posts/cats.html
 ```
+
+Or it can be used with dollar sign `$` with a newline to use less backward slashes `\`.
+
+```sh
+$ sed -i "" '/regex_to_match/ a\'$'\n'"$variable"$'\n' filepath
+
+# example
+$ sed -i "" '/<h1>/ a\'$'\n'"$publish_date"$'\n' www/posts/cats.html
+```
+- `\a` append new line after all match
+
+**Solutions above append a newline to all matches.**
+
 
 Honestly, I like the solution with `ed` instead of `sed`. Solution for `ed` is more intuitive for me.
 
-**`POSIX` ed solution**
+**`POSIX` `ed` editor solution, write a newline just after a first match**
 
 ```sh
 $ printf "/<h1>/a\nHello World!\n.\nw\nq\n" | ed filepath >/dev/null
@@ -207,6 +223,8 @@ $ ed a <<<$'/<h1>/a\n'"$variable"$'\n.\nw\nq\n' >/dev/null
 `a, ., w, q` are commands for ed editor and have to be ended with newline.
 When you are manipulate file with ed prompt manually, you push after
 each command <Enter> (or carriage-return).
+
+**Solutions with `ed` editor will append a newline only after first match.**
 
 ## Replace/Substitute only first occurency of match
 
