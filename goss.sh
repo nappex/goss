@@ -226,7 +226,7 @@ render_md_to_html() {
     local pub_date
 
     for file in $md_files; do
-        # PREPARE relative html filepath
+        # PREPARE relative html filepath from markdown filepath
             # 1. all chars to lowercase
             # 2. remove leading src_dir with sed
             # 3. replace md suffix to html
@@ -244,6 +244,8 @@ render_md_to_html() {
             printf "[SKIP - markdown rendering] %s already exists\n" "$html_filepath"
         fi
     done
+
+    return 0
 }
 
 generate_index_files() {
