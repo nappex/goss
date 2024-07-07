@@ -1,4 +1,4 @@
-publish_date: 2023-10-25
+date: 2023-10-25
 updated: 2024-07-01
 title: How to use sed command
 
