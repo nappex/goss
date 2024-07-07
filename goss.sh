@@ -212,8 +212,8 @@ html_content_from_markdown() {
     return 0
 }
 
-render_md_to_html() {
-# $1 - directory with md files
+produce_html_from_md_files() {
+    # $1 - directory with md files
     local src="${1:-$SCRIPT_DIRPATH/$MARKDOWNS_SRC}"
     local md_files=$(find ${src%/} -type f -name "*.md")
 
@@ -316,7 +316,7 @@ fi
 POSTS="$(ls "$SCRIPT_DIRPATH"/www/posts/*/** | grep -vi index.html)"
 
 # CREATE PAGES FROM MARKDOWNS FILES
-render_md_to_html
+produce_html_from_md_files
 
 # CREATE HOME PAGE
 create_homepage
