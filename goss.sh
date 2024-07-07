@@ -184,6 +184,34 @@ create_posts_page() {
     cat "$SCRIPT_DIRPATH/$END_POST" >>"$SCRIPT_DIRPATH/$POSTS_PAGE"
 }
 
+html_content_from_markdown() {
+    local markdown_filepath="$1"
+
+    # publish date
+    pub_date=$(lowdown -X date $markdown_filepath)
+    title=$(lowdown -X title $markdown_filepath)
+
+    # change default date in template specified by developer
+    # with new publish date
+    sed -e 's!0000-00-00!'"$pub_date"'!' \
+        -e 's!<title>.*!<title>'"$title"'</title>!' \
+        "$SCRIPT_DIRPATH/$BEGIN_POST"
+
+    echo "<h1>$title</h1>"
+    echo "<p><span id=pubdate>Published on: $pub_date</span></p>"
+
+    lowdown \
+        --html-no-escapehtml \
+        --html-no-skiphtml \
+        --parse-no-autolink \
+        --html-no-head-ids \
+        $file
+
+    cat "$SCRIPT_DIRPATH/$END_POST"
+
+    return 0
+}
+
 render_md_to_html() {
 # $1 - directory with md files
     local src="${1:-$SCRIPT_DIRPATH/$MARKDOWNS_SRC}"
@@ -211,36 +239,7 @@ render_md_to_html() {
 
         if [ ! -f $html_filepath ]
         then
-            cat "$SCRIPT_DIRPATH/$BEGIN_POST" >$html_filepath
-
-            title=$(lowdown -X title $file)
-            sed -i "" "s!<title>.*!<title>$title</title>!" $html_filepath
-            echo "<h1>$title</h1>" >>$html_filepath
-
-            lowdown \
-                --html-no-escapehtml \
-                --html-no-skiphtml \
-                --parse-no-autolink \
-                --html-no-head-ids \
-                $file >>$html_filepath
-
-            # pub_date
-            pub_date=$(lowdown -X date $file)
-            pub_date_fmtted=$(printf "%${INDENT}s<p><span id=pubdate>Published on: %s</span></p>\n" " " "$pub_date")
-            meta_date_pattern="\(content=\)\"[0-9]\{4\}-[0-9]\{2\}-[0-9]\{2\}\""
-            # match content="dddd-dd-dd" where content is saved to group 1
-            # then replace it with the value saved in group 1 and add a new
-            # pub_date extract from markdown metadata
-            sed -i "" "s!$meta_date_pattern!\1\"$pub_date\"!" $html_filepath
-            # sed -i "" '/<h1>/ a\'$'\n'"$pub_date"$'\n' $html_filepath
-            # \a append new line after all match
-            # sed -i "" '/<meta name/ a\'$'\n'"$meta_license"$'\n' $html_filepath
-            # sed append is challenging to do it posix, by posix it insert
-            # to all match I can not resolve to insert after first match
-            # with posix
-            # Only POSIX solution I've found was with ed
-            printf "/<h1>/a\n$pub_date_fmtted\n.\nw\nq\n" | ed $html_filepath >/dev/null
-            cat "$SCRIPT_DIRPATH/$END_POST" >>$html_filepath
+            html_content_from_markdown "$file" >$html_filepath
         else
             printf "[SKIP - markdown rendering] %s already exists\n" "$html_filepath"
         fi
