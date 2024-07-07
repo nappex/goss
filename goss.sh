@@ -147,7 +147,9 @@ create_homepage() {
         sort -r >"$SCRIPT_DIRPATH/$SORTED_POSTS"
 
     printf "%${INDENT}s<h2>New posts</h2>\n" >>"$SCRIPT_DIRPATH/$HOME_PAGE"
-    write_html_links_to_file "$(cat "$SCRIPT_DIRPATH/$SORTED_POSTS" | head | cut -d " " -f2)" "$SCRIPT_DIRPATH/$HOME_PAGE"
+    write_html_links_to_file "$(cat "$SCRIPT_DIRPATH/$SORTED_POSTS" |
+                                head |
+                                cut -d " " -f2)" "$SCRIPT_DIRPATH/$HOME_PAGE"
 
     # random picture
     local random_pic="$(random_picture_html)"
