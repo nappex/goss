@@ -13,6 +13,17 @@
 #
 #
 
+Y_or_N() {
+    printf "%s (y/N): " "$1"
+    read -r answer
+    if [ "$answer" != "${answer#[Yy]}" ]
+    then
+        return 0;
+    else
+        return 1;
+    fi
+}
+
 capitalize() {
     if [ -z "$1" ]; then
         echo "ERROR: capitalize - missing argument" >&2
@@ -50,6 +61,19 @@ meta_tag_content_by_name() {
     sed -n -e '1 s!.*<meta.*=["]*'"${name}"'["]*.*content=["]*\([^" >]*\)[" >].*$!\1!ip; t' -e '1,// s//\1/ip' "$filepath"
 }
 
+list_filepaths_with_dates() {
+    local date_id="$1"
+    local filepaths="$2"
+
+    local file_date
+    for file in $filepaths; do
+        file_date=$( meta_tag_content_by_name "$date_id" $file )
+        printf "%s %s\n" $file_date $file
+    done
+
+    return 0
+}
+
 prepare_help_files() {
     echo ""
 
@@ -64,7 +88,7 @@ path_to_html_link() {
     if [ -f $filepath ]; then
         title=$( html_tag_content "title" $filepath )
         local pub_date=$( meta_tag_content_by_name "date" $filepath )
-        local mod_date=$(stat $MTIME_FMT $filepath | cut -d " " -f 1)
+        local updated=$( meta_tag_content_by_name "updated" $filepath )
 
         if [ -z "$pub_date" ]; then
             echo ERROR Missing publish date: $filepath >&2
@@ -87,9 +111,11 @@ path_to_html_link() {
     if [ -f $filepath ]; then
         printf "\n%${indent}s</br>\n" " "
 
-        if [ "$pub_date" != "$mod_date" ]; then
+        if [ ! -z "$updated" ] && [ "$pub_date" != "$updated" ]
+        then
             # write data about publish date and updated
-            printf "%${indent}s<span id=\"pubdate\">Published on: %s</span> | <span id=\"moddate\">Modified on: %s</span></li>\n" " " "$pub_date" "$mod_date"
+            printf "%${indent}s<span id=\"pubdate\">Published on: %s</span> " " " "$pub_date"
+            printf "| <span id=\"updated\">Updated: %s</span></li>\n" "$updated"
         else
             # write data just about publish date
             printf "%${indent}s<span class=\"home-pubdate\">Published on: %s</span></li>\n" " " "$pub_date"
@@ -135,21 +161,10 @@ create_homepage() {
     cat "$SCRIPT_DIRPATH/$IMG_HOMEPAGE" >>"$SCRIPT_DIRPATH/$HOME_PAGE"
     cat "$SCRIPT_DIRPATH/$INTRO_HOMEPAGE" >>"$SCRIPT_DIRPATH/$HOME_PAGE"
 
-    # create a new file or remove content of existing one
-    truncate -s 0 "$SCRIPT_DIRPATH/$POSTS_TMPFILE"
-    local pub_date
-    for file in $POSTS; do
-        pub_date=$( meta_tag_content_by_name "date" $file )
-        printf "%s %s\n" $pub_date $file >>"$SCRIPT_DIRPATH/$POSTS_TMPFILE"
-    done
-
-    cat "$SCRIPT_DIRPATH/$POSTS_TMPFILE" |
-        sort -r >"$SCRIPT_DIRPATH/$SORTED_POSTS"
-
     printf "%${INDENT}s<h2>New posts</h2>\n" >>"$SCRIPT_DIRPATH/$HOME_PAGE"
-    write_html_links_to_file "$(cat "$SCRIPT_DIRPATH/$SORTED_POSTS" |
-                                head |
-                                cut -d " " -f2)" "$SCRIPT_DIRPATH/$HOME_PAGE"
+    write_html_links_to_file "$( echo "$POSTS_SORT_BY_PUB_DATE" |
+                                 head |
+                                 cut -d " " -f2)" "$SCRIPT_DIRPATH/$HOME_PAGE"
 
     # random picture
     local random_pic="$(random_picture_html)"
@@ -157,14 +172,11 @@ create_homepage() {
 
     # LAST MODIFIES POSTS
     printf "%${INDENT}s<h2>Last modified posts</h2>\n" >>"$SCRIPT_DIRPATH/$HOME_PAGE"
-    # find www/posts/ -type f ! -name index.html printf "%"
-    # -type f && we specify ! -name index.html && we can print
-    # by printf dates of creation and modification and delimit by
-    # spaces. Unfortunately not all implemetation of find contains
-    # option -printf
     #
     # list of last modified 10 posts, sorted by option -t
-    write_html_links_to_file "$(printf "%s\n" $POSTS | head)" "$SCRIPT_DIRPATH/$HOME_PAGE"
+    write_html_links_to_file "$( echo "$POSTS_SORT_BY_UPDATED" |
+                                 head |
+                                 cut -d " " -f2 )" "$SCRIPT_DIRPATH/$HOME_PAGE"
 
     random_pic="$(random_picture_html)"
     cat $random_pic >>"$SCRIPT_DIRPATH/$HOME_PAGE"
@@ -177,11 +189,8 @@ create_homepage() {
 create_posts_page() {
     cat "$SCRIPT_DIRPATH/$BEGIN_POST" >"$SCRIPT_DIRPATH/$POSTS_PAGE"
 
-    local files=$(cat "$SCRIPT_DIRPATH/$SORTED_POSTS" |
-                    cut -d " " -f2)
-
     printf "%${INDENT}s<h2>All posts</h2>\n" >>"$SCRIPT_DIRPATH/$POSTS_PAGE"
-    write_html_links_to_file "$files" "$SCRIPT_DIRPATH/$POSTS_PAGE"
+    write_html_links_to_file "$POSTS" "$SCRIPT_DIRPATH/$POSTS_PAGE"
 
     cat "$SCRIPT_DIRPATH/$END_POST" >>"$SCRIPT_DIRPATH/$POSTS_PAGE"
 }
@@ -190,8 +199,8 @@ html_content_from_markdown() {
     local markdown_filepath="$1"
 
     # publish date
-    pub_date=$(lowdown -X date $markdown_filepath)
-    title=$(lowdown -X title $markdown_filepath)
+    local pub_date=$(lowdown -X date $markdown_filepath)
+    local title=$(lowdown -X title $markdown_filepath)
 
     # change default date in template specified by developer
     # with new publish date
@@ -219,13 +228,12 @@ produce_html_from_md_files() {
     local src="${1:-$SCRIPT_DIRPATH/$MARKDOWNS_SRC}"
     local md_files=$(find ${src%/} -type f -name "*.md")
 
-    local meta_license='    <meta name="license" content="https://creativecommons.org/licenses/by/4.0/">'
-    local link_icon='    <link rel="icon" type="image/png" size="16x16" href="/images/favicon-16x16.png">'
-
     local rel_html_filepath
     local html_filepath
-    local title
-    local pub_date
+    local md_updated
+    local html_updated
+    local meta_tag_updated
+    local span_updated
 
     for file in $md_files; do
         # PREPARE relative html filepath from markdown filepath
@@ -243,7 +251,33 @@ produce_html_from_md_files() {
         then
             html_content_from_markdown "$file" >$html_filepath
         else
-            printf "[SKIP - markdown rendering] %s already exists\n" "$html_filepath"
+            md_updated=$( lowdown -X updated "$file" 2>/dev/null )
+            html_updated=$( meta_tag_content_by_name updated "$html_filepath" 2>/dev/null )
+
+            if [ ! -z "$md_updated" ] && [ "$md_updated" != "$html_updated" ]
+            then
+                echo "Markdown file was updated $file"
+                echo "$file updated: $md_updated"
+                echo "$html_filepath updated: $html_updated"
+                Y_or_N "Remove and generate new HTML file from markdown" &&
+                    rm $html_filepath &&
+                    html_content_from_markdown $file >$html_filepath
+                if [ $? -eq 0 ]
+                then
+                    meta_tag_updated="<meta"
+                    meta_tag_updated="$meta_tag_updated"' name="updated"'
+                    meta_tag_updated="$meta_tag_updated"' scheme="YYYY-MM-DD"'
+                    meta_tag_updated="$meta_tag_updated"' content="'"$md_updated"'">'
+                    printf '/meta name="date"/a\n'"\t$meta_tag_updated"'\n.\nw\nq\nr' |
+                        ed $html_filepath >/dev/null
+
+                    span_updated="<p><span id=updated>Updated: $md_updated</span></p>"
+                    printf "/span id=pubdate/a\n$span_updated\n.\nw\nq\nr" |
+                        ed $html_filepath >/dev/null
+                fi
+            else
+                printf "[SKIP - markdown rendering] %s already exists\n" "$html_filepath"
+            fi
         fi
     done
 
@@ -305,17 +339,11 @@ fi
 SCRIPT_DIRPATH="$( dirname "$0" )"
 source "$SCRIPT_DIRPATH/config.sh"
 
-# Set formatting to get mod_date via stat
-# for Linux coreutils stat and BSD stat
-if [ $(uname -s) = "Linux" ]
-then
-    MTIME_FMT="-c %y"
-else
-    MTIME_FMT="-f %Sm -t %Y-%m-%d"
-fi
 # all posts sorted descending by modification time
 # (recent modified as first)
 POSTS="$(ls "$SCRIPT_DIRPATH"/www/posts/*/** | grep -vi index.html)"
+POSTS_SORT_BY_PUB_DATE=$(list_filepaths_with_dates "date" "$POSTS" | sort -r)
+POSTS_SORT_BY_UPDATED=$(list_filepaths_with_dates "updated" "$POSTS" | sort -r)
 
 # CREATE PAGES FROM MARKDOWNS FILES
 produce_html_from_md_files
