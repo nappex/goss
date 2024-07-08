@@ -114,11 +114,11 @@ path_to_html_link() {
         if [ ! -z "$updated" ] && [ "$pub_date" != "$updated" ]
         then
             # write data about publish date and updated
-            printf "%${indent}s<span id=\"pubdate\">Published on: %s</span> " " " "$pub_date"
-            printf "| <span id=\"updated\">Updated: %s</span></li>\n" "$updated"
+            printf "%${indent}s<span id=\"pubdate\">Published: %s | </span>" " " "$pub_date"
+            printf "<span id=\"updated\">Updated: %s</span></li>\n" "$updated"
         else
             # write data just about publish date
-            printf "%${indent}s<span id=\"pubdate\">Published on: %s</span></li>\n" " " "$pub_date"
+            printf "%${indent}s<span id=\"pubdate\">Published: %s</span></li>\n" " " "$pub_date"
         fi
 
     else
@@ -209,7 +209,7 @@ html_content_from_markdown() {
         "$SCRIPT_DIRPATH/$BEGIN_POST"
 
     echo "<h1>$title</h1>"
-    echo "<p><span id=pubdate>Published on: $pub_date</span></p>"
+    echo "<p><span id=pubdate>Published: $pub_date</span></p>"
 
     lowdown \
         --html-no-escapehtml \
