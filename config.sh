@@ -26,8 +26,6 @@ cat $BEGIN_POST >$POST_TPL
 cat $END_POST >>$POST_TPL
 
 # CONSTANTS
-readonly SORTED_POSTS="helpers/sorted_posts"
-readonly POSTS_TMPFILE="helpers/tmp_posts"
 readonly POSTS_DIR="www/posts"
 readonly MARKDOWNS_SRC="src"
 
@@ -35,7 +33,6 @@ readonly MARKDOWNS_SRC="src"
 readonly HOME_PAGE="www/index.html"
 readonly POSTS_PAGE="www/posts/index.html"
 readonly CATEGORY_PAGE="www/categories/index.html"
-readonly PYTHON="www/posts/python/index.html"
 readonly RSS="www/feed/index.rss"
 
 #VARIABLES FOR TEXT MODIFICATION
