@@ -4,6 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="date" scheme="YYYY-MM-DD" content="2023-10-25">
+	<meta name="updated" scheme="YYYY-MM-DD" content="2024-07-01">
     <meta name="license" content="https://creativecommons.org/licenses/by/4.0/">
     <meta name="referrer" content="origin">
     <link rel="icon" type="image/png" size="16x16" href="/images/favicon-16x16.png">
@@ -44,6 +45,7 @@
           <a href="/resources/"><li>Resources</li></a>
           <a href="/about/"><li>About</li></a>
           <a href="/contact/"><li>Contact</li></a>
+          <a href="/feed/index.rss"><li>RSS</li></a>
         </ul>
       </div>
     </nav>
@@ -55,7 +57,9 @@
     <main>
 
 <h1>How to use sed command</h1>
-      <p><span id=pubdate>Published on: 2023-10-25</span></p>
+<p><span id=pubdate>Published: 2023-10-25</span></p>
+<p><span id=updated>Updated: 2024-07-01</span></p>
+<!-- Content below is generated with lowdown (https://kristaps.bsd.lv/lowdown/) -->
 <h2>How write changes from sed to file</h2>
 <p class="warning">READ THIS CHAPTER FIRST</p>
 <p>If you want to apply deletion changes to file you have to use option <code>-i</code>
@@ -137,6 +141,113 @@ contains <code>end_pattern</code>. Lines with <code>patterns</code> are included
 contains &#8216;Thanks&#8217;, including start and end lines.</p>
 <pre><code class="language-sh">$ sed -i "" &#39;&#47;Hello&#47;, &#47;Thanks&#47;d&#39; file.txt
 </code></pre>
+<h2>Insert a new line with text after match</h2>
+<p>It is important if you are using <code>GNU</code> sed or the <code>POSIX</code> sed (BSD, macOS).
+For both is little bit different syntax.
+<a href="https://stackoverflow.com/a/25306308">See stackoverflow</a></p>
+<p><strong><code>POSIX</code> sed solution, append (write after) all match</strong></p>
+<pre><code class="language-sh">$ sed -i &#39;&#39; $&#39;&#47;regex_to_match&#47;a\\\nline_to_append_after_match\\\n&#39; filepath
+
+# example
+$ sed -i "" &#39;&#47;&#60;h1&#62;&#47;a\\\n&#60;p&#62;My new article about cats\\\n&#39; www&#47;posts&#47;cats.html
+</code></pre>
+<p>Or it can be used with dollar sign <code>$</code> with a newline to use less backward slashes <code>\</code>.</p>
+<pre><code class="language-sh">$ sed -i "" &#39;&#47;regex_to_match&#47; a\&#39;$&#39;\n&#39;"$variable"$&#39;\n&#39; filepath
+
+# example
+$ sed -i "" &#39;&#47;&#60;h1&#62;&#47; a\&#39;$&#39;\n&#39;"$publish_date"$&#39;\n&#39; www&#47;posts&#47;cats.html
+</code></pre>
+<ul>
+<li><code>\a</code> append new line after all match</li>
+</ul>
+<p><strong>Solutions above append a newline to all matches.</strong></p>
+<p>Honestly, I like the solution with <code>ed</code> instead of <code>sed</code>. Solution for <code>ed</code> is more intuitive for me.</p>
+<p><strong><code>POSIX</code> <code>ed</code> editor solution, write a newline just after a first match</strong></p>
+<pre><code class="language-sh">$ printf "&#47;&#60;h1&#62;&#47;a\nHello World!\n.\nw\nq\n" | ed filepath &#62;&#47;dev&#47;null
+
+# with variable
+$ printf "&#47;&#60;h1&#62;&#47;a\n$variable\n.\nw\nq\n" | ed filepath &#62;&#47;dev&#47;null
+</code></pre>
+<p><strong><code>Here-string</code> ed solution (not POSIX)</strong></p>
+<p>With herestring ANSI-C string has to be used because of <code>\n</code></p>
+<pre><code class="language-sh">$ ed filepath &#60;&#60;&#60;$&#39;&#47;&#60;h1&#62;&#47;a\nHello World!\n.\nw\nq\n&#39; &#62;&#47;dev&#47;null
+
+# with variable
+# every escaped character has to be add to ANSI-C Quoting
+# to expand variable in string
+$ ed a &#60;&#60;&#60;"&#47;&#60;h1&#62;&#47;a"$&#39;\n&#39;"$variable"$&#39;\n&#39;"."$&#39;\n&#39;"w"$&#39;\n&#39;"q"$&#39;\n&#39; &#62;&#47;dev&#47;null
+
+# above can be simplified
+# split ANSI-C string by double quotes for variable
+$ ed a &#60;&#60;&#60;$&#39;&#47;&#60;h1&#62;&#47;a\n&#39;"$variable"$&#39;\n.\nw\nq\n&#39; &#62;&#47;dev&#47;null
+</code></pre>
+<ul>
+<li><code>&#47;&#60;h1&#62;</code> search h1 tag</li>
+<li><code>&#47;a\n</code> switch to insert mode after search match (<code>a</code> is command insert after, <code>i</code> is command insert before)</li>
+<li><code>$variable\n</code> insert string stored in variable with newline</li>
+<li><code>.\n</code> switch from insert mode to command mode or prompt</li>
+<li><code>w\n</code> write changes from buffer to file</li>
+<li><code>q\n</code> quit the <strong>ed</strong> editor</li>
+</ul>
+<p><code>a, ., w, q</code> are commands for ed editor and have to be ended with newline.
+When you are manipulate file with ed prompt manually, you push after
+each command <Enter> (or carriage-return).</p>
+<p><strong>Solutions with <code>ed</code> editor will append a newline only after first match.</strong></p>
+<h2>Replace&#47;Substitute only first occurency of match</h2>
+<p>This task can be done relatively easily with <code>GNU</code> sed, but if you want to solve in complaince
+with <code>POSIX</code>, then <code>GNU</code> sed solutio will not work. <code>POSIX</code> solution for BSD or macOS is little harder.
+The whole problem is described on <a href="https://stackoverflow.com/a/33416489">stackoverflow</a>.
+Most of my description is taken from stackoverflow just for archive reasons.
+Other reason why I duplicate the text from stackoverflow is that the solution for <code>GNU</code> sed
+is full of internet, but it is hard to find the <code>POSIX</code> solution. And YES the <code>POSIX</code>
+solution works for <code>GNU</code> sed.</p>
+<p><em>Notes for solutions:</em></p>
+<ul>
+<li><p><code>sed</code> provides a convenient <strong>shortcut</strong> for reusing the <strong>most recently applied regular expression</strong>: an empty delimiter pair <code>&#47;&#47;</code>.</p></li>
+<li><p>dollar sign (<code>$</code>) before the quoted string sending to sed command is <a href="http://www.gnu.org/software/bash/manual/bash.html#ANSI_002dC-Quoting">ANSI C-quoted strings ($&#8217;&#8230;&#8217;)</a>, this kind of string gives to escaped characters special meanings. For e.g. <code>\n</code> will become a newline.</p></li>
+</ul>
+<ol>
+<li><strong><code>GNU</code> sed solution:</strong>
+<code>GNU</code> provide some extentsions to <code>POSIX</code> sed. Hence the solution is different, because
+of that extension.</li>
+</ol>
+<pre><code class="language-sh">$ sed &#39;0,&#47;foo&#47; s&#47;&#47;bar&#47;&#39; &#60;&#60;&#60;$&#39;1st foo\nUnrelated\n2nd foo\n3rd foo&#39;
+</code></pre>
+<p><em>Description of <code>GNU</code> sed command (just copied from stackoverflow, authors are <a href="https://stackoverflow.com/users/45375/mklement0">mklement0</a> and <a href="https://stackoverflow.com/users/2430549/holdoffhunger">holdoffhunger</a>)</em></p>
+<p><code>GNU</code> sed allows 2-address form: <code>0,&#47;re&#47;</code> (<code>re</code> represents an arbitrary regular expression here).
+<code>0,&#47;re&#47;</code> allows to match the regex on the first line also. In other words: such an address will create a range from the 1st line up to and including the line that matches <code>re</code> - whether <code>re</code> occurs on the 1st line or on any subsequent line.</p>
+<p>Contrast this with the POSIX-compliant form <code>1,&#47;re&#47;</code>, which creates a range that matches from the first line up to and including the line that matches <code>re</code> on subsequent lines; in other words: this <strong>will not</strong> detect the <strong>first occurrence</strong> of an <code>re</code> match if it happens to occur on the <strong>first line</strong> and also prevents the use of shorthand <code>&#47;&#47;</code> for reuse of the most recently used regex (see <code>POSIX</code> solution below).</p>
+<p>If you combine a <code>0,&#47;re&#47;</code> address with an <code>s&#47;...&#47;...&#47;</code> (substitution) call that uses the same regular expression, your command will effectively only perform the substitution on the first line that matches <code>re</code>.</p>
+<ol start="2">
+<li><strong><code>POSIX</code> sed solution with &#8220;range&#8221; (BSD, macOS):</strong></li>
+</ol>
+<p>Since <code>0,&#47;re&#47;</code> cannot be used and the form <code>1,&#47;re&#47;</code> will not detect <code>re</code> if it happens to occur on the first line (see above <code>GNU</code> solution),
+special handling for the first line is required in <code>POSXI</code> solution.</p>
+<pre><code class="language-sh">$ sed -e &#39;1 s&#47;foo&#47;bar&#47;; t&#39; -e &#39;1,&#47;&#47; s&#47;&#47;bar&#47;&#39; &#60;&#60;&#60;$&#39;1st foo\nUnrelated\n2nd foo\n3rd foo&#39;
+1st bar         # only 1st match of &#39;foo&#39; replaced
+Unrelated
+2nd foo
+3rd foo
+</code></pre>
+<pre><code class="language-sh">$ sed -e &#39;1 s&#47;foo&#47;bar&#47;; t&#39; -e &#39;1,&#47;&#47; s&#47;&#47;bar&#47;&#39; &#60;&#60;&#60;$&#39;1st boo\nUnrelated\n2nd foo\n3rd foo&#39;
+1st boo
+Unrelated
+2nd bar         # only 1st match of &#39;foo&#39; replaced
+3rd foo
+</code></pre>
+<p><em>Description of command (just copied from stackoverflow, authors are <a href="https://stackoverflow.com/users/45375/mklement0">mklement0</a> and <a href="https://stackoverflow.com/users/2430549/holdoffhunger">holdoffhunger</a>)</em></p>
+<p>The empty regex <code>&#47;&#47;</code> shortcut is employed twice here:
+    - first for the endpoint of the range
+    - second in the <code>s</code> command call;
+in both cases, <strong>regex foo</strong> is implicitly <strong>reused</strong>, allowing us no duplications which makes shorter and more maintainable code.</p>
+<p><code>POSIX sed</code> needs actual <strong>newlines</strong> after certain functions, such as after the <strong>name</strong> of a label or even its omission, as is the case with <code>t</code> here;
+Splitting the command to multiple <code>-e</code> options is an alternative to use a <strong>newlines</strong>: end each <code>-e</code> chunk where a <strong>newline</strong> would normally need to go.</p>
+<p><code>1 s&#47;foo&#47;bar&#47;</code> replaces <code>foo</code> on the first line <strong>only</strong>, if found there.
+If so, <code>t</code> branches to the end of the script (skips remaining commands on the line).
+(The <code>t</code> function branches to a label only if the most recent <code>s</code> call performed an actual substitution; in the absence of a label, as is in the first case above, the end of the script is branched to).</p>
+<p>When that happens, range address <code>1,&#47;&#47;</code>, which normally finds the first occurrence starting from line <strong>2</strong>, will not match, and the range will not be processed, because the address is evaluated when the current line is already <strong>2</strong>.</p>
+<p>Conversely, if there&#8217;s no match on the first line, <code>1,&#47;&#47;</code> will be entered, and will find the true first match.</p>
+<p>The net effect is the same as with <code>GNU</code> sed&#8217;s <code>0,&#47;re&#47;</code>: only the first occurrence is replaced, whether it occurs on the first line or any other.</p>
 
     </main>
 
