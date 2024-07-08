@@ -3,12 +3,12 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="date" scheme="YYYY-MM-DD" content="0000-00-00">
+    <meta name="date" scheme="YYYY-MM-DD" content="2024-07-08">
     <meta name="license" content="https://creativecommons.org/licenses/by/4.0/">
     <meta name="referrer" content="origin">
     <link rel="icon" type="image/png" size="16x16" href="/images/favicon-16x16.png">
     <link rel="stylesheet" href="/css/style.css">
-    <title></title>
+    <title>How manipulate with files in shell</title>
   </head>
 
 
@@ -55,21 +55,14 @@
 
     <main>
 
-<h1>SHELL</h1>
-      <ol>
-        <li><a href=/posts/shell/shell-automation.html>Automate your workflow with shell script</a>
-        </br>
-        <span id="pubdate">Published: 2021-11-22</span></li>
-        <li><a href=/posts/shell/shell-manipulate-with-files.html>How manipulate with files in shell</a>
-        </br>
-        <span id="pubdate">Published: 2024-07-08</span></li>
-        <li><a href=/posts/shell/write-posix-shell-script.html>How to write POSIX shell script</a>
-        </br>
-        <span id="pubdate">Published: 2023-02-26</span></li>
-        <li><a href=/posts/shell/zsh-bash-diffs.html>Differences between zsh and bash</a>
-        </br>
-        <span id="pubdate">Published: 2022-04-11</span></li>
-      </ol>
+<h1>How manipulate with files in shell</h1>
+<p><span id=pubdate>Published: 2024-07-08</span></p>
+<!-- Content below is generated with lowdown (https://kristaps.bsd.lv/lowdown/) -->
+<h2>Clear content of existing file without removing itself</h2>
+<pre><code class="language-sh">$ truncate -s 0 path&#47;to&#47;file
+</code></pre>
+<pre><code class="language-sh">$ echo "" &#62;path&#47;to&#47;file
+</code></pre>
 
     </main>
 
