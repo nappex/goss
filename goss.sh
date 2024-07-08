@@ -118,7 +118,7 @@ path_to_html_link() {
             printf "| <span id=\"updated\">Updated: %s</span></li>\n" "$updated"
         else
             # write data just about publish date
-            printf "%${indent}s<span class=\"home-pubdate\">Published on: %s</span></li>\n" " " "$pub_date"
+            printf "%${indent}s<span id=\"pubdate\">Published on: %s</span></li>\n" " " "$pub_date"
         fi
 
     else
