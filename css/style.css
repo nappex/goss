@@ -37,13 +37,13 @@ ol li {
   margin-bottom: 3px;
 }
 
-span#pubdate, span#moddate {
+span#pubdate, span#updated {
   font-size: 10pt;
   font-style: italic;
   color: grey;
 }
 
-h1 + p span#pubdate, h1 + p span#moddate {
+h1 + p span#pubdate, h1 ~ p span#updated {
   font-size: 12pt;
 }
 
