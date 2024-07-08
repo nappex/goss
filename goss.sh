@@ -347,14 +347,15 @@ fi
 SCRIPT_DIRPATH="$( dirname "$0" )"
 source "$SCRIPT_DIRPATH/config.sh"
 
+# CREATE PAGES FROM MARKDOWNS FILES
+# we need to generate html files first, then make a lists with posts
+produce_html_from_md_files
+
 # all posts sorted descending by modification time
 # (recent modified as first)
 POSTS="$(ls "$SCRIPT_DIRPATH"/www/posts/*/** | grep -vi index.html)"
 POSTS_SORT_BY_PUB_DATE=$(list_filepaths_with_dates "date" "$POSTS" | sort -r)
 POSTS_SORT_BY_UPDATED=$(list_filepaths_with_dates "updated" "$POSTS" | sort -r)
-
-# CREATE PAGES FROM MARKDOWNS FILES
-produce_html_from_md_files
 
 # CREATE HOME PAGE
 create_homepage
