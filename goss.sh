@@ -210,6 +210,7 @@ html_content_from_markdown() {
 
     echo "<h1>$title</h1>"
     echo "<p><span id=pubdate>Published: $pub_date</span></p>"
+    echo "<!-- Content below is generated with lowdown (https://kristaps.bsd.lv/lowdown/) -->"
 
     lowdown \
         --html-no-escapehtml \
