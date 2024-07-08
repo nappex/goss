@@ -248,11 +248,18 @@ produce_html_from_md_files() {
         html_filepath="$SCRIPT_DIRPATH/$POSTS_DIR/${rel_html_filepath}"
         mkdir -p "${html_filepath%/*}"
 
+        md_updated=$( lowdown -X updated "$file" 2>/dev/null )
+
         if [ ! -f $html_filepath ]
         then
             html_content_from_markdown "$file" >$html_filepath
+            if [ ! -z "$md_updated" ]
+            then
+                span_updated="<p><span id=updated>Updated: $md_updated</span></p>"
+                printf "/span id=pubdate/a\n$span_updated\n.\nw\nq\nr" |
+                    ed $html_filepath >/dev/null
+            fi
         else
-            md_updated=$( lowdown -X updated "$file" 2>/dev/null )
             html_updated=$( meta_tag_content_by_name updated "$html_filepath" 2>/dev/null )
 
             if [ ! -z "$md_updated" ] && [ "$md_updated" != "$html_updated" ]
