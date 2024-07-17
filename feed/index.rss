@@ -8,13 +8,13 @@
   <language>en-US</language>
 
 <item>
-    <title>Clear content of existing file without removing without removig the file</title>
-    <link>https://nappex.github.io/https://nappex.github.io/posts/shell/shell-manipulate-with-files.html</link>
-    <guid>https://nappex.github.io/https://nappex.github.io/posts/shell/shell-manipulate-with-files.html</guid>
+    <title>Truncate content of the file in command line (shell)</title>
+    <link>https://nappex.github.io/posts/shell/truncate-file-content.html</link>
+    <guid>https://nappex.github.io/posts/shell/truncate-file-content.html</guid>
     <description>
-    What if you have a file and need to remove its content without removing the file itself. Command touch which is learn a lot by beginners will not help you if the file already exist
+    Just update existing post
     </description>
-   <pubDate>Fri, 12 Jul 2024 20:35:25 +0000</pubDate>
+   <pubDate>Wed, 17 Jul 2024 05:58:30 +0000</pubDate>
 </item>
 
 </channel>
