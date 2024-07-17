@@ -4,11 +4,12 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="date" scheme="YYYY-MM-DD" content="2024-07-08">
+	<meta name="updated" scheme="YYYY-MM-DD" content="2024-07-17">
     <meta name="license" content="https://creativecommons.org/licenses/by/4.0/">
     <meta name="referrer" content="origin">
     <link rel="icon" type="image/png" size="16x16" href="/images/favicon-16x16.png">
     <link rel="stylesheet" href="/css/style.css">
-    <title>How manipulate with files in shell</title>
+    <title>How to truncate content of file in command line</title>
   </head>
 
 
@@ -55,14 +56,28 @@
 
     <main>
 
-<h1>How manipulate with files in shell</h1>
+<h1>How to truncate content of file in command line</h1>
 <p><span id=pubdate>Published: 2024-07-08</span></p>
+<p><span id=updated>Updated: 2024-07-17</span></p>
 <!-- Content below is generated with lowdown (https://kristaps.bsd.lv/lowdown/) -->
 <h2>Clear content of existing file without removing itself</h2>
 <pre><code class="language-sh">$ truncate -s 0 path&#47;to&#47;file
 </code></pre>
 <pre><code class="language-sh">$ echo "" &#62;path&#47;to&#47;file
 </code></pre>
+<p>Command above can be simplified, because there is a special syntax for truncate the file.</p>
+<pre><code class="language-sh">$ &#62;path&#47;to&#47;file
+</code></pre>
+<p>When I&#8217;ve tested on <code>zsh</code>, <code>bash</code>, <code>oksh</code>, <code>ksh</code>, <code>dash</code>. Only <code>zsh</code> not worked.</p>
+<p>There is more portable command which was working also in <code>zsh</code>.</p>
+<pre><code class="language-sh">$ :&#62;path&#47;to&#47;file
+</code></pre>
+<h3>Resources</h3>
+<ul>
+<li><a href="https://superuser.com/questions/90008/how-to-clear-the-contents-of-a-file-from-the-command-line">Superuser.com - How to clear file content</a></li>
+<li><a href="https://www.commandlinefu.com/commands/view/12/empty-a-file">commandlinefu.com</a></li>
+<li><a href="https://tldp.org/LDP/abs/html/io-redirection.html">Advanced bash scripting - I&#47;O redirection</a></li>
+</ul>
 
     </main>
 
