@@ -24,9 +24,9 @@ figure.default-img {
   text-align: center;
 }
 
-figure.default-img img {
+img {
   border-radius: 20px;
-  width: 60%;
+  max-width: 60%;
 }
 
 p {
