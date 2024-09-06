@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="date" scheme="YYYY-MM-DD" content="2024-09-07">
+    <meta name="license" content="https://creativecommons.org/licenses/by/4.0/">
+    <meta name="referrer" content="origin">
+    <link rel="icon" type="image/png" size="16x16" href="/images/favicon-16x16.png">
+    <link rel="stylesheet" href="/css/style.css">
+    <title>How to inspect and solve problems with your home WiFi</title>
+  </head>
+
+
+  <body>
+<!--    Navigation is made by Erik Terwan    -->
+<!--          24th of November 2015          -->
+<!--              MIT License                -->
+    <nav role="navigation">
+      <div id="menuToggle">
+        <!--
+        A fake / hidden checkbox is used as click reciever,
+        so you can use the :checked selector on it.
+        -->
+        <input type="checkbox" />
+
+        <!--
+        Some spans to act as a hamburger.
+        They are acting like a real hamburger,
+        not that McDonalds stuff.
+        -->
+        <span></span>
+        <span></span>
+        <span></span>
+
+        <!--
+        Too bad the menu has to be inside of the button
+        but hey, it's pure CSS magic.
+        -->
+        <ul id="menu">
+          <a href="/"><li>Home</li></a>
+          <a href="/posts/"><li>Posts</li></a>
+          <a href="/categories/"><li>Categories</li></a>
+          <a href="/resources/"><li>Resources</li></a>
+          <a href="/about/"><li>About</li></a>
+          <a href="/contact/"><li>Contact</li></a>
+          <a href="/feed/index.rss"><li>RSS</li></a>
+        </ul>
+      </div>
+    </nav>
+
+
+    <header>
+    </header>
+
+    <main>
+
+<h1>How to inspect and solve problems with your home WiFi</h1>
+<p><span id=pubdate>Published: 2024-09-07</span></p>
+<!-- Content below is generated with lowdown (https://kristaps.bsd.lv/lowdown/) -->
+<h2>Intro - description of my problem</h2>
+<p>I had a problem that WiFi kicked my macOS laptop time to time from my home router. Even though the laptop was not kicked off the
+quality of the connection was terrible, but not always. Sometimes the time of loading pages was unacceptable to any work, but WiFi was connected and the icon of WiFi strength showed 2 from 3. It was really strange situation. Do not believe icons if you have problem with connection, there is a huge space for mistakes. Use real precise data instead.
+There were days when the connection was relatively OK, but some days I was unable to connect to my WLAN.
+The speed of my wifi connection varied from 2 Mbps to 140 Mpbs, it was a huge range.
+I&#8217;ve tried other laptops and devices from same place where the problem with macOS occurred and the signal was much more stable.</p>
+<h2>What can be the reason of problems</h2>
+<p><strong>1. Strength of WiFi signal (RSSI)</strong></p>
+<p>RSSI (<strong>R</strong>eceived <strong>S</strong>ignal <strong>S</strong>trength <strong>I</strong>ndicator) is the relative received signal strength in a wireless environment. RSSI is an indication of the power level being received by the receiving radio after the antenna and possible cable loss. Therefore, the greater the RSSI value, the stronger signal. Value of RSSI is in dBm (decibel-milliwatts)[<a href="https://en.wikipedia.org/wiki/Received_signal_strength_indicator">2</a>]. The rule is the higher value means stronger signal, but be careful value is a negative number. So value close to 0 is stronger signal. Range 0 to -51 dBm is really strong signal. Signal above the -71 dBm is consider as a weak. I have around -70 dBm and have no problems to surf internet or having a call. Very weak signal is consider between -80 and -100 dBm.</p>
+<p><strong>Ordinary range is from -35 to -74 dBm.</strong></p>
+<p><strong>2. EIRP</strong></p>
+<p>EIRP (<strong>E</strong>ffective <strong>I</strong>sotropic <strong>R</strong>adiated <strong>P</strong>ower) is close to RSSI and it means <strong>actual amount of signal leaving the antenna</strong> and is a value measured in db and is based on 3 values:
+    1. Transmit Power (dBm)
+    2. Cable Loss (dB)
+    3. Antenna Gain (dBi)</p>
+<p><strong>Units dB</strong></p>
+<p>The dB measures the power of a signal as a function of its ratio to another standardized value.
+The abbreviation dB is often combined with other abbreviations in order to represent the values that are compared. Here are two examples:</p>
+<ul>
+<li>dBm, The dB value is compared to 1 mW</li>
+<li>dBw, The dB value is compared to 1 W</li>
+</ul>
+<p>You can calculate the power in dBs from this formula:</p>
+<p><code>Power (in dB) = 10 * log10 (Signal&#47;Reference)</code></p>
+<p>This list defines the terms in the formula: <code>log10</code> is logarithm base 10.</p>
+<p>Signal is the power of the signal (for example, 50 mW).</p>
+<p>Reference is the reference power (for example, 1 mW).[<a href="https://community.cisco.com/t5/wireless-mobility-knowledge-base/snr-rssi-eirp-and-free-space-path-loss/ta-p/3128478">1</a>]</p>
+<p>Equation to calculate EIRP is:</p>
+<p><code>&#60;Transmit Power&#62; - Cable Loss + Antenna Gain = EIRP</code></p>
+<p>For example a Cisco 1242AG running at full power with these values on antenna:</p>
+<ul>
+<li>6dBi (802.11a radio)</li>
+<li>2.5dBi (802.11bg radio)</li>
+</ul>
+<p>So then equations are:</p>
+<ul>
+<li><strong>802.11a</strong> <code>EIRP = 17dBm (40mw) - 0dB + 6dBi = 23dBm = 200mw of actual output power</code></li>
+<li><strong>802.11bg</strong> <code>EIRP = 20dBm (100mw) - 0dB + 2.5dBi = 22.5dBm = 150mw (approx) of actual output power</code></li>
+</ul>
+<p>Based on the example above, in theory, if you were to measure it right at the antenna you should get a RSSI of -23dBm or -22.5dBm respectively.[<a href="https://community.cisco.com/t5/wireless-mobility-knowledge-base/snr-rssi-eirp-and-free-space-path-loss/ta-p/3128478">1</a>]</p>
+<p><strong>3. Noise</strong></p>
+<p>Other electronic device as:</p>
+<ul>
+<li>microwave</li>
+<li>cordless phones</li>
+<li>bluetooth</li>
+</ul>
+<p>or other which operates on the same or adjacent frequency bands as your WiFi (2,4 GHz or 5 GHz) interfere with your WiFi negatively.[<a href="https://www.velocenetwork.com/tech/what-is-wifi-rssi/">3</a>]
+The signal which negatively interfere with waves from WiFi is called <strong>Noise</strong>.
+The higher noise, the WiFi signal is weaker.
+The value logic is same as for RSSI, unit is dBmi, and value close to zero is really strong noise. When value is closer to zero then WiFi signal will be more unstable.
+Noise should be as small as possible.</p>
+<p><strong>Ordinary Noise is in range from -90 dBm to -95 dBm</strong>. If you have noise below you should try to find some electronic device which is the source of the noise.</p>
+<p><strong>4. Signal to Noise Ratio (SNR)</strong></p>
+<p><strong>S</strong>ignal to <strong>N</strong>oise <strong>R</strong>atio sometimes called as abbreviation SNR is:
+    - The power level of the RF (radio-frequency) signal relative to the power level of the noise floor. It is the <strong>ratio</strong> of <strong>signal power</strong> to the <strong>noise power</strong> which corrupting the total signal.[<a href="https://community.cisco.com/t5/wireless-mobility-knowledge-base/snr-rssi-eirp-and-free-space-path-loss/ta-p/3128478">1</a>]
+or by other words
+    - measurement of how much relevant WiFi signal there is compared to any other signals that can get in the way.[<a href="https://www.velocenetwork.com/tech/what-is-wifi-rssi/">3</a>]</p>
+<p>Mathematically it is a difference between RSSI and Noise:</p>
+<p><code>SNR = RSSI - Noise</code></p>
+<p>Example:</p>
+<p><code>SNR = RSSI - Noise = -70dBm - (-95dBm) = 25dBm</code>, Singal to Noise Ratio is 25 dBm</p>
+<p>General rule is that SNR above 20 dBm is good signal.<a href="https://community.cisco.com/t5/wireless-mobility-knowledge-base/snr-rssi-eirp-and-free-space-path-loss/ta-p/3128478">1</a>
+A higher SNR indicates a cleaner and more reliable signal, while a lower SNR suggests that the signal is being drowned out by noise.[<a href="https://www.velocenetwork.com/tech/what-is-wifi-rssi/">3</a>]</p>
+<p>SNR was my problem my SNR was between 3 - 10 dBm, because of high noise value. If noise value is similar to signal value then problem with connection always occurred.</p>
+<p><strong>5. 2.4 GHz or 5 GHz</strong></p>
+<p>There are a plenty of articles which describes their difference, but the main difference is that 5GHz has better data bandwith and speeds up your connections.
+Conversely 2,4GHz emits signal better over obstacles as wall and to longer distance.
+So sometimes you have bad connection because you are connected to 5GHz and your location far away from router or behind several walls or combination of both.</p>
+<h2>How inspect WiFi on macOS</h2>
+<p>Inspection of RSSI level and noise level is pretty easy on macOS. Just hold your option key and right click to WiFi icons in the top right corner.
+Then the window is showed with detail information about your WiFi connection as IP address, channel, RSSI, Noise, Tx Rate and so on.</p>
+<p><img src="/images/macos_wifi_window.png" alt="macOS WiFi window with detailed info" /></p>
+<h2>How inspect WiFi on OpenBSD</h2>
+<p>Unfortunately I&#8217;ve no idea how to check Wifi on OpenBSD properly.
+There is <code>ifconfig</code> command to use, but there are not listed parameters of WiFi separately listed. There is only strength of the WiFi signal in perecentage.</p>
+<p>If someone knows how to get precise value of dBm for noise and RSSI please let me know.</p>
+<h2>Steps to solve problem with WiFi</h2>
+<ol>
+<li>Do not buy a new device if you do not know where is a problem</li>
+<li>Get real data of your connection to analyze where can be a problem</li>
+<li>Get RSSI value
+If RSSI low
+<ul>
+<li>move closer to your router</li>
+<li>compare RSSI value between several laptops, to find out if it is problem of receiving device (laptop) or sending device (router)</li>
+<li>compare several laptops at same location (same path (distance, obstacles) from router)</li>
+</ul></li>
+<li>Get Noise value
+If noise is high
+<ul>
+<li>consecutively turn off all device which can be a source of noise. It can be any electronic device around your laptop or router, or something in path of radio waves from WiFi</li>
+<li>compare noise value between several laptops</li>
+<li>compare several laptops at same location</li>
+</ul></li>
+<li>Restart all related devices</li>
+<li>Update all related devices</li>
+<li>Disconnect all devices from network and keep only trouble one if problems persist</li>
+<li>Check forums for your devices</li>
+<li>Check date and time on router and particular laptop</li>
+<li>Absolutely last option is repairing or buying a new devices</li>
+</ol>
+<h2>What was my problem</h2>
+<p>My problem was the high value of Noise which was around -75 dBm in combination little weaker RSSI. Result was low SNR.
+This problem occured only on one laptop. So I try eliminate electronic device which can cause the high value of Noise.
+Finally I&#8217;ve found that the problem of noise was little USB Hub I-tec connected to my laptop. When I disconnected this Hub
+from my laptop Noise immediately update to ordinary value between -91 - (-95 dBm) and my connection was stable as a time ago.</p>
+<p><img src="/images/usb_hub_front.JPG" alt="USB hub I-tec front" />
+<img src="/images/usb_hub_back.JPG" alt="USB hub I-tec back" /></p>
+<h2>Sources</h2>
+<ol>
+<li><a href="https://community.cisco.com/t5/wireless-mobility-knowledge-base/snr-rssi-eirp-and-free-space-path-loss/ta-p/3128478">CISCO community</a></li>
+<li><a href="https://en.wikipedia.org/wiki/Received_signal_strength_indicator">RSSI wiki</a></li>
+<li><a href="https://www.velocenetwork.com/tech/what-is-wifi-rssi/">velocenetwork - What is wifi RSSI</a></li>
+<li><a href="https://www.netspotapp.com/wifi-troubleshooting/signal-to-noise-ratio.html">netspotapp - signal to noise</a></li>
+</ol>
+
+    </main>
+
+    <footer>
+    </footer>
+
+  </body>
+
+</html>
+
