@@ -142,8 +142,10 @@ This problem occured only on one laptop. So I try eliminate electronic device wh
 Finally I've found that the problem of noise was little USB Hub I-tec connected to my laptop. When I disconnected this Hub
 from my laptop Noise immediately update to ordinary value between -91 - (-95 dBm) and my connection was stable as a time ago.
 
-![USB hub I-tec front](/images/usb_hub_front.JPG)
-![USB hub I-tec back](/images/usb_hub_back.JPG)
+![USB hub I-tec front](/images/usb_hub/1.JPG)
+![USB hub I-tec back](/images/usb_hub/2.JPG)
+![USB hub I-tec internals](/images/usb_hub/5.JPG)
+
 
 ## Sources
 1. [CISCO community]
