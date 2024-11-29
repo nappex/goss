@@ -108,6 +108,7 @@ server <your.ip.addr.ess> {
 ```
 
 Create some files in directories to know which server match.
+
 ```terminal
 echo "first" | doas tee /var/www/htdocs/first_server/index.html
 echo "second" | doas tee /var/www/htdocs/second_server/index.html
