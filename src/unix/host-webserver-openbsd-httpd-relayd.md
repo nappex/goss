@@ -15,9 +15,11 @@ is to understand how things works.
 I can recommend these resources to start with `httpd` and rest if you are beginner:
 
 **Books**:
+
 - [Michael W Lucas - Httpd and Relayd Master (ebook)](https://www.tiltedwindmillpress.com/?product=httpd-and-relayd-mastery) I really love which Mr. Lucas write books about BSDes OSes. There is maybe not everything, but it helps you to understand the whole concept. The book is from 2017, but it still enough updated in 2024.
 
 **Web**:
+
 - [Tales mbivert: openbsd with httpd, acme, self-signed certificate, lets encrypt, relayd](https://tales.mbivert.com/on-letsencrypt-on-openbsd/)
 - [BSDHowTo: how set webserver with openbsd](https://www.bsdhowto.ch/webserver.html)
 - [Roman Zolotarev: set up httpd](https://romanzolotarev.com/openbsd/httpd.html)

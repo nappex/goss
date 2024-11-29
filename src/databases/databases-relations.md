@@ -1,13 +1,15 @@
 title: Relace (vztah) mezi databázemi (tabulkami)
 date: 2020-09-02
-updated: 2024-11-29
+updated: 2024-11-30
 
 # Databáze - obecně
 
 Každá databáze se skládá z entit. Třeba databáze uživatelů je databáze entit, kde každý uživatel je jedna entita. Tato entita je definována svými atributy. Tyto atributy mohou být rodné číslo, jméno, přezdívka, email apod. A každý atribut má svou hodnotu. Hodnota emailu může být třeba pepanovak@seznam.cz.
 
 Databáze jsou dva hlavní typy:
+
 1. Flat-File Database: tedy obyčejný soubor jako databáze. Například CSV, Excel spreadsheet, LibreOffice spreadsheet apod.Tyto databáze jsou vhodné pro menší počet dat, jelikož procházení dat nebývá moc efektivní.
+
 2. Relational database: neboli relační databáze. Jedná se přímo už o program, který spravuje data hlavně v paměti RAM, ale aby byl schopen data i uchovávat tak je také ukládá do souborů. Nicméně požadavky na data dělá speciální program, který je při manipulaci s daty daleko více efektivní než flat-file databáze.
 
 
