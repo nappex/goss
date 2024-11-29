@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="date" scheme="YYYY-MM-DD" content="2020-09-02">
-	<meta name="updated" scheme="YYYY-MM-DD" content="2024-11-29">
+	<meta name="updated" scheme="YYYY-MM-DD" content="2024-11-30">
     <meta name="license" content="https://creativecommons.org/licenses/by/4.0/">
     <meta name="referrer" content="origin">
     <link rel="icon" type="image/png" size="16x16" href="/images/favicon-16x16.png">
@@ -58,13 +58,15 @@
 
 <h1>Relace (vztah) mezi databázemi (tabulkami)</h1>
 <p><span id=pubdate>Published: 2020-09-02</span></p>
-<p><span id=updated>Updated: 2024-11-29</span></p>
+<p><span id=updated>Updated: 2024-11-30</span></p>
 <!-- Content below is generated with lowdown (https://kristaps.bsd.lv/lowdown/) -->
 <h1>Databáze - obecně</h1>
 <p>Každá databáze se skládá z entit. Třeba databáze uživatelů je databáze entit, kde každý uživatel je jedna entita. Tato entita je definována svými atributy. Tyto atributy mohou být rodné číslo, jméno, přezdívka, email apod. A každý atribut má svou hodnotu. Hodnota emailu může být třeba pepanovak@seznam.cz.</p>
-<p>Databáze jsou dva hlavní typy:
-1. Flat-File Database: tedy obyčejný soubor jako databáze. Například CSV, Excel spreadsheet, LibreOffice spreadsheet apod.Tyto databáze jsou vhodné pro menší počet dat, jelikož procházení dat nebývá moc efektivní.
-2. Relational database: neboli relační databáze. Jedná se přímo už o program, který spravuje data hlavně v paměti RAM, ale aby byl schopen data i uchovávat tak je také ukládá do souborů. Nicméně požadavky na data dělá speciální program, který je při manipulaci s daty daleko více efektivní než flat-file databáze.</p>
+<p>Databáze jsou dva hlavní typy:</p>
+<ol>
+<li><p>Flat-File Database: tedy obyčejný soubor jako databáze. Například CSV, Excel spreadsheet, LibreOffice spreadsheet apod.Tyto databáze jsou vhodné pro menší počet dat, jelikož procházení dat nebývá moc efektivní.</p></li>
+<li><p>Relational database: neboli relační databáze. Jedná se přímo už o program, který spravuje data hlavně v paměti RAM, ale aby byl schopen data i uchovávat tak je také ukládá do souborů. Nicméně požadavky na data dělá speciální program, který je při manipulaci s daty daleko více efektivní než flat-file databáze.</p></li>
+</ol>
 <h1>Relační databáze</h1>
 <h2>1. Žádný vztah</h2>
 <p>Mezi tabulkami nebo databázemi není žádný vztah.</p>
