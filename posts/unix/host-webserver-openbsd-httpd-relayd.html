@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="date" scheme="YYYY-MM-DD" content="2024-11-30">
+    <meta name="license" content="https://creativecommons.org/licenses/by/4.0/">
+    <meta name="referrer" content="origin">
+    <link rel="icon" type="image/png" size="16x16" href="/images/favicon-16x16.png">
+    <link rel="stylesheet" href="/css/style.css">
+    <title>Host websites with OpenBSD httpd and relayd</title>
+  </head>
+
+
+  <body>
+<!--    Navigation is made by Erik Terwan    -->
+<!--          24th of November 2015          -->
+<!--              MIT License                -->
+    <nav role="navigation">
+      <div id="menuToggle">
+        <!--
+        A fake / hidden checkbox is used as click reciever,
+        so you can use the :checked selector on it.
+        -->
+        <input type="checkbox" />
+
+        <!--
+        Some spans to act as a hamburger.
+        They are acting like a real hamburger,
+        not that McDonalds stuff.
+        -->
+        <span></span>
+        <span></span>
+        <span></span>
+
+        <!--
+        Too bad the menu has to be inside of the button
+        but hey, it's pure CSS magic.
+        -->
+        <ul id="menu">
+          <a href="/"><li>Home</li></a>
+          <a href="/posts/"><li>Posts</li></a>
+          <a href="/categories/"><li>Categories</li></a>
+          <a href="/resources/"><li>Resources</li></a>
+          <a href="/about/"><li>About</li></a>
+          <a href="/contact/"><li>Contact</li></a>
+          <a href="/feed/index.rss"><li>RSS</li></a>
+        </ul>
+      </div>
+    </nav>
+
+
+    <header>
+    </header>
+
+    <main>
+
+<h1>Host websites with OpenBSD httpd and relayd</h1>
+<p><span id=pubdate>Published: 2024-11-30</span></p>
+<!-- Content below is generated with lowdown (https://kristaps.bsd.lv/lowdown/) -->
+<h2>Introduction</h2>
+<p>The post try to describe how to run your own website on OpenBSD VPS with built-in tools
+- <code>httpd</code>
+- <code>relayd</code>
+- <code>openssl (LibreSSL)</code>, do not be confused it is not a SSL, but TLS
+- <code>acme</code></p>
+<p>I am absolutely beginner so there could be some mistakes. Do not repeat all steps blindly. Main purpose of this guide
+is to understand how things works.</p>
+<p>I can recommend these resources to start with <code>httpd</code> and rest if you are beginner:</p>
+<p><strong>Books</strong>:
+- <a href="https://www.tiltedwindmillpress.com/?product=httpd-and-relayd-mastery">Michael W Lucas - Httpd and Relayd Master (ebook)</a> I really love which Mr. Lucas write books about BSDes OSes. There is maybe not everything, but it helps you to understand the whole concept. The book is from 2017, but it still enough updated in 2024.</p>
+<p><strong>Web</strong>:
+- <a href="https://tales.mbivert.com/on-letsencrypt-on-openbsd/">Tales mbivert: openbsd with httpd, acme, self-signed certificate, lets encrypt, relayd</a>
+- <a href="https://www.bsdhowto.ch/webserver.html">BSDHowTo: how set webserver with openbsd</a>
+- <a href="https://romanzolotarev.com/openbsd/httpd.html">Roman Zolotarev: set up httpd</a>
+- <a href="https://romanzolotarev.com/openbsd/acme-client.html">Roman Zolotarev: set up https with acme</a>
+- <a href="https://romanzolotarev.com/ow.html">Roman Zolotarev: set up http headers with relayd and acme</a>
+- <a href="https://obsd.solutions/en/blog/2022/03/04/openbsd-acme-client-70-for-letsencrypt-certificates/index.html">OpenBSD with acme and Let&#8217;s encrypt</a>
+- <a href="https://www.tumfatig.net/2023/using-openbsd-relayd8-as-an-application-layer-gateway/">tumfatig.net: How relayd works</a>
+- <a href="https://dev.to/techschoolguru/how-to-create-sign-ssl-tls-certificates-2aai">dev.to: How to set self-signed certificate with LibreSSL</a>
+- <a href="https://dev.to/techschoolguru/a-complete-overview-of-ssl-tls-and-its-cryptographic-system-36pd">dev.to: How SSL&#47;TLS works</a></p>
+<p>When I&#8217;ve started with learning how to run <code>httpd</code> correctly I have these questions in my head:</p>
+<ul>
+<li>Why do guides on the internet setup <code>httpd</code> server domain also with and without <code>www</code> prefix?</li>
+<li>Can I host webserver without domain? Server can be reached only with IP address.</li>
+<li>How to correctly split several sites with one public IP address? Setup server location or setup several server?</li>
+<li>Do I need certificate or it is OK running just HTTP?</li>
+</ul>
+<p>I have one VPS running on <a href="https://openbsd.amsterdam/">OpenBSD.amsterdam</a> with one IPv4 and one IPv6 address.</p>
+<h2>What protocol should I support for websites (HTTP, HTTPS)</h2>
+<p>When you want to host a websites I mean just static sites, then there are two main protocols you will meet HTTP and HTTPS. There are other like GOPHER or GEMINI, but they are not so common in daily browsing the internet. Honestly I want to try them some day, but it makes sense to fully understand HTTP and then start with other less used.</p>
+<p>HTTP and HTTPS are related. HTTPS is just HTTP with SSL&#47;TLS, currently with TLS. SSL is predecessor of TLS. SSL is considered as unsecure today, it should be used only TLS. Last version of SSL was deprecated in 2015. Curentle up to date version of TLS is 1.3
+I have to used HTTPS if I want to host only static sites with html content with no login, no sensitive data, &#8230;
+Yes you should, because even though you send data which have not to be encrypted there other reason why it is not good idea to host your site only on HTTP protocol:
+1. HTTPS respective TLS is not just about protecting <strong>CONFIDENTIALITY</strong> (data encryption), but also about protecting <strong>AUTHENTICITY</strong> (verifying communicating parties, parties are usually the client - server). TLS ensures that you are communicating with the right server and not with the fake one. Last protection is <strong>INTEGRITY</strong>, TLS checks MAC - message authentication code to verify that the sent data were not altered. There are real examples where lack of TLS caused injection of ads to your site or injection of malware byt MITM (man in the middle).
+2. Your users might not want that every network they traverse will know exactly which pages they are viewing. So TLS is protecting your users from sniffing by others.
+3. Even a static site can have areas which require a link to access.</p>
+<p>The main advantage to use TLS are
+1. Confidentiality
+2. Authenticity
+3. Integrity</p>
+<p>We lose the standard level of security if we use just HTTP. It is not recommended to use only HTTP.</p>
+<p>Thanks to <a href="@kasperd@westergaard.social">kasperd</a> to point out me on these points above, which I did not realized.</p>
+<p>There is little confusion on OpenBSD with TLS and SSL, because OpenBSD uses project <code>LibreSSL</code> where one his utility is command <code>openssl</code>, despite of these names none of them use SSL. <code>LibreSSL</code> is fork of origin <code>OpenSSL</code> and uses TLS</p>
+<h2>Do I need to use domain or IP address is enough</h2>
+<p>There are many reasons why you should use a domain name.</p>
+<p>If we want to use TLS then we need domain. The easiest and free validation your site certification with some CA (certification authority) is validation with CA called <a href="https://letsencrypt.org/">Let&#8217;s encrypt</a>. <a href="https://letsencrypt.org/">Let&#8217;s encrypt</a> is used for many hobby sites and it is supprted by <code>acme</code> builtin tool on OpenBSD. <a href="https://letsencrypt.org/">Let&#8217;s encrypt</a> validate only certificate with domain not IP address. You can validate certificate to IP address by yourself with self-signed certificate, but this is not recommended. You will not be listed in browser as CA so your users will get a big warning of untrusted certificate when they visit your site for first time, then they need to save your certificate to not get warning again, but if you revoke your certificate then they have to proceed again. It can be problem especially for user who has no idea about certificates, HTTPS and so on.</p>
+<p>Anyway I think that usage of self signed certificate to IP address is good idea for learning purpose and before you obtain the domain you can try your settings with https.</p>
+<p>At some point the IP address may need to change. You change provider of VPS because of services or you want to use another platform which current provider can not handle and so on. Then will be a lot easier to manage if you are using a domain name and just need to update a DNS record. Otherwise you will have track down every link to the IP and update them. Some of those may exist in users bookmarks, which will be difficult for you to update.</p>
+<p>Using a domain name with DNS means you can add redundancy as needed. If there multiple DNS records pointing to different IP addresses a browser will try them in turn. You can&#8217;t get that kind of redundancy with a hardcoded IP address.</p>
+<p>Even if the site has no redundancy it will not be sufficient for you to remember one IP address. You will need to remember both the IPv4 address and the IPv6 address.</p>
+<h3>How to obtain a domain</h3>
+<p>Now it should be obvious that ideal path to host website is with TLS and hosting stable website for long period of time is convenient with domain.</p>
+<p>I know two reliable ways how to get domain for purpose of hosting website:
+1. Buy domain from some domain name registrar. If you buy a domain name then usually you can add several subdomains for free.
+2. Obtain subdomain for free from shared domain via <a href="https://freedns.afraid.org/">FreeDNS</a>, <a href="https://nic.eu.org/">EU.org</a>, these two seems to me trusworthy, but do your research on your own. There is another like <a href="https://www.noip.com/">noIP</a></p>
+<p>Finally set your IP address to your domain.</p>
+<h2>Setup httpd</h2>
+<p>If you have no experience with setup webserver as for example <code>nginx</code> or <code>apache</code> then just play with that.</p>
+<p>I created some scenarios for playing as homework to be sure how really <code>httpd</code> works, you can follow it if you want.</p>
+<ol>
+<li>to practice how httpd server <name> works, try to make two servers first with some dummy name, and second server where the name will be your IP address, if httpd will not match any server it should take the first hence the server with IP adress should be second and nonsense name first one. You will try if server match also the IP address and if it is true that if there is no match the first server is taken.</li>
+</ol>
+<pre><code># &#47;etc&#47;httpd.conf
+server "noexistname" {
+    listen on * port 80
+    root "&#47;htdocs&#47;first_server"
+}
+
+server &#60;your.ip.addr.ess&#62; {
+    listen on * port 80
+    root "&#47;htdocs&#47;second_server"
+}
+</code></pre>
+<p>Create some files in directories to know which server match.
+<code>terminal
+echo "first" | doas tee &#47;var&#47;www&#47;htdocs&#47;first_server&#47;index.html
+echo "second" | doas tee &#47;var&#47;www&#47;htdocs&#47;second_server&#47;index.html
+</code></p>
+<p>If you setup everything correct, then the second one with the IP should be loaded to your browser.
+Then change the IP address to some unreachable name as &#8220;noexistnamesecond&#8221; or &#8220;secondhello&#8221; whatever and
+refresh page and the first one should be loaded. If not try hard refresh the site probably cached to your browser and serves you the last version and not the new one.</p>
+
+    </main>
+
+    <footer>
+    </footer>
+
+  </body>
+
+</html>
+
