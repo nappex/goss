@@ -10,8 +10,14 @@ Databáze jsou dva hlavní typy:
 
 1. Flat-File Database: tedy obyčejný soubor jako databáze. Například CSV, Excel spreadsheet, LibreOffice spreadsheet apod.Tyto databáze jsou vhodné pro menší počet dat, jelikož procházení dat nebývá moc efektivní.
 
-2. Relational database: neboli relační databáze. Jedná se přímo už o program, který spravuje data hlavně v paměti RAM, ale aby byl schopen data i uchovávat tak je také ukládá do souborů. Nicméně požadavky na data dělá speciální program, který je při manipulaci s daty daleko více efektivní než flat-file databáze.
+2. Relational database: neboli relační databáze. Jedná se přímo už o program, který spravuje data hlavně v paměti RAM, ale aby byl schopen data i uchovávat tak je také ukládá do souborů. Nicméně požadavky na data dělá speciální program, který je při manipulaci s daty daleko více efektivní než flat-file databáze. V praxi to vypadá tak, že máte binární soubor, kde jsou uložena všechna data. Tím, že soubor binární tak jde otevřít pouze speciálním programem a nikoliv textovým editorem, tak jako je tomu u flat-file databazí. Tím programem je třeba `SQLite`, sqlite otevře binární soubor a pomocí příkazů mění data v tomto souboru, která jsou uložena v tzv. `tables`. Příkazy, které se použivají k manipulaci s daty jsou příkazy jazyka SQL - Structred Query Language Programy, tento jazyk se používá u databází jako MySQL, PostgreSQL a další. Tedy k interakci s daty je nutné znát syntaxy jazyka pro práci s databází. K manipulaci dat se používají 4 základní operace označovaných pod zkratkou `CRUD`, což je:
 
+- C - Create (SQL uses also INSERT)
+- R - Read (SQL uses insted SELECT)
+- U - Update
+- D - Delete
+
+As you see SQL for example uses not literally same named operations as in general definition. But the `SELECT` is the same thing what it is meant by operation `READ`, `SELECT` == `READ`.
 
 # Relační databáze
 
