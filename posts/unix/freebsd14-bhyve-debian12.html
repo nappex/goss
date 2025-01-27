@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="date" scheme="YYYY-MM-DD" content="2023-12-31">
-    <meta name="updated" scheme="YYYY-MM-DD" content="2024-08-20">
+    <meta name="updated" scheme="YYYY-MM-DD" content="2024-12-20">
     <meta name="license" content="https://creativecommons.org/licenses/by/4.0/">
     <meta name="referrer" content="origin">
     <link rel="icon" type="image/png" size="16x16" href="/images/favicon-16x16.png">
@@ -131,16 +131,20 @@
         <li>grub2-bhyve</li>
       </ol>
 
+      <p>I am using several terms in the article whose meaning could be confusing for beginners, so I put there explanation.
+        By <b>Host</b>, <b>laptop</b> I mean the physical hardware where I am running <code>FreeBSDcode</code> with <code>vm-bhyve</code>.
+        By <b>Guest</b> or <b>VM</b> (virtual machine) I mean virtual machine running by <code>vm-bhyve</code>.
+      </p>
+
 
       <h2 id="environ-config"><a class="anchor" href="#environ-config"></a>Environment configuration</h2>
       <ul>
         <li><b>Host computer:</b> Lenovo ThinkPad T470</li>
-        <li><b>Host OS:</b> FreeBSD 14.0-RELEASE-p3</li>
-        <li><b>Host graphic environment:</b> KDE plasma</li>
-        <li><b>Guest OS:</b> Debian 12.4</li>
+        <li><b>Host OS:</b> FreeBSD 14.2-RELEASE-p0</li>
+        <li><b>Guest OS:</b> Debian 12.8 (Gnome)</li>
         <li><b>Guest disk type:</b> nvme</li>
         <li><b>Guest boot firmware interface:</b> UEFI</li>
-        <li><b>vm-bhyve version:</b> 1.5 (rev. 105102)</li>
+        <li><b>vm-bhyve version:</b> 1.6</li>
       </ul>
 
       <h2 id="install-packages">Necessary packages to run bhyve with Linux guest</h2>
@@ -151,6 +155,7 @@ $ pkg install -y \
           bhyve-firmware \
           edk2-bhyve \
           uefi-edk2-bhyve-csm \
+          dnsmasq \
           tigervnc-viewer
       </code></pre>
 
@@ -346,6 +351,32 @@ Mapping table
 Shel> BLK0:
 BLK0:\>
       </code></pre>
+
+      <h2>Network</h2>
+      <p>
+        Network setup of my host machine (FreeBSD) and VM (debian) was the biggest challenge.
+        I was playing with the setup most of the time to get things work.
+        My goal was to set the network through my WiFi interface of my host, this ensure more comfort to use internet on VM.
+        This goal is little bit more difficult than if you connect just via Ethernet.
+        Unfortunately the <code>vm-bhyve</code> doesn't have exhausting wiki, so unexperienced users like me have to do try and error approach
+        and find several resources to understand whole context of it and finally connect all of them somehow together.
+        Best approach is to study all related tech to details, but it is the most time consuming approach.
+        But if you like there is a nice book about PF from Peter Hansteen with name <i>Book of PF</i> for example.
+      </p>
+
+      <p>
+        It is important to realise that you need two separate subnets. First one is your local network where is connected your host (laptop/PC)
+        and the latter is subnet of your VM. Your <b>Host</b> will be middle point between your local area network and you <b>VM</b>.
+        It is not good idea to set subnets which overlaps themselves. See <a href="https://forums.freebsd.org/threads/bhyve-with-wlan0-nat-for-my-guests.89813/">this freebsd forum thread</a>, where the author of question could not get working network because of overlapping these two networks.
+      </p>
+      #TODO
+
+      <h3>Run network with WiFi card</h3>
+      We will need:
+      <li>PF</li>
+      <li>dnsmasq</li>
+      <li>NAT</li>
+      #TODO
 
       <h2>Supervise the virtual machine</h2>
 
