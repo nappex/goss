@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="date" scheme="YYYY-MM-DD" content="2025-01-28">
+    <meta name="license" content="https://creativecommons.org/licenses/by/4.0/">
+    <meta name="referrer" content="origin">
+    <link rel="icon" type="image/png" size="16x16" href="/images/favicon-16x16.png">
+    <link rel="stylesheet" href="/css/style.css">
+    <title>Improve your ssh config file</title>
+  </head>
+
+
+  <body>
+<!--    Navigation is made by Erik Terwan    -->
+<!--          24th of November 2015          -->
+<!--              MIT License                -->
+    <nav role="navigation">
+      <div id="menuToggle">
+        <!--
+        A fake / hidden checkbox is used as click reciever,
+        so you can use the :checked selector on it.
+        -->
+        <input type="checkbox" />
+
+        <!--
+        Some spans to act as a hamburger.
+        They are acting like a real hamburger,
+        not that McDonalds stuff.
+        -->
+        <span></span>
+        <span></span>
+        <span></span>
+
+        <!--
+        Too bad the menu has to be inside of the button
+        but hey, it's pure CSS magic.
+        -->
+        <ul id="menu">
+          <a href="/"><li>Home</li></a>
+          <a href="/posts/"><li>Posts</li></a>
+          <a href="/categories/"><li>Categories</li></a>
+          <a href="/resources/"><li>Resources</li></a>
+          <a href="/about/"><li>About</li></a>
+          <a href="/contact/"><li>Contact</li></a>
+          <a href="/feed/index.rss"><li>RSS</li></a>
+        </ul>
+      </div>
+    </nav>
+
+
+    <header>
+    </header>
+
+    <main>
+
+<h1>Improve your ssh config file</h1>
+<p><span id=pubdate>Published: 2025-01-28</span></p>
+<!-- Content below is generated with lowdown (https://kristaps.bsd.lv/lowdown/) -->
+<h1>SSH config file</h1>
+<p>It is a tedious to remember all the servers you manage by yourself, to remember the right port,
+right address the user and so on. It can be challenging if you do not use domain name
+for your just one server, at least because of IP addresses (hence domains come to the world).
+It is not necessary to buy a domain immediately just for to remember what to write on CLI when
+you want to connect via ssh. You can name your server locally thanks to your user ssh config file
+located in <code>$HOME&#47;.ssh&#47;config</code>. The configuration support two basic things which make usage of your ssh
+much more comfortable:</p>
+<ol>
+<li>name your server by you (whatever name you want, the name is just use in local context of your ssh)</li>
+<li>globbing (allow DRY, so you can write config more efficient, but sometimes it can lead to less legibility)</li>
+</ol>
+<p>Below there is a example of the config file.</p>
+<pre><code class="language-terminal"># $HOME&#47;.ssh&#47;config
+
+Host *
+  AddKeysToAgent yes
+  IgnoreUnknown UseKeychain
+  IdentityFile ~&#47;.ssh&#47;your_private_key
+  SetEnv TERM=xterm-256color
+
+Host *my_server*
+    User your_username
+    Port ssh_port_on_your_server # if not used default 22
+
+Host *my_server_ipv4
+    HostName 49.49.49.49
+
+Host *my_server_ipv6
+    HostName 2a03:6000:95f1:607::17
+
+Host ssh_socks5*
+    DynamicForward 44444 # some your local port you want to use
+    Compression yes
+    SessionType none
+    RequestTTY false
+
+</code></pre>
+<p>You can see in the example above how it works, after keyword of ssh config <code>Host</code> you can define name of server whatever you want. It is the name you will use in your terminal and it used just locally in context of your user and ssh. Furthermore you can use globbing so you can set what will be used for every server with <code>*</code>, the star match everything.</p>
+<p>Then you can continue with playing with the globbing I can set just <code>username</code> and <code>port</code>, and then split address for ipv4 and ipv6, so the infortmation is not repeated. And also if I want to use <code>socks5</code> I can just add options which is required to do so for every server not just to <code>my_server</code>.</p>
+<p>At the end you can connect via ssh just with a full name (full name means, the name which contains all required information), without to remember it. Just remember the right name you defined in config file :).</p>
+<pre><code class="language-terminal">ssh my_server_ipv4
+</code></pre>
+
+    </main>
+
+    <footer>
+    </footer>
+
+  </body>
+
+</html>
+
