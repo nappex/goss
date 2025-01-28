@@ -87,13 +87,15 @@ th:last-child {
 /* CSS Simple Pre Code */
 code {
   background-color: lightgrey;
-  padding: 1px;
+  padding: 2px;
+  font-style: italic;
 }
 
 pre {
   background: #f4f4f4;
+  padding: 10px;
   border: 1px solid #ddd;
-  border-left: 3px solid tomato;
+  border-left: 4px solid tomato;
   font-size: 13pt;
   font-family: monospace;
   line-height: 1.6;
