@@ -109,7 +109,7 @@ server <your.ip.addr.ess> {
 
 Create some files in directories to know which server match.
 
-```terminal
+```console
 echo "first" | doas tee /var/www/htdocs/first_server/index.html
 echo "second" | doas tee /var/www/htdocs/second_server/index.html
 ```
@@ -117,4 +117,18 @@ echo "second" | doas tee /var/www/htdocs/second_server/index.html
 If you setup everything correct, then the second one with the IP should be loaded to your browser.
 Then change the IP address to some unreachable name as "noexistnamesecond" or "secondhello" whatever and
 refresh page and the first one should be loaded. If not try hard refresh the site probably cached to your browser and serves you the last version and not the new one.
+
+### Generally about setup
+
+File you want to edit to configure `httpd` is `/etc/httpd.conf`. Man page is good start point [httpd.conf(5)](https://man.openbsd.org/httpd.conf.5).
+
+What you can specify in configuration file?
+
+    - `macros` ordinary variables, which should be defined at the begining of the configuration file
+    - `servers` defined by keyword server and then with value which you want to match. The match can be complete with globbing or with advanced lua regex pattern when you will used keywords `server match`
+
+Httpd goes through the configuration, line by line server by server from up to down. There is important info in man page, if evaluating do not match anything, then **it is handled by the first defined server section that matches the listening port.**
+Originally, I supposed if there is no match then the request is refused, it was huge misunderstanding because I have not read the man page properly.
+
+So if I do not want to response to all subdomains because of matching listening port, then I have to specify at the end of config file glob with asterisk `server * {}` to match rest all what would not be matched by server sections above the asterisk to block undefined subdomains.
 
