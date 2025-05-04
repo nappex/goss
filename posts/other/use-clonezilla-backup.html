@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="date" scheme="YYYY-MM-DD" content="2025-05-04">
+    <meta name="license" content="https://creativecommons.org/licenses/by/4.0/">
+    <meta name="referrer" content="origin">
+    <link rel="icon" type="image/png" size="16x16" href="/images/favicon-16x16.png">
+    <link rel="stylesheet" href="/css/style.css">
+    <title>Jak si pomoci CloneZilla udelat obraz disku - pouze teoreticky</title>
+  </head>
+
+
+  <body>
+<!--    Navigation is made by Erik Terwan    -->
+<!--          24th of November 2015          -->
+<!--              MIT License                -->
+    <nav role="navigation">
+      <div id="menuToggle">
+        <!--
+        A fake / hidden checkbox is used as click reciever,
+        so you can use the :checked selector on it.
+        -->
+        <input type="checkbox" />
+
+        <!--
+        Some spans to act as a hamburger.
+        They are acting like a real hamburger,
+        not that McDonalds stuff.
+        -->
+        <span></span>
+        <span></span>
+        <span></span>
+
+        <!--
+        Too bad the menu has to be inside of the button
+        but hey, it's pure CSS magic.
+        -->
+        <ul id="menu">
+          <a href="/"><li>Home</li></a>
+          <a href="/posts/"><li>Posts</li></a>
+          <a href="/categories/"><li>Categories</li></a>
+          <a href="/resources/"><li>Resources</li></a>
+          <a href="/about/"><li>About</li></a>
+          <a href="/contact/"><li>Contact</li></a>
+          <a href="/feed/index.rss"><li>RSS</li></a>
+        </ul>
+      </div>
+    </nav>
+
+
+    <header>
+    </header>
+
+    <main>
+
+<h1>Jak si pomoci CloneZilla udelat obraz disku - pouze teoreticky</h1>
+<p><span id=pubdate>Published: 2025-05-04</span></p>
+<!-- Content below is generated with lowdown (https://kristaps.bsd.lv/lowdown/) -->
+<p>Vytvořím si <a href="https://clonezilla.org/clonezilla-live.php">clonezilla - live</a> jako USB drive a nabootuješ do něj. Potom připojím disk, na kteýr chci zálohovat. Potom udělám zálohu nebo obraz disku laptopu do složky na externím disku, který jsem připojil pro zálohu.</p>
+<p>Opačý proces je výběr složky, která byla vytvořena jako záloha disku a uděláš obnovu na disk laptopu.</p>
+<p>Příklad použití: Koupíš notebook nebo dostaneš, kde je funkční windows. Nevíš jestli bude fungovat dobře Linux nebo BSD, ale nechceš widle a chceš zkusit, co na tom bude fičet. Potřebuješ si udělat zadní vrátka, že nebude fungovat nic a budeš tam muset dát zpatky původní windows. Tak na tohle se to přesně hodí ať tam aspoň v nejhorším jedou původní widle.</p>
+<p>Teoreticky jdou takhle widle přenést na jakýkoliv jiný počítač. Prostě chytíš obraz widlí do pokeballu pomocí <a href="https://clonezilla.org/">CloneZilla</a>
+a pak tento obraz přeneseš na jiný komp. Otevřeš pokeball. Bohužel windows budou nejpsíše spárované s jedním hardwarem a nebude to asi fungovat, ale určitě to stojí někdy za vyzkoušení.</p>
+<p>Originál:</p>
+<p>I&#8217;ve just created a clonezille usb drive and booted into it. Then, plugged another drive and told it to backup the entire internal drive into a directory of the external device. Nothing more than this.
+I don&#8217;t know if this can be reused on another hardware. I think the license is for that specific device, but I&#8217;m not into Windows</p>
+<p>Mount the destination (repository) disk and clonezilla will clone the partitions in compressed files inside that repo. Then, you can restore it into another disk. I&#8217;m not using it to move to other disks but just to keep a copy of the original windows, just in case I need to restore it for any reason</p>
+
+    </main>
+
+    <footer>
+    </footer>
+
+  </body>
+
+</html>
+
