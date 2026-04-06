@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="date" scheme="YYYY-MM-DD" content="2026-04-06">
+    <meta name="license" content="https://creativecommons.org/licenses/by/4.0/">
+    <meta name="referrer" content="origin">
+    <link rel="icon" type="image/png" size="16x16" href="/images/favicon-16x16.png">
+    <link rel="stylesheet" href="/css/style.css">
+    <title>How to run Geekworm x735 script on Freedombox</title>
+  </head>
+
+
+  <body>
+<!--    Navigation is made by Erik Terwan    -->
+<!--          24th of November 2015          -->
+<!--              MIT License                -->
+    <nav role="navigation">
+      <div id="menuToggle">
+        <!--
+        A fake / hidden checkbox is used as click reciever,
+        so you can use the :checked selector on it.
+        -->
+        <input type="checkbox" />
+
+        <!--
+        Some spans to act as a hamburger.
+        They are acting like a real hamburger,
+        not that McDonalds stuff.
+        -->
+        <span></span>
+        <span></span>
+        <span></span>
+
+        <!--
+        Too bad the menu has to be inside of the button
+        but hey, it's pure CSS magic.
+        -->
+        <ul id="menu">
+          <a href="/"><li>Home</li></a>
+          <a href="/posts/"><li>Posts</li></a>
+          <a href="/categories/"><li>Categories</li></a>
+          <a href="/resources/"><li>Resources</li></a>
+          <a href="/about/"><li>About</li></a>
+          <a href="/contact/"><li>Contact</li></a>
+          <a href="/feed/index.rss"><li>RSS</li></a>
+        </ul>
+      </div>
+    </nav>
+
+
+    <header>
+    </header>
+
+    <main>
+
+<h1>How to run Geekworm x735 script on Freedombox</h1>
+<p><span id=pubdate>Published: 2026-04-06</span></p>
+<!-- Content below is generated with lowdown (https://kristaps.bsd.lv/lowdown/) -->
+<h2>Overview</h2>
+<p>When I installed the x735 script by the official <a href="https://wiki.geekworm.com/X735-script">guide</a> to <a href="https://freedombox.org/">FreedomBox</a>, then the fan of my X735 V2.5 Power Management Board was not rotating at all.</p>
+<p>See below the hardware and software specification when I struggled with this problem.</p>
+<p>Hardware kit:</p>
+<ul>
+<li>Raspberry Pi 4 Model B</li>
+<li>X825 V2.0 2.5&#8221; SATA HDD&#47;SSD Storage Board</li>
+<li>X825-C8 Case</li>
+<li>X735 V2.5 Power Management Board</li>
+</ul>
+<pre><code class="language-console">$ sudo dmesg | grep -i rasp
+[    0.000000] Machine model: Raspberry Pi 4 Model B Rev 1.4
+</code></pre>
+<pre><code class="language-console">$ lsb_release -a
+No LSB modules are available.
+Distributor ID: Debian
+Description:    Debian GNU&#47;Linux 13 (trixie)
+Release:        13
+Codename:       trixie
+</code></pre>
+<pre><code class="language-console">$ uname -a
+Linux freedombox 6.12.74+deb13+1-arm64 #1 SMP Debian 6.12.74-2 (2026-03-08) aarch64 GNU&#47;Linux
+</code></pre>
+<h3>Errors</h3>
+<p>Errors which I&#8217;ve got during testing&#8230;</p>
+<pre><code class="language-console">$ sudo python3 pwm_fan_control.py
+Traceback (most recent call last):
+x735-script&#47;pwm_fan_control.py", line 10, in &#60;module&#62;
+IO.setup(servo,IO.OUT)
+RuntimeError: Mmap of GPIO registers failed
+</code></pre>
+<h2>How to solve</h2>
+<p>Firstly I will show outputs which could affect the function of the <a href="https://wiki.geekworm.com/index.php/X735">fan x735 v2.5</a>.</p>
+<pre><code class="language-console">$ ls &#47;sys&#47;class&#47;pwm&#47;
+pwmchip0
+</code></pre>
+<pre><code class="language-console">$ ls &#47;sys&#47;class&#47;pwm&#47;pwmchip0
+device  export  npwm  power  pwm1  subsystem  uevent  unexport
+</code></pre>
+<pre><code class="language-console">$ sudo dmesg | grep -i pwm
+</code></pre>
+<pre><code class="language-console">$ sudo dmesg | grep -i overlay
+</code></pre>
+<pre><code class="language-console">$ ls &#47;boot&#47;firmware&#47;overlays&#47;
+hifiberry-dac.dtbo  pi4-spidev.dtbo  README.md
+</code></pre>
+<p>By the last command is obvious there are only two overlays installed by default.
+None of these seems as the right one for pwm-2chan.</p>
+<h3>Solution</h3>
+<p>The solution is to add missing overlay, because when I add all available <code>pwm*</code> overlays from <a href="https://github.com/raspberrypi/firmware/tree/master/boot/overlays">GitHub raspberry</a> then the fan started rotate!</p>
+<p>The problem is that I do not know how to properly add the overlays to the system if should be
+- the whole kernel recompiled with new overlays, or
+- there is some interface&#47;framework for adding the overlays, or
+- download the raw file from <a href="https://github.com/raspberrypi/firmware/tree/master/boot/overlays">GitHub raspberry</a> to <code>&#47;boot&#47;framework&#47;overlays</code> is just enough</p>
+<p>I choosed the last one as the simplest one for me.</p>
+<pre><code class="language-console">curl -s https:&#47;&#47;api.github.com&#47;repos&#47;raspberrypi&#47;firmware&#47;contents&#47;boot&#47;overlays |
+jq -r &#39;.[] | select(.name | startswith("pwm")) | "\(.download_url)"&#39; |
+wget -i - -P &#47;boot&#47;firmware&#47;overlays&#47;
+</code></pre>
+<p>The command above will download all overlays which begin with <code>pwm</code>.
+Honestly not all of these are required, but I do not have a time tested by one by one or some right combination of files,
+but just the file <code>pwm-2chan.dtbo</code> did not work for me so I downloaded all these files and the fan start correctly rotating.</p>
+<h2>Other tips</h2>
+<p>Do not edit <code>&#47;boot&#47;firmware&#47;config.txt</code> directly, then udpate could rewrite this file on debian and fan will stop working.</p>
+<p>Instead edit the <code>&#47;etc&#47;default&#47;raspi-firmware-custom</code> as is adviced in <code>&#47;boot&#47;firmware&#47;config.txt</code></p>
+<pre><code class="language-console">$ cat &#47;boot&#47;firmware&#47;config.txt
+# Do not modify this file!
+#
+# It is automatically generated upon install or update of either the
+# firmware or the Linux kernel.
+#
+# If you need to set boot-time parameters, do so via the
+# &#47;etc&#47;default&#47;raspi-firmware, &#47;etc&#47;default&#47;raspi-firmware-custom or
+# &#47;etc&#47;default&#47;raspi-extra-cmdline files.
+</code></pre>
+<pre><code class="language-console">$ cat &#47;etc&#47;default&#47;raspi-firmware-custom
+# configuration for x735 script of geekworm
+dtoverlay=pwm-2chan,pin2=13,func2=4
+</code></pre>
+<h2>Helpful resources to solve similar problem</h2>
+<ul>
+<li><a href="https://github.com/raspberrypi/firmware/blob/master/boot/overlays/README">Official rpi overlays README</a></li>
+<li><a href="https://www.raspberrypi.com/documentation/computers/configuration.html#device-trees-overlays-and-parameters">Documentation overlays, device trees and parameters</a></li>
+<li><a href="https://bootlin.com/blog/enabling-new-hardware-on-raspberry-pi-with-device-tree-overlays/">Customize Linux Kernel to add new hardware support on RaspberryPi</a></li>
+<li><a href="https://github.com/raspberrypi/utils">raspberrypi-utils, collection of useful scripts</a></li>
+<li><a href="https://github.com/raspberrypi/utils/tree/master/dtmerge">dtmerge, dtoverly(tool for applying pre-compiled overlays to a live system) and dtparam</a></li>
+</ul>
+
+    </main>
+
+    <footer>
+    </footer>
+
+  </body>
+
+</html>
+
